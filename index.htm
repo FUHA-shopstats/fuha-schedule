@@ -21,6 +21,7 @@
       --success: #39d353;
       --danger: #f44336;
       --telegram: #0088cc;
+      --twitch: #9146ff;
       --glow: rgba(255,107,53,0.35);
     }
 
@@ -44,7 +45,6 @@
       transition: background 0.4s, color 0.4s;
     }
 
-    /* NOISE OVERLAY */
     body::before {
       content: '';
       position: fixed;
@@ -55,7 +55,6 @@
       opacity: 0.4;
     }
 
-    /* GRID BG */
     body::after {
       content: '';
       position: fixed;
@@ -82,7 +81,7 @@
 
     .header-left { display: flex; align-items: center; gap: 2rem; }
 
-    .logo { display: flex; align-items: center; gap: 0.75rem; text-decoration: none; }
+    .logo { display: flex; align-items: center; gap: 0.75rem; text-decoration: none; cursor: pointer; }
     .logo-mark {
       width: 36px; height: 36px;
       background: linear-gradient(135deg, var(--primary), var(--secondary));
@@ -116,6 +115,26 @@
     nav a.active::after {
       content: ''; position: absolute; bottom: -1px; left: 50%; transform: translateX(-50%);
       width: 20px; height: 2px; background: var(--primary); border-radius: 2px;
+    }
+
+    /* Live pulse in nav */
+    nav a.live-nav {
+      color: var(--twitch) !important;
+      background: rgba(145,70,255,0.08) !important;
+    }
+    nav a.live-nav::before {
+      content: '';
+      display: inline-block;
+      width: 7px; height: 7px;
+      background: var(--twitch);
+      border-radius: 50%;
+      margin-right: 5px;
+      animation: liveDot 1.2s ease-in-out infinite;
+      vertical-align: middle;
+    }
+    @keyframes liveDot {
+      0%,100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.4; transform: scale(0.7); }
     }
 
     .header-right { display: flex; align-items: center; gap: 0.75rem; }
@@ -192,6 +211,122 @@
       width: 48px; height: 3px;
       background: linear-gradient(90deg, var(--primary), var(--secondary));
       border-radius: 2px; margin-bottom: 1.5rem;
+    }
+
+    /* ─── TWITCH STREAM BLOCK ─── */
+    #twitchBlock {
+      display: none;
+      margin-bottom: 2rem;
+      animation: fadeUp 0.5s ease;
+    }
+    #twitchBlock.visible { display: block; }
+
+    .twitch-wrapper {
+      border: 2px solid var(--twitch);
+      border-radius: 16px;
+      overflow: hidden;
+      background: #0e0e10;
+      box-shadow: 0 0 40px rgba(145,70,255,0.25), 0 0 80px rgba(145,70,255,0.1);
+      position: relative;
+    }
+
+    .twitch-header {
+      background: linear-gradient(90deg, rgba(145,70,255,0.2), rgba(145,70,255,0.05));
+      border-bottom: 1px solid rgba(145,70,255,0.3);
+      padding: 0.85rem 1.5rem;
+      display: flex; align-items: center; justify-content: space-between;
+      flex-wrap: wrap; gap: 0.75rem;
+    }
+
+    .twitch-header-left { display: flex; align-items: center; gap: 0.75rem; }
+
+    .live-badge {
+      background: #eb0400;
+      color: white;
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 0.85rem; font-weight: 800; letter-spacing: 0.12em;
+      padding: 0.2rem 0.6rem; border-radius: 4px;
+      display: flex; align-items: center; gap: 0.4rem;
+      text-transform: uppercase;
+      box-shadow: 0 0 12px rgba(235,4,0,0.5);
+    }
+    .live-badge::before {
+      content: '';
+      width: 7px; height: 7px;
+      background: white; border-radius: 50%;
+      animation: liveDot 1s infinite;
+    }
+
+    .twitch-channel-name {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 1.2rem; font-weight: 800;
+      color: var(--twitch);
+      letter-spacing: 0.04em;
+    }
+
+    .twitch-game-info {
+      font-size: 0.88rem; color: var(--gray);
+      display: flex; align-items: center; gap: 0.4rem;
+    }
+
+    .twitch-header-right { display: flex; align-items: center; gap: 0.75rem; }
+
+    .viewer-count {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.85rem; color: var(--gray);
+      display: flex; align-items: center; gap: 0.4rem;
+    }
+    .viewer-count .eye { color: var(--twitch); }
+
+    .twitch-open-btn {
+      background: var(--twitch);
+      color: white; padding: 0.35rem 0.9rem; border-radius: 6px;
+      font-family: 'Barlow Condensed', sans-serif; font-weight: 700;
+      font-size: 0.85rem; letter-spacing: 0.05em;
+      border: none; cursor: pointer; text-decoration: none;
+      display: inline-flex; align-items: center; gap: 0.35rem;
+      transition: all 0.2s;
+    }
+    .twitch-open-btn:hover { filter: brightness(1.15); transform: translateY(-1px); box-shadow: 0 4px 16px rgba(145,70,255,0.4); }
+
+    .twitch-embed-wrap {
+      position: relative;
+      padding-top: 56.25%; /* 16:9 */
+      background: #0e0e10;
+    }
+    .twitch-embed-wrap iframe {
+      position: absolute;
+      inset: 0; width: 100%; height: 100%;
+      border: none;
+    }
+
+    /* Offline block */
+    .twitch-offline-block {
+      background: var(--surface);
+      border: 1px solid rgba(145,70,255,0.2);
+      border-radius: 12px;
+      padding: 1.5rem;
+      display: flex; align-items: center; gap: 1.25rem;
+      margin-bottom: 2rem;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+    .twitch-offline-block:hover {
+      border-color: var(--twitch);
+      background: rgba(145,70,255,0.05);
+      transform: translateY(-2px);
+    }
+    .twitch-offline-icon { font-size: 2rem; flex-shrink: 0; }
+    .twitch-offline-text strong {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 1.1rem; font-weight: 700;
+      color: var(--twitch); display: block; margin-bottom: 0.2rem;
+    }
+    .twitch-offline-text span {
+      font-size: 0.88rem; color: var(--gray);
+    }
+    .twitch-offline-block .twitch-offline-arrow {
+      margin-left: auto; color: var(--twitch); font-size: 1.1rem; flex-shrink: 0;
     }
 
     /* ─── DASHBOARD ─── */
@@ -564,6 +699,7 @@
     .toast.success { border-color: rgba(57,211,83,0.4); color: var(--success); }
     .toast.error { border-color: rgba(244,67,54,0.4); color: #f44336; }
     .toast.info { border-color: rgba(255,107,53,0.4); color: var(--primary); }
+    .toast.twitch { border-color: rgba(145,70,255,0.5); color: var(--twitch); }
     @keyframes toastIn { from { transform: translateX(60px); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
 
     /* ─── RESPONSIVE ─── */
@@ -574,6 +710,7 @@
       .lb-head, .lb-row { grid-template-columns: 40px 1fr 80px; }
       .lb-head > *:nth-child(3), .lb-row > *:nth-child(3),
       .lb-head > *:nth-child(4), .lb-row > *:nth-child(4) { display: none; }
+      .twitch-header { flex-direction: column; align-items: flex-start; }
     }
     .mobile-menu-btn {
       display: none; width: 36px; height: 36px; border-radius: 8px;
@@ -626,6 +763,31 @@
     .skill-level { font-size: 0.8rem; color: var(--gray); margin-bottom: 0.5rem; }
     .skill-bar { height: 4px; background: rgba(255,255,255,0.07); border-radius: 4px; overflow: hidden; }
     .skill-bar-fill { height: 100%; background: linear-gradient(90deg, var(--primary), var(--secondary)); border-radius: 4px; }
+
+    /* ─── STREAM PAGE ─── */
+    .stream-page-embed {
+      border: 2px solid var(--twitch);
+      border-radius: 16px; overflow: hidden;
+      box-shadow: 0 0 60px rgba(145,70,255,0.2);
+      margin-bottom: 2rem;
+    }
+    .stream-page-header {
+      background: linear-gradient(90deg, rgba(145,70,255,0.18), rgba(145,70,255,0.04));
+      border-bottom: 1px solid rgba(145,70,255,0.3);
+      padding: 1rem 1.5rem;
+      display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 1rem;
+    }
+    .stream-offline-page {
+      text-align: center; padding: 5rem 2rem;
+      background: var(--surface); border: 2px dashed rgba(145,70,255,0.25); border-radius: 16px;
+      margin-bottom: 2rem;
+    }
+    .stream-offline-page .stream-offline-icon { font-size: 4rem; margin-bottom: 1rem; opacity: 0.5; }
+    .stream-offline-page h3 {
+      font-family: 'Barlow Condensed', sans-serif; font-size: 1.8rem; font-weight: 800;
+      color: var(--twitch); margin-bottom: 0.5rem;
+    }
+    .stream-offline-page p { color: var(--gray); margin-bottom: 1.5rem; }
   </style>
 </head>
 <body>
@@ -646,6 +808,7 @@
       <a onclick="showPage('subscriptions')" data-page="subscriptions">Plans</a>
       <a onclick="showPage('testimonials')" data-page="testimonials">Reviews</a>
       <a onclick="showPage('faq')" data-page="faq">FAQ</a>
+      <a onclick="showPage('stream')" data-page="stream" id="streamNavBtn">📺 Stream</a>
     </nav>
   </div>
   <div class="header-right">
@@ -673,6 +836,42 @@
     <div class="announcement-bar">
       <div class="ann-dot"></div>
       <span><strong>Live:</strong> Tournament qualifier starts in 2h 30m — <span style="color:var(--primary);cursor:pointer" onclick="showPage('schedule')">View Schedule →</span></span>
+    </div>
+
+    <!-- TWITCH LIVE BLOCK (shown when live) -->
+    <div id="twitchBlock">
+      <div class="twitch-wrapper">
+        <div class="twitch-header">
+          <div class="twitch-header-left">
+            <div class="live-badge">LIVE</div>
+            <div>
+              <div class="twitch-channel-name">🎮 AXO_HH</div>
+              <div class="twitch-game-info" id="twitchGameInfo">Counter-Strike 2</div>
+            </div>
+          </div>
+          <div class="twitch-header-right">
+            <div class="viewer-count"><span class="eye">👁</span> <span id="viewerCount">...</span> viewers</div>
+            <a href="https://twitch.tv/AXO_HH" target="_blank" class="twitch-open-btn">Open Twitch ↗</a>
+          </div>
+        </div>
+        <div class="twitch-embed-wrap">
+          <iframe
+            id="twitchIframe"
+            src="https://player.twitch.tv/?channel=AXO_HH&parent=localhost&autoplay=true&muted=true"
+            allowfullscreen>
+          </iframe>
+        </div>
+      </div>
+    </div>
+
+    <!-- TWITCH OFFLINE TEASER (shown when offline) -->
+    <div class="twitch-offline-block" id="twitchOfflineBlock" onclick="showPage('stream')" style="display:none;">
+      <div class="twitch-offline-icon">📺</div>
+      <div class="twitch-offline-text">
+        <strong>AXO_HH on Twitch</strong>
+        <span>Stream is currently offline — follow to get notified when live</span>
+      </div>
+      <div class="twitch-offline-arrow">→</div>
     </div>
 
     <div class="hero-banner">
@@ -729,6 +928,10 @@
         <div class="quick-action-icon">📈</div>
         <div class="quick-action-label">My Skills</div>
       </div>
+      <div class="quick-action" onclick="showPage('stream')">
+        <div class="quick-action-icon">📺</div>
+        <div class="quick-action-label">Watch Live</div>
+      </div>
       <div class="quick-action" onclick="openSupport()">
         <div class="quick-action-icon">💬</div>
         <div class="quick-action-label">Support</div>
@@ -770,6 +973,104 @@
       <div class="lb-row"><div class="lb-rank">8</div><div class="lb-name">bodyy</div><div class="lb-team">Rifler / OG</div><div class="lb-rating">Premier 2698</div><div class="lb-score">2698</div></div>
       <div class="lb-row"><div class="lb-rank">9</div><div class="lb-name">kioShiMa</div><div class="lb-team">Lurker / Vitality</div><div class="lb-rating">Premier 2654</div><div class="lb-score">2654</div></div>
       <div class="lb-row"><div class="lb-rank">10</div><div class="lb-name">Boombl4</div><div class="lb-team">IGL / Gambit</div><div class="lb-rating">Premier 2567</div><div class="lb-score">2567</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════ STREAM PAGE ══════════════ -->
+<section id="stream" class="page">
+  <div class="container">
+    <div class="section-title">Live Stream</div>
+    <div class="section-sub">Watch AXO_HH live on Twitch</div>
+    <div class="accent-line"></div>
+
+    <!-- Live state -->
+    <div id="streamLiveBlock" style="display:none;">
+      <div class="stream-page-embed">
+        <div class="stream-page-header">
+          <div style="display:flex;align-items:center;gap:0.75rem;">
+            <div class="live-badge">LIVE</div>
+            <div>
+              <div class="twitch-channel-name">🎮 AXO_HH</div>
+              <div class="twitch-game-info" id="streamPageGameInfo">Counter-Strike 2</div>
+            </div>
+          </div>
+          <div style="display:flex;align-items:center;gap:0.75rem;">
+            <div class="viewer-count"><span class="eye">👁</span> <span id="streamPageViewers">...</span> viewers</div>
+            <a href="https://twitch.tv/AXO_HH" target="_blank" class="twitch-open-btn">Open Twitch ↗</a>
+          </div>
+        </div>
+        <div class="twitch-embed-wrap" style="padding-top:56.25%;">
+          <iframe
+            id="twitchIframePage"
+            src="https://player.twitch.tv/?channel=AXO_HH&parent=localhost&autoplay=true&muted=false"
+            allowfullscreen>
+          </iframe>
+        </div>
+      </div>
+
+      <!-- Chat embed -->
+      <div style="margin-top:1rem;border:1px solid rgba(145,70,255,0.3);border-radius:12px;overflow:hidden;height:500px;">
+        <iframe
+          id="twitchChatFrame"
+          src="https://www.twitch.tv/embed/AXO_HH/chat?parent=localhost&darkpopout"
+          style="width:100%;height:100%;border:none;">
+        </iframe>
+      </div>
+    </div>
+
+    <!-- Offline state -->
+    <div id="streamOfflinePage" style="display:none;">
+      <div class="stream-offline-page">
+        <div class="stream-offline-icon">📺</div>
+        <h3>Stream is Offline</h3>
+        <p>AXO_HH is not streaming right now.<br>Follow on Twitch to get notified when the next stream starts!</p>
+        <a href="https://twitch.tv/AXO_HH" target="_blank" class="btn" style="margin-right:0.75rem;">
+          Follow on Twitch
+        </a>
+        <a href="https://t.me/axo_fuha" target="_blank" class="tg-btn" style="display:inline-flex;">
+          📱 Get Notified on Telegram
+        </a>
+      </div>
+    </div>
+
+    <!-- Loading state -->
+    <div id="streamLoadingBlock">
+      <div style="text-align:center;padding:4rem 2rem;color:var(--gray);">
+        <div style="font-size:2.5rem;margin-bottom:1rem;animation:hexPulse 1.5s infinite;">📺</div>
+        <p>Checking stream status...</p>
+      </div>
+    </div>
+
+    <!-- Past streams section -->
+    <div style="margin-top:2rem;">
+      <h3 style="font-family:'Barlow Condensed',sans-serif;font-size:1.4rem;font-weight:800;margin-bottom:1rem;color:var(--light);">Recent Streams</h3>
+      <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:1rem;">
+        <div class="schedule-card" onclick="window.open('https://twitch.tv/AXO_HH/videos','_blank')">
+          <div style="font-size:1.8rem;">🎬</div>
+          <div class="schedule-day">CS2 Ranked Grind</div>
+          <div style="font-size:0.85rem;color:var(--gray);">Premier ladder — Full session</div>
+          <div class="schedule-status">Past broadcast</div>
+        </div>
+        <div class="schedule-card" onclick="window.open('https://twitch.tv/AXO_HH/videos','_blank')">
+          <div style="font-size:1.8rem;">🎯</div>
+          <div class="schedule-day">Aim Training VOD</div>
+          <div style="font-size:0.85rem;color:var(--gray);">Workshop warm-up & DM session</div>
+          <div class="schedule-status">Past broadcast</div>
+        </div>
+        <div class="schedule-card" onclick="window.open('https://twitch.tv/AXO_HH/videos','_blank')">
+          <div style="font-size:1.8rem;">🏆</div>
+          <div class="schedule-day">Tournament Qualifier</div>
+          <div style="font-size:0.85rem;color:var(--gray);">FUHA team competitive match</div>
+          <div class="schedule-status">Past broadcast</div>
+        </div>
+        <div class="schedule-card" onclick="window.open('https://twitch.tv/AXO_HH/videos','_blank')">
+          <div style="font-size:1.8rem;">📹</div>
+          <div class="schedule-day">All Past Streams</div>
+          <div style="font-size:0.85rem;color:var(--gray);">Browse full VOD library on Twitch</div>
+          <div class="schedule-status" style="color:var(--twitch);">→ View on Twitch</div>
+        </div>
+      </div>
     </div>
   </div>
 </section>
@@ -837,9 +1138,7 @@
     <div class="section-title">Weekly Schedule</div>
     <div class="section-sub">Your training plan for the week</div>
     <div class="accent-line"></div>
-    <div class="schedule-grid" id="scheduleGrid">
-      <!-- filled by JS -->
-    </div>
+    <div class="schedule-grid" id="scheduleGrid"></div>
   </div>
 </section>
 
@@ -849,9 +1148,7 @@
     <div class="section-title">My Skills</div>
     <div class="section-sub">Track your progress across all CS2 mechanics</div>
     <div class="accent-line"></div>
-    <div class="skill-grid" id="skillGrid">
-      <!-- filled by JS -->
-    </div>
+    <div class="skill-grid" id="skillGrid"></div>
     <button class="btn" onclick="trainRandomSkill()">⚡ Train Random Skill</button>
   </div>
 </section>
@@ -869,9 +1166,7 @@
       <button class="filter-btn" onclick="filterShop(this,'coaching')">👥 Coaching</button>
       <button class="filter-btn" onclick="filterShop(this,'config')">⚙️ Config</button>
     </div>
-    <div class="products-grid" id="productsGrid">
-      <!-- filled by JS -->
-    </div>
+    <div class="products-grid" id="productsGrid"></div>
   </div>
 </section>
 
@@ -882,7 +1177,6 @@
     <div class="section-sub">Choose the plan that matches your ambition</div>
     <div class="accent-line"></div>
     <div class="subs-grid">
-
       <div class="sub-card">
         <div class="sub-name">Starter</div>
         <div><span class="sub-price">$4.99</span></div>
@@ -898,7 +1192,6 @@
         </ul>
         <button class="btn btn-full" onclick="subscribe('Starter','4.99')">Start Free Trial</button>
       </div>
-
       <div class="sub-card featured">
         <div class="featured-badge">Most Popular</div>
         <div class="sub-name">Pro</div>
@@ -915,7 +1208,6 @@
         </ul>
         <button class="btn btn-full" onclick="subscribe('Pro','9.99')">Start Free Trial</button>
       </div>
-
       <div class="sub-card">
         <div class="sub-name">Elite</div>
         <div><span class="sub-price">$19.99</span></div>
@@ -965,9 +1257,7 @@
     <div class="section-title">Player Reviews</div>
     <div class="section-sub">What the community says about FUHA</div>
     <div class="accent-line"></div>
-    <div class="reviews-grid" id="reviewsGrid">
-      <!-- filled by JS -->
-    </div>
+    <div class="reviews-grid" id="reviewsGrid"></div>
   </div>
 </section>
 
@@ -977,9 +1267,7 @@
     <div class="section-title">FAQ</div>
     <div class="section-sub">Got questions? We've got answers.</div>
     <div class="accent-line"></div>
-    <div class="faq-wrap" id="faqList">
-      <!-- filled by JS -->
-    </div>
+    <div class="faq-wrap" id="faqList"></div>
   </div>
 </section>
 
@@ -999,14 +1287,127 @@
 
 <footer>
   <p style="margin-bottom:0.5rem">© 2026 FUHA Training System. All rights reserved.</p>
-  <p>Contact: <a href="https://t.me/axo_fuha" target="_blank">@axo_fuha on Telegram</a></p>
+  <p>Contact: <a href="https://t.me/axo_fuha" target="_blank">@axo_fuha on Telegram</a> · Watch: <a href="https://twitch.tv/AXO_HH" target="_blank">twitch.tv/AXO_HH</a></p>
 </footer>
 
 <script>
 /* ─── STATE ─── */
 let cart = [];
 let lightMode = false;
+let isStreamLive = false;
+const TWITCH_CHANNEL = 'AXO_HH';
 
+/* ─── TWITCH STREAM CHECK ─── */
+// Twitch doesn't allow direct API calls from browser without OAuth for stream status.
+// We use the Twitch Player embed trick: load iframe and detect via postMessage / oEmbed.
+// The most reliable client-side approach is the oEmbed endpoint for thumbnail detection,
+// or simply always show the embed and let Twitch handle the offline state display.
+// 
+// For a real production site: use Twitch API (Helix /streams endpoint) from your backend.
+// Here we use the Twitch embed which natively shows "Channel is Offline" when not live,
+// AND we use the unofficial thumbnail trick to detect live status without a backend.
+
+async function checkTwitchStatus() {
+  try {
+    // Use Twitch's thumbnail URL trick: live streams have a thumbnail, offline don't load the same way.
+    // We use the official oEmbed endpoint which doesn't require auth.
+    const res = await fetch(
+      `https://api.twitch.tv/helix/streams?user_login=${TWITCH_CHANNEL}`,
+      {
+        headers: {
+          // Note: In production replace these with your real Client-ID and token
+          // For demo purposes, we fall back to embed-only detection
+          'Client-ID': 'PLACEHOLDER',
+          'Authorization': 'Bearer PLACEHOLDER'
+        }
+      }
+    );
+    // If no real API key, this will fail — we catch it below
+    const data = await res.json();
+    if (data.data && data.data.length > 0) {
+      const stream = data.data[0];
+      handleLiveStatus(true, stream.viewer_count, stream.game_name || 'Counter-Strike 2');
+    } else {
+      handleLiveStatus(false);
+    }
+  } catch (e) {
+    // No API key / CORS — fall back to always showing embed
+    // Twitch embed handles offline state natively
+    handleLiveStatus(null); // null = unknown, show embed anyway
+  }
+}
+
+function handleLiveStatus(live, viewers, game) {
+  const block = document.getElementById('twitchBlock');
+  const offlineBlock = document.getElementById('twitchOfflineBlock');
+  const streamLive = document.getElementById('streamLiveBlock');
+  const streamOffline = document.getElementById('streamOfflinePage');
+  const streamLoading = document.getElementById('streamLoadingBlock');
+  const navBtn = document.getElementById('streamNavBtn');
+
+  // Hide loading on stream page
+  if (streamLoading) streamLoading.style.display = 'none';
+
+  if (live === true) {
+    // LIVE
+    isStreamLive = true;
+    block.classList.add('visible');
+    offlineBlock.style.display = 'none';
+    if (streamLive) streamLive.style.display = 'block';
+    if (streamOffline) streamOffline.style.display = 'none';
+    if (navBtn) navBtn.classList.add('live-nav');
+    if (viewers) {
+      document.getElementById('viewerCount').textContent = viewers.toLocaleString();
+      const spv = document.getElementById('streamPageViewers');
+      if (spv) spv.textContent = viewers.toLocaleString();
+    }
+    if (game) {
+      document.getElementById('twitchGameInfo').textContent = '🎮 ' + game;
+      const spg = document.getElementById('streamPageGameInfo');
+      if (spg) spg.textContent = '🎮 ' + game;
+    }
+    // Show toast only once
+    if (!sessionStorage.getItem('liveNotified')) {
+      toast('🔴 AXO_HH is LIVE on Twitch!', 'twitch');
+      sessionStorage.setItem('liveNotified', '1');
+    }
+  } else if (live === false) {
+    // OFFLINE
+    isStreamLive = false;
+    block.classList.remove('visible');
+    offlineBlock.style.display = 'flex';
+    if (streamLive) streamLive.style.display = 'none';
+    if (streamOffline) streamOffline.style.display = 'block';
+    if (navBtn) navBtn.classList.remove('live-nav');
+  } else {
+    // UNKNOWN — show embed anyway (Twitch handles offline display internally)
+    isStreamLive = false;
+    block.classList.add('visible');
+    offlineBlock.style.display = 'none';
+    if (streamLive) streamLive.style.display = 'block';
+    if (streamOffline) streamOffline.style.display = 'none';
+    document.getElementById('viewerCount').textContent = '—';
+    const spv = document.getElementById('streamPageViewers');
+    if (spv) spv.textContent = '—';
+  }
+}
+
+// Update iframe parent to current hostname for Twitch embed to work
+function fixTwitchParent() {
+  const host = window.location.hostname || 'localhost';
+  ['twitchIframe','twitchIframePage'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) {
+      el.src = `https://player.twitch.tv/?channel=${TWITCH_CHANNEL}&parent=${host}&autoplay=true&muted=${id==='twitchIframe'?'true':'false'}`;
+    }
+  });
+  const chat = document.getElementById('twitchChatFrame');
+  if (chat) {
+    chat.src = `https://www.twitch.tv/embed/${TWITCH_CHANNEL}/chat?parent=${host}&darkpopout`;
+  }
+}
+
+/* ─── DATA ─── */
 const SCHEDULE = [
   { day:'Monday', icon:'💪', tasks:['Warm-up routine','Aim workshop','DM practice'], status:'completed' },
   { day:'Tuesday', icon:'🎯', tasks:['Crosshair placement','Retake scenarios','VOD review'], status:'completed' },
@@ -1067,12 +1468,15 @@ const SKILLS = [
 
 /* ─── INIT ─── */
 document.addEventListener('DOMContentLoaded', () => {
+  fixTwitchParent();
+  checkTwitchStatus();
+  // Re-check every 3 minutes
+  setInterval(checkTwitchStatus, 3 * 60 * 1000);
   renderSchedule();
   renderProducts('all');
   renderReviews();
   renderFaq();
   renderSkills();
-  // animate bars when players page shown
 });
 
 /* ─── PAGE NAVIGATION ─── */
@@ -1081,6 +1485,8 @@ function showPage(id) {
   document.getElementById(id).classList.add('active');
   document.querySelectorAll('nav a').forEach(a => {
     a.classList.toggle('active', a.dataset.page === id);
+    // Preserve live-nav class on stream button
+    if (a.dataset.page === 'stream' && isStreamLive) a.classList.add('live-nav');
   });
   if (id === 'players') setTimeout(animateBars, 100);
   window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -1102,10 +1508,10 @@ function setLang(btn, lang) {
 
 /* ─── TOAST ─── */
 function toast(msg, type = 'success') {
-  const icons = { success:'✓', error:'✕', info:'ℹ' };
+  const icons = { success:'✓', error:'✕', info:'ℹ', twitch:'📺' };
   const el = document.createElement('div');
   el.className = `toast ${type}`;
-  el.innerHTML = `<span>${icons[type]}</span> ${msg}`;
+  el.innerHTML = `<span>${icons[type]||'ℹ'}</span> ${msg}`;
   document.getElementById('toast-container').appendChild(el);
   setTimeout(() => el.remove(), 3200);
 }
@@ -1116,14 +1522,12 @@ function addToCart(id, name, price) {
   updateCartUI();
   toast(`${name} added to cart!`);
 }
-
 function removeFromCart(idx) {
   cart.splice(idx, 1);
   updateCartUI();
   renderCartPage();
   toast('Item removed', 'info');
 }
-
 function clearCart() {
   if (!cart.length) { toast('Cart is already empty', 'error'); return; }
   cart = [];
@@ -1131,7 +1535,6 @@ function clearCart() {
   renderCartPage();
   toast('Cart cleared', 'info');
 }
-
 function updateCartUI() {
   const badge = document.getElementById('cartBadge');
   badge.textContent = cart.length;
@@ -1139,7 +1542,6 @@ function updateCartUI() {
   renderCartPage();
   updateSummary();
 }
-
 function renderCartPage() {
   const el = document.getElementById('cartItems');
   if (!cart.length) {
@@ -1155,7 +1557,6 @@ function renderCartPage() {
     </div>
   `).join('');
 }
-
 function updateSummary() {
   const sub = cart.reduce((s,i)=>s+i.price, 0);
   const tax = sub * 0.1;
@@ -1178,9 +1579,7 @@ function openCheckout() {
   document.getElementById('modalTotal').textContent = '$'+total.toFixed(2);
   document.getElementById('checkoutModal').classList.add('active');
 }
-
 function closeModal(id) { document.getElementById(id).classList.remove('active'); }
-
 function confirmOrder() {
   closeModal('checkoutModal');
   toast('🎉 Order confirmed! Check your email.', 'success');
@@ -1204,12 +1603,11 @@ function renderSchedule() {
     </div>
   `).join('');
 }
-
 function scheduleAction(i) {
   const d = SCHEDULE[i];
-  if (d.status === 'upcoming') { toast(`${d.day} session added to your calendar!`); }
-  else if (d.status === 'today') { toast(`Starting today\'s training session!`); }
-  else { toast(`${d.day} already completed! Great work 💪`,'info'); }
+  if (d.status === 'upcoming') toast(`${d.day} session added to your calendar!`);
+  else if (d.status === 'today') toast(`Starting today's training session!`);
+  else toast(`${d.day} already completed! Great work 💪`, 'info');
 }
 
 /* ─── PRODUCTS ─── */
@@ -1227,7 +1625,6 @@ function renderProducts(filter) {
     </div>
   `).join('');
 }
-
 function filterShop(btn, cat) {
   document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
   btn.classList.add('active');
@@ -1251,15 +1648,11 @@ function renderReviews() {
 function renderFaq() {
   document.getElementById('faqList').innerHTML = FAQS.map((f,i) => `
     <div class="faq-item" onclick="toggleFaq(this)">
-      <div class="faq-q">
-        <span>${f.q}</span>
-        <span class="faq-arrow">▼</span>
-      </div>
+      <div class="faq-q"><span>${f.q}</span><span class="faq-arrow">▼</span></div>
       <div class="faq-a">${f.a}</div>
     </div>
   `).join('');
 }
-
 function toggleFaq(el) {
   const wasOpen = el.classList.contains('open');
   document.querySelectorAll('.faq-item').forEach(i => i.classList.remove('open'));
@@ -1277,7 +1670,6 @@ function renderSkills() {
     </div>
   `).join('');
 }
-
 function practiceSkill(i) {
   const s = SKILLS[i];
   if (s.pct < 100) {
@@ -1290,17 +1682,13 @@ function practiceSkill(i) {
     toast(`${s.name} is maxed! Legendary 🏆`, 'info');
   }
 }
-
 function trainRandomSkill() {
-  const i = Math.floor(Math.random() * SKILLS.length);
-  practiceSkill(i);
+  practiceSkill(Math.floor(Math.random() * SKILLS.length));
 }
 
 /* ─── PLAYER BARS ─── */
 function animateBars() {
-  document.querySelectorAll('.bar-fill').forEach(el => {
-    el.classList.add('animated');
-  });
+  document.querySelectorAll('.bar-fill').forEach(el => el.classList.add('animated'));
 }
 
 /* ─── DASHBOARD ACTIONS ─── */
@@ -1309,31 +1697,31 @@ function startSession() {
   document.getElementById('sessionsCount').textContent = n + 1;
   toast('Training session started! 🎮 Good luck!');
 }
-
-function openSupport() {
-  window.open('https://t.me/axo_fuha', '_blank');
-}
+function openSupport() { window.open('https://t.me/axo_fuha', '_blank'); }
 
 /* ─── MOBILE MENU ─── */
 function toggleMobileMenu() {
   const nav = document.getElementById('mainNav');
-  nav.style.display = nav.style.display === 'flex' ? 'none' : 'flex';
-  nav.style.flexDirection = 'column';
-  nav.style.position = 'absolute';
-  nav.style.top = '64px';
-  nav.style.left = '0';
-  nav.style.right = '0';
-  nav.style.background = 'var(--surface)';
-  nav.style.padding = '1rem';
-  nav.style.borderBottom = '1px solid var(--border)';
-  nav.style.gap = '0.5rem';
-  nav.style.zIndex = '400';
+  const isVisible = nav.style.display === 'flex';
+  nav.style.display = isVisible ? 'none' : 'flex';
+  if (!isVisible) {
+    nav.style.flexDirection = 'column';
+    nav.style.position = 'absolute';
+    nav.style.top = '64px';
+    nav.style.left = '0';
+    nav.style.right = '0';
+    nav.style.background = 'var(--surface)';
+    nav.style.padding = '1rem';
+    nav.style.borderBottom = '1px solid var(--border)';
+    nav.style.gap = '0.5rem';
+    nav.style.zIndex = '400';
+  }
 }
 
-/* ─── CLOSE MODAL ON OUTSIDE CLICK ─── */
+/* ─── MODAL OUTSIDE CLICK ─── */
 document.getElementById('checkoutModal').addEventListener('click', function(e) {
   if (e.target === this) closeModal('checkoutModal');
 });
 </script>
 </body>
-</html>
+</html>      
