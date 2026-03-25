@@ -1,798 +1,630 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>FUHA - CS2 Professional Training System</title>
-  <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&family=Barlow+Condensed:wght@400;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
-  <style>
-    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FUHA — CS2 Pro Training</title>
+<link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&family=Barlow+Condensed:wght@300;400;600;700;800;900&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --primary:#ff6b35;--secondary:#f7931e;--accent:#ffcc00;
+  --dark:#07080f;--surface:#0e0f1a;--surface2:#141526;--surface3:#1a1c30;
+  --border:rgba(255,107,53,.18);--gray:#6b7a99;--light:#e8eaf2;
+  --success:#39d353;--danger:#f44336;--telegram:#0088cc;--twitch:#9146ff;
+  --glow:rgba(255,107,53,.35);--glow2:rgba(255,107,53,.12);
+}
+body.light{
+  --dark:#f0f2f8;--surface:#fff;--surface2:#f5f7ff;--surface3:#eceffe;
+  --border:rgba(255,107,53,.2);--light:#1a1c2e;--gray:#5a6070;
+}
+html{scroll-behavior:smooth}
+body{
+  font-family:'Rajdhani',sans-serif;background:var(--dark);color:var(--light);
+  min-height:100vh;overflow-x:hidden;transition:background .4s,color .4s;
+  cursor:none;
+}
 
-    :root {
-      --primary: #ff6b35;
-      --secondary: #f7931e;
-      --accent: #ffcc00;
-      --dark: #07080f;
-      --surface: #0e0f1a;
-      --surface2: #141526;
-      --border: rgba(255,107,53,0.18);
-      --gray: #6b7a99;
-      --light: #e8eaf2;
-      --success: #39d353;
-      --danger: #f44336;
-      --telegram: #0088cc;
-      --twitch: #9146ff;
-      --glow: rgba(255,107,53,0.35);
-    }
+/* ── CUSTOM CURSOR ── */
+#cursor{
+  position:fixed;width:12px;height:12px;background:var(--primary);
+  border-radius:50%;pointer-events:none;z-index:99999;
+  transition:transform .1s,width .2s,height .2s,background .2s;
+  transform:translate(-50%,-50%);
+}
+#cursor-ring{
+  position:fixed;width:36px;height:36px;border:1.5px solid var(--primary);
+  border-radius:50%;pointer-events:none;z-index:99998;opacity:.5;
+  transform:translate(-50%,-50%);transition:transform .15s ease,opacity .2s;
+}
+body:has(a:hover,button:hover,.clickable:hover) #cursor{
+  width:20px;height:20px;background:var(--accent);
+}
+body:has(a:hover,button:hover,.clickable:hover) #cursor-ring{
+  width:52px;height:52px;opacity:.2;
+}
 
-    body.light {
-      --dark: #f0f2f8;
-      --surface: #ffffff;
-      --surface2: #f5f7ff;
-      --border: rgba(255,107,53,0.2);
-      --light: #1a1c2e;
-      --gray: #5a6070;
-    }
+/* ── NOISE + GRID OVERLAY ── */
+body::before{
+  content:'';position:fixed;inset:0;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.04'/%3E%3C/svg%3E");
+  pointer-events:none;z-index:9998;opacity:.35;
+}
+body::after{
+  content:'';position:fixed;inset:0;
+  background-image:linear-gradient(rgba(255,107,53,.025) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(255,107,53,.025) 1px,transparent 1px);
+  background-size:44px 44px;pointer-events:none;z-index:0;
+}
 
-    html { scroll-behavior: smooth; }
+/* ── SCANLINE EFFECT ── */
+.scanlines{
+  position:fixed;inset:0;pointer-events:none;z-index:9997;
+  background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,0,0,.03) 2px,rgba(0,0,0,.03) 4px);
+}
 
-    body {
-      font-family: 'Rajdhani', sans-serif;
-      background: var(--dark);
-      color: var(--light);
-      min-height: 100vh;
-      overflow-x: hidden;
-      transition: background 0.4s, color 0.4s;
-    }
+/* ── PARTICLES ── */
+#particles{position:fixed;inset:0;pointer-events:none;z-index:1;overflow:hidden}
+.particle{
+  position:absolute;width:2px;height:2px;background:var(--primary);border-radius:50%;
+  animation:particleFall linear infinite;opacity:0;
+}
+@keyframes particleFall{
+  0%{opacity:0;transform:translateY(-10px)}
+  10%{opacity:.6}
+  90%{opacity:.3}
+  100%{opacity:0;transform:translateY(100vh)}
+}
 
-    body::before {
-      content: '';
-      position: fixed;
-      inset: 0;
-      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
-      pointer-events: none;
-      z-index: 9999;
-      opacity: 0.4;
-    }
+/* ── HEADER ── */
+header{
+  position:sticky;top:0;z-index:500;
+  background:rgba(7,8,15,.96);border-bottom:1px solid var(--border);
+  backdrop-filter:blur(24px);
+  display:flex;align-items:center;justify-content:space-between;
+  padding:0 2rem;height:64px;
+}
+body.light header{background:rgba(255,255,255,.97)}
+.header-left{display:flex;align-items:center;gap:1.5rem}
+.logo{display:flex;align-items:center;gap:.7rem;text-decoration:none;cursor:none}
+.logo-mark{
+  width:38px;height:38px;
+  background:linear-gradient(135deg,var(--primary),var(--secondary));
+  clip-path:polygon(50% 0%,100% 25%,100% 75%,50% 100%,0% 75%,0% 25%);
+  display:flex;align-items:center;justify-content:center;
+  font-size:1rem;font-weight:900;color:#fff;
+  animation:hexPulse 3s ease-in-out infinite;flex-shrink:0;
+}
+@keyframes hexPulse{
+  0%,100%{filter:brightness(1)}
+  50%{filter:brightness(1.3) drop-shadow(0 0 8px var(--primary))}
+}
+.logo-text{
+  font-family:'Barlow Condensed',sans-serif;font-size:1.7rem;font-weight:900;
+  background:linear-gradient(135deg,var(--primary),var(--secondary));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+  letter-spacing:.06em;
+}
+nav{display:flex;gap:.2rem}
+nav a{
+  font-family:'Barlow Condensed',sans-serif;font-size:.92rem;font-weight:700;
+  letter-spacing:.1em;color:var(--gray);text-decoration:none;text-transform:uppercase;
+  padding:.4rem .75rem;border-radius:6px;cursor:none;transition:all .2s;position:relative;
+}
+nav a:hover,nav a.active{color:var(--primary);background:rgba(255,107,53,.08)}
+nav a.active::after{
+  content:'';position:absolute;bottom:-1px;left:50%;transform:translateX(-50%);
+  width:18px;height:2px;background:var(--primary);border-radius:2px;
+}
+nav a.live-nav{color:var(--twitch)!important;background:rgba(145,70,255,.08)!important}
+nav a.live-nav::before{
+  content:'';display:inline-block;width:6px;height:6px;background:var(--twitch);
+  border-radius:50%;margin-right:5px;animation:blink 1s infinite;vertical-align:middle;
+}
+.header-right{display:flex;align-items:center;gap:.6rem}
+.tg-btn{
+  background:linear-gradient(135deg,var(--telegram),#006bb3);color:#fff;
+  padding:.38rem .9rem;border-radius:6px;font-family:'Barlow Condensed',sans-serif;
+  font-weight:700;font-size:.88rem;letter-spacing:.05em;border:none;cursor:none;
+  text-decoration:none;display:inline-flex;align-items:center;gap:.35rem;transition:all .2s;
+}
+.tg-btn:hover{transform:translateY(-1px);box-shadow:0 4px 16px rgba(0,136,204,.4)}
+.icon-btn{
+  width:36px;height:36px;border-radius:8px;background:rgba(255,107,53,.08);
+  border:1px solid var(--border);cursor:none;display:flex;align-items:center;
+  justify-content:center;font-size:1rem;transition:all .2s;color:var(--gray);
+}
+.icon-btn:hover{background:rgba(255,107,53,.18);border-color:var(--primary);color:var(--primary)}
+.lang-selector{display:flex;gap:.2rem}
+.lang-btn{
+  padding:.28rem .55rem;background:transparent;border:1px solid var(--border);
+  color:var(--gray);border-radius:5px;cursor:none;
+  font-family:'Barlow Condensed',sans-serif;font-size:.8rem;font-weight:700;
+  letter-spacing:.05em;transition:all .2s;
+}
+.lang-btn.active,.lang-btn:hover{background:var(--primary);border-color:var(--primary);color:#fff}
+.cart-icon{position:relative}
+.cart-badge{
+  position:absolute;top:-6px;right:-6px;min-width:18px;height:18px;
+  border-radius:9px;background:var(--primary);color:#fff;font-size:.68rem;
+  font-weight:700;font-family:'JetBrains Mono',monospace;
+  display:flex;align-items:center;justify-content:center;padding:0 3px;
+}
+.cart-badge.hidden{display:none}
 
-    body::after {
-      content: '';
-      position: fixed;
-      inset: 0;
-      background-image:
-        linear-gradient(rgba(255,107,53,0.03) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(255,107,53,0.03) 1px, transparent 1px);
-      background-size: 40px 40px;
-      pointer-events: none;
-      z-index: 0;
-    }
+/* USER AVATAR IN HEADER */
+.user-avatar-btn{
+  width:36px;height:36px;border-radius:50%;cursor:none;border:2px solid var(--primary);
+  background:linear-gradient(135deg,var(--primary),var(--secondary));
+  display:flex;align-items:center;justify-content:center;
+  font-size:.85rem;font-weight:800;color:#fff;
+  font-family:'Barlow Condensed',sans-serif;letter-spacing:.03em;
+  transition:all .2s;box-shadow:0 0 0 0 var(--glow);
+}
+.user-avatar-btn:hover{box-shadow:0 0 0 4px var(--glow2)}
+.auth-btn{
+  background:linear-gradient(135deg,var(--primary),var(--secondary));
+  color:#fff;padding:.38rem 1rem;border-radius:7px;
+  font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:.92rem;
+  letter-spacing:.06em;border:none;cursor:none;transition:all .2s;
+}
+.auth-btn:hover{transform:translateY(-1px);box-shadow:0 6px 20px var(--glow)}
 
-    /* ─── HEADER ─── */
-    header {
-      position: sticky; top: 0; z-index: 500;
-      background: rgba(7,8,15,0.97);
-      border-bottom: 1px solid var(--border);
-      backdrop-filter: blur(20px);
-      display: flex; align-items: center; justify-content: space-between;
-      padding: 0 2rem;
-      height: 64px;
-    }
-    body.light header { background: rgba(255,255,255,0.97); }
+/* ── PAGES ── */
+.page{display:none;position:relative;z-index:1}
+.page.active{display:block;animation:fadeUp .4s ease}
+@keyframes fadeUp{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
+.container{max-width:1400px;margin:0 auto;padding:2.5rem 2rem}
 
-    .header-left { display: flex; align-items: center; gap: 2rem; }
+/* ── SECTION HEADINGS ── */
+.section-title{font-family:'Barlow Condensed',sans-serif;font-size:2.6rem;font-weight:900;letter-spacing:.04em;color:var(--light);margin-bottom:.2rem}
+.section-sub{font-size:1rem;color:var(--gray);margin-bottom:2rem;font-weight:500}
+.accent-line{width:48px;height:3px;background:linear-gradient(90deg,var(--primary),var(--secondary));border-radius:2px;margin-bottom:1.5rem}
 
-    .logo { display: flex; align-items: center; gap: 0.75rem; text-decoration: none; cursor: pointer; }
-    .logo-mark {
-      width: 36px; height: 36px;
-      background: linear-gradient(135deg, var(--primary), var(--secondary));
-      clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
-      display: flex; align-items: center; justify-content: center;
-      font-size: 1rem; font-weight: 900; color: white;
-      animation: hexPulse 3s ease-in-out infinite;
-      flex-shrink: 0;
-    }
-    @keyframes hexPulse {
-      0%,100% { box-shadow: 0 0 0 0 var(--glow); }
-      50% { box-shadow: 0 0 0 8px transparent; filter: brightness(1.2); }
-    }
-    .logo-text {
-      font-family: 'Barlow Condensed', sans-serif;
-      font-size: 1.6rem; font-weight: 800;
-      background: linear-gradient(135deg, var(--primary), var(--secondary));
-      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-      letter-spacing: 0.05em;
-    }
+/* ── BUTTONS ── */
+.btn{
+  background:linear-gradient(135deg,var(--primary),var(--secondary));color:#fff;
+  border:none;padding:.65rem 1.4rem;border-radius:8px;cursor:none;
+  font-family:'Barlow Condensed',sans-serif;font-size:1rem;font-weight:800;
+  letter-spacing:.06em;transition:all .2s;display:inline-flex;align-items:center;gap:.4rem;
+}
+.btn:hover{transform:translateY(-2px);box-shadow:0 8px 24px var(--glow)}
+.btn:active{transform:translateY(0)}
+.btn-sm{padding:.42rem .9rem;font-size:.88rem}
+.btn-outline{background:transparent;border:1.5px solid var(--border);color:var(--gray)}
+.btn-outline:hover{border-color:var(--primary);color:var(--primary);box-shadow:none}
+.btn-full{width:100%;justify-content:center}
+.btn-twitch{background:linear-gradient(135deg,var(--twitch),#7b3fe4)}
+.btn-ghost{background:rgba(255,107,53,.08);color:var(--primary);border:1px solid var(--border)}
+.btn-ghost:hover{background:rgba(255,107,53,.18);border-color:var(--primary);box-shadow:none}
 
-    nav { display: flex; gap: 0.25rem; }
-    nav a {
-      font-family: 'Barlow Condensed', sans-serif;
-      font-size: 0.95rem; font-weight: 600; letter-spacing: 0.08em;
-      color: var(--gray); text-decoration: none; text-transform: uppercase;
-      padding: 0.4rem 0.8rem; border-radius: 6px; cursor: pointer;
-      transition: all 0.2s; position: relative;
-    }
-    nav a:hover, nav a.active { color: var(--primary); background: rgba(255,107,53,0.08); }
-    nav a.active::after {
-      content: ''; position: absolute; bottom: -1px; left: 50%; transform: translateX(-50%);
-      width: 20px; height: 2px; background: var(--primary); border-radius: 2px;
-    }
+/* ── MODALS ── */
+.modal-overlay{
+  display:none;position:fixed;inset:0;z-index:2000;
+  background:rgba(0,0,0,.75);backdrop-filter:blur(8px);
+  align-items:center;justify-content:center;padding:1rem;
+}
+.modal-overlay.active{display:flex;animation:fadeIn .2s}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+.modal-box{
+  background:var(--surface2);border:1px solid var(--border);
+  border-radius:20px;padding:2rem;width:100%;max-width:480px;
+  max-height:90vh;overflow-y:auto;animation:slideUp .3s ease;
+  position:relative;
+}
+@keyframes slideUp{from{transform:translateY(28px);opacity:0}to{transform:translateY(0);opacity:1}}
+.modal-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:1.75rem}
+.modal-head h3{font-family:'Barlow Condensed',sans-serif;font-size:1.7rem;font-weight:900}
+.modal-close{
+  width:32px;height:32px;border-radius:8px;border:1px solid var(--border);
+  background:transparent;color:var(--gray);cursor:none;font-size:1.1rem;
+  display:flex;align-items:center;justify-content:center;transition:all .2s;
+}
+.modal-close:hover{border-color:var(--primary);color:var(--primary)}
 
-    /* Live pulse in nav */
-    nav a.live-nav {
-      color: var(--twitch) !important;
-      background: rgba(145,70,255,0.08) !important;
-    }
-    nav a.live-nav::before {
-      content: '';
-      display: inline-block;
-      width: 7px; height: 7px;
-      background: var(--twitch);
-      border-radius: 50%;
-      margin-right: 5px;
-      animation: liveDot 1.2s ease-in-out infinite;
-      vertical-align: middle;
-    }
-    @keyframes liveDot {
-      0%,100% { opacity: 1; transform: scale(1); }
-      50% { opacity: 0.4; transform: scale(0.7); }
-    }
+/* ── AUTH MODAL ── */
+.auth-tabs{display:flex;gap:.5rem;margin-bottom:1.75rem;background:var(--surface);border-radius:10px;padding:.3rem}
+.auth-tab{
+  flex:1;padding:.5rem;border-radius:8px;border:none;background:transparent;
+  color:var(--gray);cursor:none;font-family:'Barlow Condensed',sans-serif;
+  font-size:1rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;transition:all .2s;
+}
+.auth-tab.active{background:linear-gradient(135deg,var(--primary),var(--secondary));color:#fff}
+.form-group{margin-bottom:1.1rem}
+.form-label{
+  display:block;font-size:.82rem;font-weight:700;letter-spacing:.08em;
+  text-transform:uppercase;color:var(--gray);margin-bottom:.45rem;
+}
+.form-input{
+  width:100%;background:var(--surface);border:1.5px solid var(--border);
+  border-radius:8px;padding:.75rem 1rem;color:var(--light);
+  font-family:'Rajdhani',sans-serif;font-size:1rem;font-weight:600;
+  transition:all .2s;outline:none;cursor:none;
+}
+.form-input:focus{border-color:var(--primary);box-shadow:0 0 0 3px var(--glow2)}
+.form-input::placeholder{color:var(--gray);opacity:.6}
+.form-input-wrap{position:relative}
+.form-input-icon{
+  position:absolute;right:.9rem;top:50%;transform:translateY(-50%);
+  color:var(--gray);cursor:none;font-size:1rem;
+}
+.password-toggle{cursor:none}
+.form-hint{font-size:.8rem;color:var(--gray);margin-top:.35rem}
+.auth-divider{text-align:center;color:var(--gray);font-size:.85rem;margin:1.25rem 0;position:relative}
+.auth-divider::before,.auth-divider::after{
+  content:'';position:absolute;top:50%;width:42%;height:1px;background:var(--border);
+}
+.auth-divider::before{left:0}.auth-divider::after{right:0}
+.oauth-btns{display:flex;flex-direction:column;gap:.6rem}
+.oauth-btn{
+  display:flex;align-items:center;gap:.75rem;padding:.65rem 1rem;
+  border:1.5px solid var(--border);border-radius:8px;background:transparent;
+  color:var(--light);cursor:none;font-family:'Rajdhani',sans-serif;
+  font-size:.95rem;font-weight:700;transition:all .2s;width:100%;
+}
+.oauth-btn:hover{border-color:var(--primary);background:rgba(255,107,53,.06)}
+.oauth-icon{width:20px;height:20px;flex-shrink:0}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:.75rem}
+.strength-bar{height:4px;background:rgba(255,255,255,.07);border-radius:4px;overflow:hidden;margin-top:.4rem}
+.strength-fill{height:100%;border-radius:4px;transition:width .3s,background .3s;width:0}
+.terms-check{display:flex;align-items:flex-start;gap:.6rem;font-size:.85rem;color:var(--gray);margin-bottom:1rem}
+.terms-check input{margin-top:.15rem;accent-color:var(--primary)}
+.terms-check a{color:var(--primary)}
 
-    .header-right { display: flex; align-items: center; gap: 0.75rem; }
+/* ── TOAST ── */
+#toast-container{position:fixed;top:76px;right:1.5rem;z-index:9000;display:flex;flex-direction:column;gap:.45rem}
+.toast{
+  background:var(--surface2);border:1px solid var(--border);border-radius:10px;
+  padding:.8rem 1.15rem;font-weight:700;font-size:.93rem;max-width:320px;
+  display:flex;align-items:center;gap:.6rem;
+  animation:toastIn .35s cubic-bezier(.34,1.56,.64,1);
+  box-shadow:0 8px 24px rgba(0,0,0,.35);
+}
+.toast.success{border-color:rgba(57,211,83,.5);color:var(--success)}
+.toast.error{border-color:rgba(244,67,54,.5);color:#f44336}
+.toast.info{border-color:rgba(255,107,53,.4);color:var(--primary)}
+.toast.twitch{border-color:rgba(145,70,255,.5);color:var(--twitch)}
+@keyframes toastIn{from{transform:translateX(60px);opacity:0}to{transform:translateX(0);opacity:1}}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.25}}
 
-    .tg-btn {
-      background: linear-gradient(135deg, var(--telegram), #006bb3);
-      color: white; padding: 0.4rem 1rem; border-radius: 6px;
-      font-family: 'Barlow Condensed', sans-serif; font-weight: 700;
-      font-size: 0.9rem; letter-spacing: 0.05em;
-      border: none; cursor: pointer; text-decoration: none;
-      display: inline-flex; align-items: center; gap: 0.4rem;
-      transition: all 0.2s;
-    }
-    .tg-btn:hover { transform: translateY(-1px); box-shadow: 0 4px 16px rgba(0,136,204,0.4); }
+/* ── HERO BANNER ── */
+.hero-banner{
+  background:linear-gradient(135deg,rgba(255,107,53,.1),rgba(247,147,30,.04));
+  border:1px solid var(--border);border-radius:18px;padding:2.5rem;
+  margin-bottom:2rem;position:relative;overflow:hidden;
+}
+.hero-banner::before{
+  content:'FUHA';position:absolute;right:-10px;bottom:-30px;
+  font-family:'Barlow Condensed',sans-serif;font-size:10rem;font-weight:900;
+  color:rgba(255,107,53,.04);line-height:1;pointer-events:none;user-select:none;
+  animation:heroTextPulse 6s ease-in-out infinite;
+}
+@keyframes heroTextPulse{0%,100%{opacity:.4}50%{opacity:1}}
+.hero-title{font-family:'Barlow Condensed',sans-serif;font-size:1rem;font-weight:700;letter-spacing:.15em;color:var(--primary);text-transform:uppercase;margin-bottom:.5rem}
+.hero-banner h2{font-family:'Barlow Condensed',sans-serif;font-size:2.9rem;font-weight:900;color:var(--light);margin-bottom:.7rem;line-height:1.05}
+.hero-banner p{color:var(--gray);font-size:1.05rem;max-width:580px;margin-bottom:1.5rem}
+.hero-actions{display:flex;gap:1rem;flex-wrap:wrap}
 
-    .theme-btn {
-      width: 36px; height: 36px; border-radius: 8px;
-      background: rgba(255,107,53,0.1); border: 1px solid var(--border);
-      cursor: pointer; display: flex; align-items: center; justify-content: center;
-      font-size: 1rem; transition: all 0.2s;
-    }
-    .theme-btn:hover { background: rgba(255,107,53,0.2); border-color: var(--primary); }
+/* ── STATS ── */
+.stats-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:1rem;margin-bottom:2rem}
+.stat-card{
+  background:var(--surface);border:1px solid var(--border);border-radius:12px;
+  padding:1.4rem;text-align:center;cursor:none;transition:all .3s;position:relative;overflow:hidden;
+}
+.stat-card::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(255,107,53,.07),transparent);opacity:0;transition:opacity .3s}
+.stat-card:hover{transform:translateY(-4px);border-color:var(--primary)}
+.stat-card:hover::before{opacity:1}
+.stat-num{font-family:'Barlow Condensed',sans-serif;font-size:2.5rem;font-weight:900;color:var(--primary);line-height:1;margin-bottom:.35rem}
+.stat-label{font-size:.78rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--gray)}
 
-    .lang-selector { display: flex; gap: 0.25rem; }
-    .lang-btn {
-      padding: 0.3rem 0.6rem; background: transparent;
-      border: 1px solid var(--border); color: var(--gray); border-radius: 5px;
-      cursor: pointer; font-family: 'Barlow Condensed', sans-serif;
-      font-size: 0.8rem; font-weight: 700; letter-spacing: 0.05em;
-      transition: all 0.2s;
-    }
-    .lang-btn.active, .lang-btn:hover {
-      background: var(--primary); border-color: var(--primary); color: white;
-    }
+/* ── LEADERBOARD ── */
+.leaderboard{background:var(--surface);border:1px solid var(--border);border-radius:12px;overflow:hidden;margin-bottom:2rem}
+.lb-head{display:grid;grid-template-columns:56px 1fr 160px 120px 80px;gap:1rem;padding:.85rem 1.5rem;background:rgba(255,107,53,.07);border-bottom:1px solid var(--border);font-family:'Barlow Condensed',sans-serif;font-size:.78rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--gray)}
+.lb-row{display:grid;grid-template-columns:56px 1fr 160px 120px 80px;gap:1rem;padding:.95rem 1.5rem;border-bottom:1px solid rgba(255,107,53,.05);align-items:center;transition:background .2s;cursor:none}
+.lb-row:last-child{border-bottom:none}
+.lb-row:hover{background:rgba(255,107,53,.04)}
+.lb-row.fuha{background:linear-gradient(90deg,rgba(255,107,53,.08),transparent);border-left:3px solid var(--primary)}
+.lb-rank{font-family:'Barlow Condensed',sans-serif;font-size:1.4rem;font-weight:900;color:var(--primary);text-align:center}
+.lb-rank.gold{color:#FFD700;text-shadow:0 0 12px rgba(255,215,0,.5)}
+.lb-rank.silver{color:#C0C0C0}
+.lb-rank.bronze{color:#CD7F32}
+.lb-name{font-weight:700;font-size:1rem}
+.lb-team{color:var(--gray);font-size:.88rem}
+.lb-rating{font-family:'JetBrains Mono',monospace;font-size:.88rem;color:var(--gray)}
+.lb-score{font-family:'Barlow Condensed',sans-serif;font-size:1.2rem;font-weight:800;color:var(--primary);text-align:right}
+.fuha-tag{background:var(--primary);color:#fff;font-size:.62rem;font-weight:800;letter-spacing:.08em;padding:.08rem .4rem;border-radius:4px;margin-left:.35rem;vertical-align:middle}
 
-    .cart-icon {
-      position: relative; width: 36px; height: 36px; border-radius: 8px;
-      background: rgba(255,107,53,0.1); border: 1px solid var(--border);
-      cursor: pointer; display: flex; align-items: center; justify-content: center;
-      font-size: 1rem; transition: all 0.2s;
-    }
-    .cart-icon:hover { background: rgba(255,107,53,0.2); border-color: var(--primary); }
-    .cart-badge {
-      position: absolute; top: -6px; right: -6px;
-      min-width: 18px; height: 18px; border-radius: 9px;
-      background: var(--primary); color: white;
-      font-size: 0.7rem; font-weight: 700; font-family: 'JetBrains Mono', monospace;
-      display: flex; align-items: center; justify-content: center;
-      padding: 0 3px;
-    }
-    .cart-badge.hidden { display: none; }
+/* ── QUICK ACTIONS ── */
+.quick-actions{display:flex;gap:1rem;flex-wrap:wrap;margin-bottom:2rem}
+.quick-action{flex:1;min-width:140px;background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:1.15rem 1.25rem;cursor:none;transition:all .3s;text-align:center}
+.quick-action:hover{border-color:var(--primary);background:rgba(255,107,53,.05);transform:translateY(-2px)}
+.quick-action-icon{font-size:1.4rem;margin-bottom:.4rem}
+.quick-action-label{font-family:'Barlow Condensed',sans-serif;font-size:.9rem;font-weight:700;letter-spacing:.05em;color:var(--gray);text-transform:uppercase}
 
-    /* ─── PAGES ─── */
-    .page { display: none; position: relative; z-index: 1; }
-    .page.active { display: block; animation: fadeUp 0.4s ease; }
-    @keyframes fadeUp {
-      from { opacity: 0; transform: translateY(16px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
+/* ── ANN BAR ── */
+.announcement-bar{background:linear-gradient(90deg,rgba(255,107,53,.1),rgba(247,147,30,.05),rgba(255,107,53,.1));border:1px solid var(--border);border-radius:10px;padding:.8rem 1.4rem;margin-bottom:1.5rem;display:flex;align-items:center;gap:1rem;font-size:.93rem;overflow:hidden;position:relative}
+.ann-dot{width:8px;height:8px;border-radius:50%;background:var(--success);animation:blink 1.5s infinite;flex-shrink:0}
+.ann-ticker{display:flex;gap:3rem;animation:ticker 20s linear infinite;white-space:nowrap}
+@keyframes ticker{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
 
-    .container { max-width: 1400px; margin: 0 auto; padding: 2.5rem 2rem; }
+/* ── PLAYERS ── */
+.players-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:1.5rem}
+.player-card{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:1.75rem;position:relative;transition:all .35s;overflow:hidden}
+.player-card::after{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(255,107,53,.06),transparent);opacity:0;transition:opacity .3s}
+.player-card:hover{transform:translateY(-6px);border-color:var(--primary);box-shadow:0 20px 40px rgba(255,107,53,.1)}
+.player-card:hover::after{opacity:1}
+.player-card.fuha{border-color:rgba(255,107,53,.35);background:linear-gradient(135deg,rgba(255,107,53,.07),var(--surface))}
+.player-avatar{width:54px;height:54px;border-radius:50%;background:linear-gradient(135deg,var(--primary),var(--secondary));display:flex;align-items:center;justify-content:center;font-size:1.5rem;margin-bottom:.9rem;position:relative;z-index:1}
+.player-rank-badge{position:absolute;top:1.2rem;right:1.2rem;width:34px;height:34px;border-radius:50%;background:linear-gradient(135deg,var(--primary),var(--secondary));display:flex;align-items:center;justify-content:center;font-family:'Barlow Condensed',sans-serif;font-size:1rem;font-weight:900;color:#fff}
+.player-name{font-family:'Barlow Condensed',sans-serif;font-size:1.4rem;font-weight:800;margin-bottom:.2rem;position:relative;z-index:1}
+.player-role{font-size:.83rem;color:var(--primary);font-weight:700;letter-spacing:.08em;text-transform:uppercase;margin-bottom:1.25rem;position:relative;z-index:1}
+.stat-bar{margin-bottom:.85rem;position:relative;z-index:1}
+.stat-bar-header{display:flex;justify-content:space-between;margin-bottom:.3rem;font-size:.83rem;font-weight:700}
+.stat-bar-label{color:var(--gray)}.stat-bar-val{color:var(--primary);font-family:'JetBrains Mono',monospace}
+.bar-track{height:5px;background:rgba(255,255,255,.06);border-radius:5px;overflow:hidden}
+.bar-fill{height:100%;background:linear-gradient(90deg,var(--primary),var(--secondary));border-radius:5px;width:0;transition:width .9s cubic-bezier(.25,.46,.45,.94)}
+.bar-fill.animated{width:var(--target-w)!important}
 
-    /* ─── SECTION HEADINGS ─── */
-    .section-title {
-      font-family: 'Barlow Condensed', sans-serif;
-      font-size: 2.4rem; font-weight: 800; letter-spacing: 0.04em;
-      color: var(--light); margin-bottom: 0.25rem;
-    }
-    .section-sub {
-      font-size: 1rem; color: var(--gray); margin-bottom: 2rem;
-      font-weight: 500;
-    }
-    .accent-line {
-      width: 48px; height: 3px;
-      background: linear-gradient(90deg, var(--primary), var(--secondary));
-      border-radius: 2px; margin-bottom: 1.5rem;
-    }
+/* ── SCHEDULE ── */
+.schedule-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:1.15rem}
+.schedule-card{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:1.4rem;cursor:none;transition:all .3s;display:flex;flex-direction:column;gap:.65rem}
+.schedule-card:hover{transform:translateY(-4px);border-color:var(--primary);box-shadow:0 12px 28px rgba(255,107,53,.12)}
+.schedule-card.completed{border-color:var(--success);background:rgba(57,211,83,.04)}
+.schedule-card.today-card{border-color:var(--primary);box-shadow:0 0 0 1px var(--primary),0 8px 24px rgba(255,107,53,.2);animation:todayPulse 2s ease-in-out infinite}
+@keyframes todayPulse{0%,100%{box-shadow:0 0 0 1px var(--primary),0 8px 24px rgba(255,107,53,.2)}50%{box-shadow:0 0 0 3px rgba(255,107,53,.3),0 8px 24px rgba(255,107,53,.3)}}
+.schedule-day{font-family:'Barlow Condensed',sans-serif;font-size:1.25rem;font-weight:800;color:var(--light)}
+.schedule-icon{font-size:1.9rem}
+.schedule-tasks{list-style:none}
+.schedule-tasks li{font-size:.85rem;color:var(--gray);padding:.22rem 0;border-bottom:1px solid rgba(255,107,53,.05)}
+.schedule-tasks li:last-child{border-bottom:none}
+.schedule-tasks li::before{content:'▸ ';color:var(--primary);font-size:.68rem}
+.schedule-status{font-size:.72rem;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--gray)}
+.schedule-card.completed .schedule-status{color:var(--success)}
+.schedule-card.today-card .schedule-status{color:var(--primary)}
 
-    /* ─── TWITCH STREAM BLOCK ─── */
-    #twitchBlock {
-      display: none;
-      margin-bottom: 2rem;
-      animation: fadeUp 0.5s ease;
-    }
-    #twitchBlock.visible { display: block; }
+/* ── SKILLS ── */
+.skill-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:1rem;margin-bottom:2rem}
+.skill-item{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:1.15rem;cursor:none;transition:all .3s}
+.skill-item:hover{border-color:var(--primary);transform:translateY(-3px)}
+.skill-icon{font-size:1.7rem;margin-bottom:.45rem}
+.skill-name{font-family:'Barlow Condensed',sans-serif;font-size:1rem;font-weight:800;margin-bottom:.2rem}
+.skill-level{font-size:.78rem;color:var(--gray);margin-bottom:.45rem}
+.skill-bar{height:4px;background:rgba(255,255,255,.06);border-radius:4px;overflow:hidden}
+.skill-bar-fill{height:100%;background:linear-gradient(90deg,var(--primary),var(--secondary));border-radius:4px;transition:width .5s}
 
-    .twitch-wrapper {
-      border: 2px solid var(--twitch);
-      border-radius: 16px;
-      overflow: hidden;
-      background: #0e0e10;
-      box-shadow: 0 0 40px rgba(145,70,255,0.25), 0 0 80px rgba(145,70,255,0.1);
-      position: relative;
-    }
+/* ── SHOP ── */
+.shop-filters{display:flex;gap:.45rem;flex-wrap:wrap;margin-bottom:1.5rem}
+.filter-btn{padding:.38rem .9rem;border:1px solid var(--border);background:transparent;color:var(--gray);border-radius:20px;cursor:none;font-family:'Barlow Condensed',sans-serif;font-size:.88rem;font-weight:700;letter-spacing:.05em;transition:all .2s}
+.filter-btn.active,.filter-btn:hover{background:var(--primary);border-color:var(--primary);color:#fff}
+.products-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:1.15rem;margin-bottom:2rem}
+.product-card{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:1.4rem;cursor:none;transition:all .3s;display:flex;flex-direction:column;position:relative;overflow:hidden}
+.product-card:hover{transform:translateY(-6px);border-color:var(--primary);box-shadow:0 16px 32px rgba(255,107,53,.12)}
+.product-badge{position:absolute;top:.9rem;right:.9rem;padding:.18rem .48rem;border-radius:4px;font-size:.68rem;font-weight:800;letter-spacing:.08em;text-transform:uppercase}
+.badge-hot{background:rgba(244,67,54,.12);color:#f44336;border:1px solid rgba(244,67,54,.3)}
+.badge-new{background:rgba(57,211,83,.12);color:var(--success);border:1px solid rgba(57,211,83,.3)}
+.badge-sale{background:rgba(255,204,0,.12);color:var(--accent);border:1px solid rgba(255,204,0,.3)}
+.product-icon{font-size:2rem;margin-bottom:.85rem}
+.product-name{font-family:'Barlow Condensed',sans-serif;font-size:1.15rem;font-weight:800;margin-bottom:.35rem}
+.product-desc{color:var(--gray);font-size:.86rem;margin-bottom:.85rem;flex:1;line-height:1.5}
+.product-price{font-family:'Barlow Condensed',sans-serif;font-size:1.6rem;font-weight:900;color:var(--primary);margin-bottom:.85rem}
+.product-price .old-price{font-size:.95rem;color:var(--gray);text-decoration:line-through;margin-left:.35rem}
+.product-owned{background:rgba(57,211,83,.1);border:1px solid rgba(57,211,83,.3);color:var(--success);border-radius:6px;padding:.4rem .8rem;font-family:'Barlow Condensed',sans-serif;font-size:.88rem;font-weight:700;text-align:center}
 
-    .twitch-header {
-      background: linear-gradient(90deg, rgba(145,70,255,0.2), rgba(145,70,255,0.05));
-      border-bottom: 1px solid rgba(145,70,255,0.3);
-      padding: 0.85rem 1.5rem;
-      display: flex; align-items: center; justify-content: space-between;
-      flex-wrap: wrap; gap: 0.75rem;
-    }
+/* ── SUBSCRIPTIONS ── */
+.subs-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(270px,1fr));gap:1.5rem;margin-bottom:2rem}
+.sub-card{background:var(--surface);border:2px solid var(--border);border-radius:16px;padding:1.75rem;transition:all .35s;position:relative;overflow:hidden}
+.sub-card:hover{transform:translateY(-6px);border-color:rgba(255,107,53,.45);box-shadow:0 20px 40px rgba(255,107,53,.1)}
+.sub-card.featured{border-color:var(--primary);background:linear-gradient(135deg,rgba(255,107,53,.07),var(--surface))}
+.featured-badge{position:absolute;top:0;right:1.75rem;background:linear-gradient(135deg,var(--primary),var(--secondary));color:#fff;padding:.28rem .75rem;font-size:.72rem;font-weight:800;letter-spacing:.1em;text-transform:uppercase;border-radius:0 0 8px 8px}
+.sub-name{font-family:'Barlow Condensed',sans-serif;font-size:1.55rem;font-weight:900;margin-bottom:.45rem}
+.sub-price{font-family:'Barlow Condensed',sans-serif;font-size:2.7rem;font-weight:900;color:var(--primary);line-height:1}
+.sub-period{font-size:.88rem;color:var(--gray);margin-bottom:1.25rem}
+.sub-divider{height:1px;background:var(--border);margin:1.15rem 0}
+.sub-features{list-style:none;margin-bottom:1.25rem}
+.sub-features li{padding:.4rem 0;font-size:.93rem;color:var(--gray);display:flex;align-items:center;gap:.45rem}
+.sub-features li .check{color:var(--success);font-size:.78rem;font-weight:800}
+.sub-features li .cross{color:rgba(255,255,255,.18);font-size:.78rem}
 
-    .twitch-header-left { display: flex; align-items: center; gap: 0.75rem; }
+/* ── PAYMENT MODAL ── */
+.pay-tabs{display:flex;gap:.4rem;margin-bottom:1.5rem;background:var(--surface);border-radius:9px;padding:.25rem}
+.pay-tab{flex:1;padding:.45rem;border-radius:7px;border:none;background:transparent;color:var(--gray);cursor:none;font-family:'Barlow Condensed',sans-serif;font-size:.9rem;font-weight:700;letter-spacing:.07em;text-transform:uppercase;transition:all .2s}
+.pay-tab.active{background:var(--surface2);color:var(--light);box-shadow:0 1px 4px rgba(0,0,0,.3)}
+.card-visual{background:linear-gradient(135deg,#1a1c30,#0e0f1a);border:1px solid var(--border);border-radius:14px;padding:1.4rem;margin-bottom:1.4rem;position:relative;overflow:hidden;height:170px}
+.card-visual::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(255,107,53,.12),transparent);pointer-events:none}
+.card-chip{width:36px;height:26px;border-radius:5px;background:linear-gradient(135deg,var(--accent),#e5a800);margin-bottom:1rem;box-shadow:inset 0 1px 0 rgba(255,255,255,.3)}
+.card-number{font-family:'JetBrains Mono',monospace;font-size:1.05rem;font-weight:600;letter-spacing:.2em;color:var(--light);margin-bottom:1rem}
+.card-meta{display:flex;justify-content:space-between;align-items:flex-end}
+.card-meta-label{font-size:.6rem;letter-spacing:.12em;text-transform:uppercase;color:var(--gray);margin-bottom:.2rem}
+.card-meta-val{font-family:'JetBrains Mono',monospace;font-size:.9rem;font-weight:600;color:var(--light)}
+.card-brand{position:absolute;top:1.2rem;right:1.2rem;width:44px;height:28px;display:flex;align-items:center;justify-content:center}
+.card-brand-circles{position:relative;width:44px;height:28px}
+.card-brand-circles span{position:absolute;width:28px;height:28px;border-radius:50%;opacity:.85}
+.card-brand-circles span:first-child{left:0;background:#eb001b}
+.card-brand-circles span:last-child{right:0;background:#f79e1b}
+.crypto-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:.6rem;margin-bottom:1.25rem}
+.crypto-opt{background:var(--surface);border:1.5px solid var(--border);border-radius:9px;padding:.7rem;text-align:center;cursor:none;transition:all .2s}
+.crypto-opt:hover,.crypto-opt.selected{border-color:var(--primary);background:rgba(255,107,53,.06)}
+.crypto-opt .crypto-icon{font-size:1.5rem;margin-bottom:.25rem}
+.crypto-opt .crypto-name{font-family:'JetBrains Mono',monospace;font-size:.72rem;color:var(--gray)}
+.pay-secure{display:flex;align-items:center;gap:.5rem;font-size:.78rem;color:var(--gray);margin-top:1rem;justify-content:center}
 
-    .live-badge {
-      background: #eb0400;
-      color: white;
-      font-family: 'Barlow Condensed', sans-serif;
-      font-size: 0.85rem; font-weight: 800; letter-spacing: 0.12em;
-      padding: 0.2rem 0.6rem; border-radius: 4px;
-      display: flex; align-items: center; gap: 0.4rem;
-      text-transform: uppercase;
-      box-shadow: 0 0 12px rgba(235,4,0,0.5);
-    }
-    .live-badge::before {
-      content: '';
-      width: 7px; height: 7px;
-      background: white; border-radius: 50%;
-      animation: liveDot 1s infinite;
-    }
+/* ── CART ── */
+.cart-layout{display:grid;grid-template-columns:1fr 320px;gap:2rem}
+@media(max-width:900px){.cart-layout{grid-template-columns:1fr}}
+.cart-panel,.summary-panel{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:1.75rem}
+.summary-panel{height:fit-content;position:sticky;top:80px}
+.cart-item{display:grid;grid-template-columns:52px 1fr auto auto;gap:1rem;padding:1.15rem 0;border-bottom:1px solid rgba(255,107,53,.05);align-items:center}
+.cart-item:last-child{border-bottom:none}
+.cart-item-icon{width:52px;height:52px;border-radius:9px;background:linear-gradient(135deg,rgba(255,107,53,.18),rgba(247,147,30,.08));border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:1.4rem}
+.cart-item-name{font-weight:700;font-size:1rem}
+.cart-item-sub{font-size:.83rem;color:var(--gray);margin-top:.2rem}
+.cart-item-price{font-family:'Barlow Condensed',sans-serif;font-size:1.25rem;font-weight:800;color:var(--primary)}
+.remove-btn{background:rgba(244,67,54,.08);border:1px solid rgba(244,67,54,.2);color:#f44336;width:28px;height:28px;border-radius:6px;cursor:none;font-size:.95rem;display:flex;align-items:center;justify-content:center;transition:all .2s}
+.remove-btn:hover{background:rgba(244,67,54,.18)}
+.summary-row{display:flex;justify-content:space-between;align-items:center;padding:.55rem 0;border-bottom:1px solid rgba(255,107,53,.05);font-size:.93rem;color:var(--gray)}
+.summary-row.total{font-family:'Barlow Condensed',sans-serif;font-size:1.4rem;font-weight:900;color:var(--primary);border-bottom:none;margin-top:.45rem}
+.empty-state{text-align:center;padding:4rem 2rem;color:var(--gray)}
+.empty-state-icon{font-size:3.5rem;margin-bottom:1rem;opacity:.35}
 
-    .twitch-channel-name {
-      font-family: 'Barlow Condensed', sans-serif;
-      font-size: 1.2rem; font-weight: 800;
-      color: var(--twitch);
-      letter-spacing: 0.04em;
-    }
+/* ── REVIEWS ── */
+.reviews-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(270px,1fr));gap:1.15rem}
+.review-card{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:1.4rem;position:relative;transition:all .3s}
+.review-card:hover{border-color:rgba(255,107,53,.35);transform:translateY(-4px)}
+.review-quote{font-size:1.9rem;color:var(--primary);line-height:1;margin-bottom:.45rem}
+.review-text{color:var(--gray);font-size:.93rem;line-height:1.7;margin-bottom:1.15rem}
+.review-stars{color:var(--accent);font-size:.88rem;margin-bottom:.65rem;letter-spacing:.1em}
+.review-author{font-weight:800;font-size:.93rem;color:var(--primary)}
+.review-tag{font-size:.78rem;color:var(--gray);margin-top:.15rem}
 
-    .twitch-game-info {
-      font-size: 0.88rem; color: var(--gray);
-      display: flex; align-items: center; gap: 0.4rem;
-    }
+/* ── FAQ ── */
+.faq-wrap{max-width:740px;margin:0 auto}
+.faq-item{background:var(--surface);border:1px solid var(--border);border-radius:12px;margin-bottom:.65rem;overflow:hidden;cursor:none;transition:border-color .2s}
+.faq-item:hover,.faq-item.open{border-color:rgba(255,107,53,.35)}
+.faq-q{padding:1.15rem 1.4rem;font-weight:700;font-size:1.02rem;display:flex;justify-content:space-between;align-items:center;gap:1rem;user-select:none}
+.faq-arrow{color:var(--primary);font-size:.78rem;transition:transform .3s;flex-shrink:0}
+.faq-item.open .faq-arrow{transform:rotate(180deg)}
+.faq-a{max-height:0;overflow:hidden;transition:max-height .35s ease,padding .3s;color:var(--gray);font-size:.93rem;line-height:1.7;padding:0 1.4rem}
+.faq-item.open .faq-a{max-height:220px;padding:0 1.4rem 1.15rem}
 
-    .twitch-header-right { display: flex; align-items: center; gap: 0.75rem; }
+/* ── TWITCH ── */
+#twitchBlock{display:none;margin-bottom:2rem;animation:fadeUp .5s ease}
+#twitchBlock.visible{display:block}
+.twitch-wrapper{border:2px solid var(--twitch);border-radius:16px;overflow:hidden;background:#0e0e10;box-shadow:0 0 40px rgba(145,70,255,.2),0 0 80px rgba(145,70,255,.08)}
+.twitch-header{background:linear-gradient(90deg,rgba(145,70,255,.18),rgba(145,70,255,.04));border-bottom:1px solid rgba(145,70,255,.28);padding:.8rem 1.4rem;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:.75rem}
+.twitch-header-left{display:flex;align-items:center;gap:.7rem}
+.live-badge{background:#eb0400;color:#fff;font-family:'Barlow Condensed',sans-serif;font-size:.82rem;font-weight:900;letter-spacing:.12em;padding:.18rem .55rem;border-radius:4px;display:flex;align-items:center;gap:.35rem;text-transform:uppercase;box-shadow:0 0 12px rgba(235,4,0,.5);animation:liveBadgePulse 2s ease-in-out infinite}
+@keyframes liveBadgePulse{0%,100%{box-shadow:0 0 8px rgba(235,4,0,.5)}50%{box-shadow:0 0 20px rgba(235,4,0,.8)}}
+.live-badge::before{content:'';width:6px;height:6px;background:#fff;border-radius:50%;animation:blink 1s infinite}
+.twitch-channel-name{font-family:'Barlow Condensed',sans-serif;font-size:1.15rem;font-weight:900;color:var(--twitch);letter-spacing:.04em}
+.twitch-game-info{font-size:.85rem;color:var(--gray);display:flex;align-items:center;gap:.35rem}
+.twitch-header-right{display:flex;align-items:center;gap:.7rem}
+.viewer-count{font-family:'JetBrains Mono',monospace;font-size:.83rem;color:var(--gray);display:flex;align-items:center;gap:.35rem}
+.viewer-count .eye{color:var(--twitch)}
+.twitch-open-btn{background:var(--twitch);color:#fff;padding:.32rem .85rem;border-radius:6px;font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:.83rem;letter-spacing:.05em;border:none;cursor:none;text-decoration:none;display:inline-flex;align-items:center;gap:.3rem;transition:all .2s}
+.twitch-open-btn:hover{filter:brightness(1.15);transform:translateY(-1px)}
+.twitch-embed-wrap{position:relative;padding-top:56.25%;background:#0e0e10}
+.twitch-embed-wrap iframe{position:absolute;inset:0;width:100%;height:100%;border:none}
+.twitch-offline-block{background:var(--surface);border:1px solid rgba(145,70,255,.2);border-radius:12px;padding:1.4rem;display:flex;align-items:center;gap:1.15rem;margin-bottom:2rem;cursor:none;transition:all .3s}
+.twitch-offline-block:hover{border-color:var(--twitch);background:rgba(145,70,255,.05);transform:translateY(-2px)}
+.twitch-offline-icon{font-size:1.9rem;flex-shrink:0}
+.twitch-offline-text strong{font-family:'Barlow Condensed',sans-serif;font-size:1.05rem;font-weight:800;color:var(--twitch);display:block;margin-bottom:.15rem}
+.twitch-offline-text span{font-size:.85rem;color:var(--gray)}
+.twitch-offline-block .twitch-offline-arrow{margin-left:auto;color:var(--twitch);font-size:1.05rem;flex-shrink:0}
 
-    .viewer-count {
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 0.85rem; color: var(--gray);
-      display: flex; align-items: center; gap: 0.4rem;
-    }
-    .viewer-count .eye { color: var(--twitch); }
+/* ── PROFILE PAGE ── */
+.profile-layout{display:grid;grid-template-columns:300px 1fr;gap:2rem}
+@media(max-width:900px){.profile-layout{grid-template-columns:1fr}}
+.profile-sidebar{display:flex;flex-direction:column;gap:1.25rem}
+.profile-card{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:1.75rem;text-align:center}
+.profile-big-avatar{width:90px;height:90px;border-radius:50%;background:linear-gradient(135deg,var(--primary),var(--secondary));display:flex;align-items:center;justify-content:center;font-size:2.4rem;font-weight:900;color:#fff;margin:0 auto 1rem;font-family:'Barlow Condensed',sans-serif;border:3px solid var(--primary);box-shadow:0 0 0 4px var(--glow2)}
+.profile-username{font-family:'Barlow Condensed',sans-serif;font-size:1.7rem;font-weight:900;margin-bottom:.2rem}
+.profile-email{font-size:.85rem;color:var(--gray);margin-bottom:1rem}
+.profile-plan{display:inline-flex;align-items:center;gap:.4rem;background:linear-gradient(135deg,rgba(255,107,53,.15),rgba(247,147,30,.1));border:1px solid var(--border);border-radius:20px;padding:.3rem .85rem;font-family:'Barlow Condensed',sans-serif;font-size:.88rem;font-weight:700;color:var(--primary);letter-spacing:.06em}
+.profile-stats{display:grid;grid-template-columns:1fr 1fr;gap:.75rem}
+.profile-stat{background:var(--surface2);border-radius:10px;padding:.9rem;text-align:center}
+.profile-stat-num{font-family:'Barlow Condensed',sans-serif;font-size:1.7rem;font-weight:900;color:var(--primary)}
+.profile-stat-label{font-size:.72rem;color:var(--gray);font-weight:700;letter-spacing:.08em;text-transform:uppercase}
+.profile-main{display:flex;flex-direction:column;gap:1.25rem}
+.profile-section{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:1.75rem}
+.profile-section h4{font-family:'Barlow Condensed',sans-serif;font-size:1.25rem;font-weight:800;margin-bottom:1.25rem;color:var(--light)}
+.achievement-list{display:flex;flex-direction:column;gap:.65rem}
+.achievement-item{display:flex;align-items:center;gap:.9rem;padding:.75rem 1rem;background:var(--surface2);border-radius:9px;border:1px solid var(--border)}
+.achievement-icon{font-size:1.4rem;flex-shrink:0}
+.achievement-name{font-weight:700;font-size:.93rem}
+.achievement-desc{font-size:.78rem;color:var(--gray);margin-top:.1rem}
+.achievement-badge{margin-left:auto;font-family:'Barlow Condensed',sans-serif;font-size:.75rem;font-weight:800;letter-spacing:.06em;padding:.15rem .45rem;border-radius:4px;background:rgba(255,204,0,.15);color:var(--accent);border:1px solid rgba(255,204,0,.3)}
+.owned-courses{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:.75rem}
+.owned-course-card{background:var(--surface2);border:1px solid var(--border);border-radius:9px;padding:.9rem;cursor:none;transition:all .2s}
+.owned-course-card:hover{border-color:var(--primary)}
+.owned-course-icon{font-size:1.5rem;margin-bottom:.4rem}
+.owned-course-name{font-family:'Barlow Condensed',sans-serif;font-size:.9rem;font-weight:700}
+.owned-course-status{font-size:.72rem;color:var(--success);margin-top:.2rem;font-weight:700}
 
-    .twitch-open-btn {
-      background: var(--twitch);
-      color: white; padding: 0.35rem 0.9rem; border-radius: 6px;
-      font-family: 'Barlow Condensed', sans-serif; font-weight: 700;
-      font-size: 0.85rem; letter-spacing: 0.05em;
-      border: none; cursor: pointer; text-decoration: none;
-      display: inline-flex; align-items: center; gap: 0.35rem;
-      transition: all 0.2s;
-    }
-    .twitch-open-btn:hover { filter: brightness(1.15); transform: translateY(-1px); box-shadow: 0 4px 16px rgba(145,70,255,0.4); }
+/* ── STREAM PAGE ── */
+.stream-page-embed{border:2px solid var(--twitch);border-radius:16px;overflow:hidden;box-shadow:0 0 60px rgba(145,70,255,.18);margin-bottom:2rem}
+.stream-page-header{background:linear-gradient(90deg,rgba(145,70,255,.16),rgba(145,70,255,.04));border-bottom:1px solid rgba(145,70,255,.28);padding:.95rem 1.4rem;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:1rem}
+.stream-offline-page{text-align:center;padding:5rem 2rem;background:var(--surface);border:2px dashed rgba(145,70,255,.22);border-radius:16px;margin-bottom:2rem}
+.stream-offline-page h3{font-family:'Barlow Condensed',sans-serif;font-size:1.8rem;font-weight:900;color:var(--twitch);margin-bottom:.45rem}
+.stream-offline-page p{color:var(--gray);margin-bottom:1.5rem}
 
-    .twitch-embed-wrap {
-      position: relative;
-      padding-top: 56.25%; /* 16:9 */
-      background: #0e0e10;
-    }
-    .twitch-embed-wrap iframe {
-      position: absolute;
-      inset: 0; width: 100%; height: 100%;
-      border: none;
-    }
+/* ── EASTER EGG / FUN ── */
+.konami-flash{position:fixed;inset:0;z-index:99990;pointer-events:none;animation:konamiFlash .5s forwards}
+@keyframes konamiFlash{0%{background:rgba(255,107,53,0)}30%{background:rgba(255,107,53,.25)}100%{background:rgba(255,107,53,0)}}
+.confetti-piece{position:fixed;width:8px;height:8px;pointer-events:none;z-index:99991;animation:confettiFall 2.5s ease-in forwards}
+@keyframes confettiFall{0%{opacity:1;transform:translateY(0) rotate(0deg)}100%{opacity:0;transform:translateY(100vh) rotate(720deg)}}
+#aimbot-overlay{display:none;position:fixed;inset:0;z-index:99992;pointer-events:none}
+.crosshair{position:absolute;width:40px;height:40px;transition:left .15s,top .15s}
+.crosshair::before,.crosshair::after{content:'';position:absolute;background:rgba(255,107,53,.9)}
+.crosshair::before{width:2px;height:100%;left:50%;transform:translateX(-50%)}
+.crosshair::after{height:2px;width:100%;top:50%;transform:translateY(-50%)}
+.crosshair-ring{position:absolute;inset:-8px;border:1.5px solid rgba(255,107,53,.5);border-radius:50%;animation:crosshairSpin 1s linear infinite}
+@keyframes crosshairSpin{to{transform:rotate(360deg)}}
 
-    /* Offline block */
-    .twitch-offline-block {
-      background: var(--surface);
-      border: 1px solid rgba(145,70,255,0.2);
-      border-radius: 12px;
-      padding: 1.5rem;
-      display: flex; align-items: center; gap: 1.25rem;
-      margin-bottom: 2rem;
-      cursor: pointer;
-      transition: all 0.3s;
-    }
-    .twitch-offline-block:hover {
-      border-color: var(--twitch);
-      background: rgba(145,70,255,0.05);
-      transform: translateY(-2px);
-    }
-    .twitch-offline-icon { font-size: 2rem; flex-shrink: 0; }
-    .twitch-offline-text strong {
-      font-family: 'Barlow Condensed', sans-serif;
-      font-size: 1.1rem; font-weight: 700;
-      color: var(--twitch); display: block; margin-bottom: 0.2rem;
-    }
-    .twitch-offline-text span {
-      font-size: 0.88rem; color: var(--gray);
-    }
-    .twitch-offline-block .twitch-offline-arrow {
-      margin-left: auto; color: var(--twitch); font-size: 1.1rem; flex-shrink: 0;
-    }
+/* ── GLITCH TEXT ── */
+.glitch{position:relative}
+.glitch::before,.glitch::after{content:attr(data-text);position:absolute;inset:0;font-family:inherit;font-size:inherit;font-weight:inherit}
+.glitch::before{color:#ff6b35;animation:glitchA .5s infinite;clip-path:polygon(0 0,100% 0,100% 33%,0 33%)}
+.glitch::after{color:#00f5ff;animation:glitchB .5s infinite;clip-path:polygon(0 66%,100% 66%,100% 100%,0 100%)}
+@keyframes glitchA{0%,100%{transform:translateX(0)}33%{transform:translateX(-3px)}66%{transform:translateX(3px)}}
+@keyframes glitchB{0%,100%{transform:translateX(0)}33%{transform:translateX(3px)}66%{transform:translateX(-3px)}}
 
-    /* ─── DASHBOARD ─── */
-    .hero-banner {
-      background: linear-gradient(135deg, rgba(255,107,53,0.12), rgba(247,147,30,0.05));
-      border: 1px solid var(--border);
-      border-radius: 16px; padding: 2.5rem;
-      margin-bottom: 2rem;
-      position: relative; overflow: hidden;
-    }
-    .hero-banner::before {
-      content: 'FUHA';
-      position: absolute; right: -10px; bottom: -30px;
-      font-family: 'Barlow Condensed', sans-serif;
-      font-size: 9rem; font-weight: 800;
-      color: rgba(255,107,53,0.05); line-height: 1;
-      pointer-events: none; user-select: none;
-    }
-    .hero-title {
-      font-family: 'Barlow Condensed', sans-serif;
-      font-size: 1rem; font-weight: 700; letter-spacing: 0.15em;
-      color: var(--primary); text-transform: uppercase; margin-bottom: 0.5rem;
-    }
-    .hero-banner h2 {
-      font-family: 'Barlow Condensed', sans-serif;
-      font-size: 2.8rem; font-weight: 800; color: var(--light);
-      margin-bottom: 0.75rem; line-height: 1.1;
-    }
-    .hero-banner p { color: var(--gray); font-size: 1.05rem; max-width: 600px; margin-bottom: 1.5rem; }
-    .hero-actions { display: flex; gap: 1rem; flex-wrap: wrap; }
+/* ── USER DROPDOWN ── */
+.user-dropdown{position:relative}
+.user-dropdown-menu{
+  display:none;position:absolute;top:calc(100% + 8px);right:0;
+  background:var(--surface2);border:1px solid var(--border);border-radius:12px;
+  padding:.5rem;min-width:200px;z-index:600;
+  box-shadow:0 16px 40px rgba(0,0,0,.4);
+  animation:fadeUp .2s ease;
+}
+.user-dropdown-menu.open{display:block}
+.user-dropdown-item{display:flex;align-items:center;gap:.7rem;padding:.65rem .85rem;border-radius:8px;cursor:none;transition:background .15s;font-size:.92rem;font-weight:600;color:var(--light);text-decoration:none}
+.user-dropdown-item:hover{background:rgba(255,107,53,.08);color:var(--primary)}
+.user-dropdown-divider{height:1px;background:var(--border);margin:.35rem 0}
+.user-dropdown-item.danger:hover{background:rgba(244,67,54,.08);color:#f44336}
 
-    .stats-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
-      gap: 1rem; margin-bottom: 2rem;
-    }
-    .stat-card {
-      background: var(--surface); border: 1px solid var(--border);
-      border-radius: 12px; padding: 1.5rem; text-align: center;
-      cursor: pointer; transition: all 0.3s; position: relative; overflow: hidden;
-    }
-    .stat-card::before {
-      content: ''; position: absolute; inset: 0;
-      background: linear-gradient(135deg, rgba(255,107,53,0.06), transparent);
-      opacity: 0; transition: opacity 0.3s;
-    }
-    .stat-card:hover { transform: translateY(-4px); border-color: var(--primary); }
-    .stat-card:hover::before { opacity: 1; }
-    .stat-num {
-      font-family: 'Barlow Condensed', sans-serif;
-      font-size: 2.6rem; font-weight: 800; color: var(--primary);
-      line-height: 1; margin-bottom: 0.4rem;
-    }
-    .stat-label {
-      font-size: 0.8rem; font-weight: 700; letter-spacing: 0.1em;
-      text-transform: uppercase; color: var(--gray);
-    }
+/* ── RESPONSIVE ── */
+@media(max-width:768px){
+  header{padding:0 1rem}
+  nav{display:none}
+  .mobile-menu-btn{display:flex!important}
+  .lb-head,.lb-row{grid-template-columns:40px 1fr 70px}
+  .lb-head>*:nth-child(3),.lb-row>*:nth-child(3),
+  .lb-head>*:nth-child(4),.lb-row>*:nth-child(4){display:none}
+}
+.mobile-menu-btn{display:none;width:36px;height:36px;border-radius:8px;background:rgba(255,107,53,.08);border:1px solid var(--border);cursor:none;align-items:center;justify-content:center;font-size:1.2rem}
 
-    /* LEADERBOARD */
-    .leaderboard { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; overflow: hidden; margin-bottom: 2rem; }
-    .lb-head {
-      display: grid; grid-template-columns: 56px 1fr 160px 120px 80px;
-      gap: 1rem; padding: 0.9rem 1.5rem;
-      background: rgba(255,107,53,0.08); border-bottom: 1px solid var(--border);
-      font-family: 'Barlow Condensed', sans-serif;
-      font-size: 0.8rem; font-weight: 700; letter-spacing: 0.12em;
-      text-transform: uppercase; color: var(--gray);
-    }
-    .lb-row {
-      display: grid; grid-template-columns: 56px 1fr 160px 120px 80px;
-      gap: 1rem; padding: 1rem 1.5rem;
-      border-bottom: 1px solid rgba(255,107,53,0.06);
-      align-items: center; transition: background 0.2s; cursor: pointer;
-    }
-    .lb-row:last-child { border-bottom: none; }
-    .lb-row:hover { background: rgba(255,107,53,0.04); }
-    .lb-row.fuha { background: linear-gradient(90deg, rgba(255,107,53,0.08), transparent); border-left: 3px solid var(--primary); }
-    .lb-rank {
-      font-family: 'Barlow Condensed', sans-serif; font-size: 1.4rem;
-      font-weight: 800; color: var(--primary); text-align: center;
-    }
-    .lb-rank.gold { color: #FFD700; }
-    .lb-rank.silver { color: #C0C0C0; }
-    .lb-rank.bronze { color: #CD7F32; }
-    .lb-name { font-weight: 600; font-size: 1rem; }
-    .lb-team { color: var(--gray); font-size: 0.9rem; }
-    .lb-rating { font-family: 'JetBrains Mono', monospace; font-size: 0.9rem; color: var(--gray); }
-    .lb-score {
-      font-family: 'Barlow Condensed', sans-serif; font-size: 1.2rem;
-      font-weight: 700; color: var(--primary); text-align: right;
-    }
-    .fuha-tag {
-      background: var(--primary); color: white;
-      font-size: 0.65rem; font-weight: 700; letter-spacing: 0.08em;
-      padding: 0.1rem 0.4rem; border-radius: 4px; margin-left: 0.4rem;
-      vertical-align: middle;
-    }
+/* ── FOOTER ── */
+footer{background:var(--surface);border-top:1px solid var(--border);padding:2rem;text-align:center;color:var(--gray);font-size:.88rem;margin-top:4rem;position:relative;z-index:1}
+footer a{color:var(--primary);text-decoration:none}
+footer a:hover{text-decoration:underline}
 
-    /* ─── PLAYERS ─── */
-    .players-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 1.5rem; }
-    .player-card {
-      background: var(--surface); border: 1px solid var(--border);
-      border-radius: 16px; padding: 2rem; position: relative;
-      transition: all 0.35s; overflow: hidden;
-    }
-    .player-card::after {
-      content: ''; position: absolute; inset: 0;
-      background: linear-gradient(135deg, rgba(255,107,53,0.06), transparent);
-      opacity: 0; transition: opacity 0.3s;
-    }
-    .player-card:hover { transform: translateY(-6px); border-color: var(--primary); box-shadow: 0 20px 40px rgba(255,107,53,0.12); }
-    .player-card:hover::after { opacity: 1; }
-    .player-card.fuha { border-color: rgba(255,107,53,0.4); background: linear-gradient(135deg, rgba(255,107,53,0.08), var(--surface)); }
-    .player-avatar {
-      width: 56px; height: 56px; border-radius: 50%;
-      background: linear-gradient(135deg, var(--primary), var(--secondary));
-      display: flex; align-items: center; justify-content: center;
-      font-size: 1.6rem; margin-bottom: 1rem;
-      position: relative; z-index: 1;
-    }
-    .player-rank-badge {
-      position: absolute; top: 1.25rem; right: 1.25rem;
-      width: 36px; height: 36px; border-radius: 50%;
-      background: linear-gradient(135deg, var(--primary), var(--secondary));
-      display: flex; align-items: center; justify-content: center;
-      font-family: 'Barlow Condensed', sans-serif; font-size: 1rem; font-weight: 800; color: white;
-    }
-    .player-name {
-      font-family: 'Barlow Condensed', sans-serif; font-size: 1.4rem;
-      font-weight: 700; margin-bottom: 0.2rem; position: relative; z-index: 1;
-    }
-    .player-role { font-size: 0.85rem; color: var(--primary); font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 1.5rem; position: relative; z-index: 1; }
-    .stat-bar { margin-bottom: 1rem; position: relative; z-index: 1; }
-    .stat-bar-header { display: flex; justify-content: space-between; margin-bottom: 0.35rem; font-size: 0.85rem; font-weight: 600; }
-    .stat-bar-label { color: var(--gray); }
-    .stat-bar-val { color: var(--primary); font-family: 'JetBrains Mono', monospace; }
-    .bar-track { height: 6px; background: rgba(255,255,255,0.07); border-radius: 6px; overflow: hidden; }
-    .bar-fill { height: 100%; background: linear-gradient(90deg, var(--primary), var(--secondary)); border-radius: 6px; transition: width 0.8s cubic-bezier(0.25,0.46,0.45,0.94); }
+/* ── XP BAR ── */
+.xp-bar-wrap{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:1.25rem 1.5rem;margin-bottom:1.5rem;display:flex;align-items:center;gap:1.25rem}
+.xp-level{font-family:'Barlow Condensed',sans-serif;font-size:2rem;font-weight:900;color:var(--primary);flex-shrink:0;line-height:1}
+.xp-level span{font-size:.75rem;display:block;color:var(--gray);font-weight:700;letter-spacing:.08em;text-transform:uppercase}
+.xp-bar-inner{flex:1}
+.xp-bar-labels{display:flex;justify-content:space-between;font-size:.78rem;color:var(--gray);margin-bottom:.4rem;font-weight:700}
+.xp-track{height:8px;background:rgba(255,255,255,.06);border-radius:8px;overflow:hidden}
+.xp-fill{height:100%;background:linear-gradient(90deg,var(--primary),var(--accent));border-radius:8px;transition:width 1s cubic-bezier(.25,.46,.45,.94);position:relative;overflow:hidden}
+.xp-fill::after{content:'';position:absolute;inset:0;background:linear-gradient(90deg,transparent,rgba(255,255,255,.25),transparent);animation:xpShimmer 2s infinite}
+@keyframes xpShimmer{0%{transform:translateX(-100%)}100%{transform:translateX(100%)}}
 
-    /* ─── SCHEDULE ─── */
-    .schedule-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 1.25rem; }
-    .schedule-card {
-      background: var(--surface); border: 1px solid var(--border); border-radius: 12px;
-      padding: 1.5rem; cursor: pointer; transition: all 0.3s; display: flex; flex-direction: column; gap: 0.75rem;
-    }
-    .schedule-card:hover { transform: translateY(-4px); border-color: var(--primary); box-shadow: 0 12px 30px rgba(255,107,53,0.15); }
-    .schedule-card.completed { border-color: var(--success); background: rgba(57,211,83,0.05); }
-    .schedule-day {
-      font-family: 'Barlow Condensed', sans-serif; font-size: 1.3rem;
-      font-weight: 800; color: var(--light);
-    }
-    .schedule-icon { font-size: 2rem; }
-    .schedule-tasks { list-style: none; }
-    .schedule-tasks li { font-size: 0.88rem; color: var(--gray); padding: 0.25rem 0; border-bottom: 1px solid rgba(255,107,53,0.06); }
-    .schedule-tasks li:last-child { border-bottom: none; }
-    .schedule-tasks li::before { content: '▸ '; color: var(--primary); font-size: 0.7rem; }
-    .schedule-status {
-      font-size: 0.75rem; font-weight: 700; letter-spacing: 0.08em;
-      text-transform: uppercase; color: var(--gray);
-    }
-    .schedule-card.completed .schedule-status { color: var(--success); }
-
-    /* ─── SHOP ─── */
-    .shop-filters { display: flex; gap: 0.5rem; flex-wrap: wrap; margin-bottom: 1.5rem; }
-    .filter-btn {
-      padding: 0.4rem 1rem; border: 1px solid var(--border);
-      background: transparent; color: var(--gray);
-      border-radius: 20px; cursor: pointer;
-      font-family: 'Barlow Condensed', sans-serif; font-size: 0.9rem;
-      font-weight: 600; letter-spacing: 0.05em; transition: all 0.2s;
-    }
-    .filter-btn.active, .filter-btn:hover { background: var(--primary); border-color: var(--primary); color: white; }
-
-    .products-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 1.25rem; margin-bottom: 2rem; }
-    .product-card {
-      background: var(--surface); border: 1px solid var(--border); border-radius: 12px;
-      padding: 1.5rem; cursor: pointer; transition: all 0.3s;
-      display: flex; flex-direction: column; position: relative; overflow: hidden;
-    }
-    .product-card:hover { transform: translateY(-6px); border-color: var(--primary); box-shadow: 0 16px 32px rgba(255,107,53,0.15); }
-    .product-badge {
-      position: absolute; top: 1rem; right: 1rem;
-      padding: 0.2rem 0.5rem; border-radius: 4px;
-      font-size: 0.7rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase;
-    }
-    .badge-hot { background: rgba(244,67,54,0.15); color: #f44336; border: 1px solid rgba(244,67,54,0.3); }
-    .badge-new { background: rgba(57,211,83,0.15); color: var(--success); border: 1px solid rgba(57,211,83,0.3); }
-    .badge-sale { background: rgba(255,204,0,0.15); color: var(--accent); border: 1px solid rgba(255,204,0,0.3); }
-    .product-icon { font-size: 2.2rem; margin-bottom: 1rem; }
-    .product-name { font-family: 'Barlow Condensed', sans-serif; font-size: 1.2rem; font-weight: 700; margin-bottom: 0.4rem; }
-    .product-desc { color: var(--gray); font-size: 0.88rem; margin-bottom: 1rem; flex: 1; line-height: 1.5; }
-    .product-price {
-      font-family: 'Barlow Condensed', sans-serif; font-size: 1.7rem;
-      font-weight: 800; color: var(--primary); margin-bottom: 1rem;
-    }
-    .product-price .old-price {
-      font-size: 1rem; color: var(--gray); text-decoration: line-through;
-      margin-left: 0.4rem;
-    }
-
-    /* ─── SUBSCRIPTIONS ─── */
-    .subs-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem; margin-bottom: 2rem; }
-    .sub-card {
-      background: var(--surface); border: 2px solid var(--border); border-radius: 16px;
-      padding: 2rem; transition: all 0.35s; position: relative; overflow: hidden;
-    }
-    .sub-card:hover { transform: translateY(-6px); border-color: rgba(255,107,53,0.5); box-shadow: 0 20px 40px rgba(255,107,53,0.12); }
-    .sub-card.featured {
-      border-color: var(--primary); background: linear-gradient(135deg, rgba(255,107,53,0.08), var(--surface));
-    }
-    .featured-badge {
-      position: absolute; top: 0; right: 2rem;
-      background: linear-gradient(135deg, var(--primary), var(--secondary));
-      color: white; padding: 0.3rem 0.8rem;
-      font-size: 0.75rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase;
-      border-radius: 0 0 8px 8px;
-    }
-    .sub-name { font-family: 'Barlow Condensed', sans-serif; font-size: 1.6rem; font-weight: 800; margin-bottom: 0.5rem; }
-    .sub-price { font-family: 'Barlow Condensed', sans-serif; font-size: 2.8rem; font-weight: 800; color: var(--primary); line-height: 1; }
-    .sub-period { font-size: 0.9rem; color: var(--gray); margin-bottom: 1.5rem; }
-    .sub-divider { height: 1px; background: var(--border); margin: 1.25rem 0; }
-    .sub-features { list-style: none; margin-bottom: 1.5rem; }
-    .sub-features li { padding: 0.45rem 0; font-size: 0.95rem; color: var(--gray); display: flex; align-items: center; gap: 0.5rem; }
-    .sub-features li .check { color: var(--success); font-size: 0.8rem; font-weight: 700; }
-    .sub-features li .cross { color: rgba(255,255,255,0.2); font-size: 0.8rem; }
-
-    /* ─── CART ─── */
-    .cart-layout { display: grid; grid-template-columns: 1fr 340px; gap: 2rem; }
-    @media (max-width: 900px) { .cart-layout { grid-template-columns: 1fr; } }
-    .cart-panel, .summary-panel {
-      background: var(--surface); border: 1px solid var(--border); border-radius: 16px; padding: 2rem;
-    }
-    .summary-panel { height: fit-content; position: sticky; top: 80px; }
-    .cart-item {
-      display: grid; grid-template-columns: 56px 1fr auto auto; gap: 1rem;
-      padding: 1.25rem 0; border-bottom: 1px solid rgba(255,107,53,0.06);
-      align-items: center;
-    }
-    .cart-item:last-child { border-bottom: none; }
-    .cart-item-icon {
-      width: 56px; height: 56px; border-radius: 10px;
-      background: linear-gradient(135deg, rgba(255,107,53,0.2), rgba(247,147,30,0.1));
-      border: 1px solid var(--border);
-      display: flex; align-items: center; justify-content: center; font-size: 1.5rem;
-    }
-    .cart-item-name { font-weight: 600; font-size: 1rem; }
-    .cart-item-sub { font-size: 0.85rem; color: var(--gray); margin-top: 0.25rem; }
-    .cart-item-price { font-family: 'Barlow Condensed', sans-serif; font-size: 1.3rem; font-weight: 700; color: var(--primary); }
-    .remove-btn {
-      background: rgba(244,67,54,0.1); border: 1px solid rgba(244,67,54,0.2);
-      color: #f44336; width: 30px; height: 30px; border-radius: 6px;
-      cursor: pointer; font-size: 1rem; display: flex; align-items: center; justify-content: center;
-      transition: all 0.2s;
-    }
-    .remove-btn:hover { background: rgba(244,67,54,0.2); }
-
-    .summary-row {
-      display: flex; justify-content: space-between; align-items: center;
-      padding: 0.6rem 0; border-bottom: 1px solid rgba(255,107,53,0.06);
-      font-size: 0.95rem; color: var(--gray);
-    }
-    .summary-row.total {
-      font-family: 'Barlow Condensed', sans-serif; font-size: 1.4rem;
-      font-weight: 800; color: var(--primary); border-bottom: none; margin-top: 0.5rem;
-    }
-
-    .empty-state { text-align: center; padding: 4rem 2rem; color: var(--gray); }
-    .empty-state-icon { font-size: 3.5rem; margin-bottom: 1rem; opacity: 0.4; }
-    .empty-state p { font-size: 1rem; }
-
-    /* ─── TESTIMONIALS ─── */
-    .reviews-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.25rem; }
-    .review-card {
-      background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 1.5rem;
-      position: relative; transition: all 0.3s;
-    }
-    .review-card:hover { border-color: rgba(255,107,53,0.4); transform: translateY(-4px); }
-    .review-quote { font-size: 2rem; color: var(--primary); line-height: 1; margin-bottom: 0.5rem; }
-    .review-text { color: var(--gray); font-size: 0.95rem; line-height: 1.7; margin-bottom: 1.25rem; }
-    .review-stars { color: var(--accent); font-size: 0.9rem; margin-bottom: 0.75rem; letter-spacing: 0.1em; }
-    .review-author { font-weight: 700; font-size: 0.95rem; color: var(--primary); }
-    .review-tag { font-size: 0.8rem; color: var(--gray); margin-top: 0.2rem; }
-
-    /* ─── FAQ ─── */
-    .faq-wrap { max-width: 760px; margin: 0 auto; }
-    .faq-item {
-      background: var(--surface); border: 1px solid var(--border); border-radius: 12px;
-      margin-bottom: 0.75rem; overflow: hidden; cursor: pointer; transition: border-color 0.2s;
-    }
-    .faq-item:hover, .faq-item.open { border-color: rgba(255,107,53,0.4); }
-    .faq-q {
-      padding: 1.25rem 1.5rem; font-weight: 700; font-size: 1.05rem;
-      display: flex; justify-content: space-between; align-items: center; gap: 1rem;
-      user-select: none;
-    }
-    .faq-arrow { color: var(--primary); font-size: 0.8rem; transition: transform 0.3s; flex-shrink: 0; }
-    .faq-item.open .faq-arrow { transform: rotate(180deg); }
-    .faq-a {
-      max-height: 0; overflow: hidden;
-      transition: max-height 0.35s ease, padding 0.3s;
-      color: var(--gray); font-size: 0.95rem; line-height: 1.7;
-      padding: 0 1.5rem;
-    }
-    .faq-item.open .faq-a { max-height: 200px; padding: 0 1.5rem 1.25rem; }
-
-    /* ─── BUTTONS ─── */
-    .btn {
-      background: linear-gradient(135deg, var(--primary), var(--secondary));
-      color: white; border: none; padding: 0.65rem 1.4rem; border-radius: 8px;
-      cursor: pointer; font-family: 'Barlow Condensed', sans-serif;
-      font-size: 1rem; font-weight: 700; letter-spacing: 0.05em;
-      transition: all 0.2s; display: inline-flex; align-items: center; gap: 0.4rem;
-    }
-    .btn:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(255,107,53,0.35); }
-    .btn:active { transform: translateY(0); }
-    .btn-sm { padding: 0.45rem 1rem; font-size: 0.9rem; }
-    .btn-outline {
-      background: transparent; border: 1px solid var(--border); color: var(--gray);
-    }
-    .btn-outline:hover { border-color: var(--primary); color: var(--primary); box-shadow: none; }
-    .btn-full { width: 100%; justify-content: center; }
-    .btn-danger { background: linear-gradient(135deg, #f44336, #d32f2f); }
-
-    /* ─── MODAL ─── */
-    .modal-overlay {
-      display: none; position: fixed; inset: 0; z-index: 1000;
-      background: rgba(0,0,0,0.7); backdrop-filter: blur(6px);
-      align-items: center; justify-content: center; padding: 1rem;
-    }
-    .modal-overlay.active { display: flex; animation: fadeIn 0.2s; }
-    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-    .modal-box {
-      background: var(--surface2); border: 1px solid var(--border);
-      border-radius: 20px; padding: 2rem; width: 100%; max-width: 520px;
-      max-height: 85vh; overflow-y: auto;
-      animation: slideUp 0.3s ease;
-    }
-    @keyframes slideUp { from { transform: translateY(30px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
-    .modal-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; }
-    .modal-head h3 { font-family: 'Barlow Condensed', sans-serif; font-size: 1.5rem; font-weight: 800; }
-    .modal-close-btn {
-      width: 32px; height: 32px; border-radius: 8px; border: 1px solid var(--border);
-      background: transparent; color: var(--gray); cursor: pointer; font-size: 1.1rem;
-      display: flex; align-items: center; justify-content: center; transition: all 0.2s;
-    }
-    .modal-close-btn:hover { border-color: var(--primary); color: var(--primary); }
-    .modal-item {
-      display: flex; justify-content: space-between; align-items: center;
-      padding: 0.9rem 1rem; background: rgba(255,107,53,0.05);
-      border: 1px solid var(--border); border-radius: 8px; margin-bottom: 0.5rem;
-    }
-    .modal-item-name { font-weight: 600; }
-    .modal-item-price { font-family: 'Barlow Condensed', sans-serif; font-size: 1.2rem; font-weight: 700; color: var(--primary); }
-    .modal-total {
-      font-family: 'Barlow Condensed', sans-serif; font-size: 1.6rem;
-      font-weight: 800; color: var(--primary); text-align: right;
-      margin: 1rem 0; padding-top: 1rem; border-top: 1px solid var(--border);
-    }
-
-    /* ─── TOAST ─── */
-    #toast-container { position: fixed; top: 76px; right: 1.5rem; z-index: 2000; display: flex; flex-direction: column; gap: 0.5rem; }
-    .toast {
-      background: var(--surface2); border: 1px solid var(--border);
-      border-radius: 10px; padding: 0.85rem 1.25rem;
-      font-weight: 600; font-size: 0.95rem; max-width: 320px;
-      display: flex; align-items: center; gap: 0.6rem;
-      animation: toastIn 0.35s cubic-bezier(0.34,1.56,0.64,1);
-      box-shadow: 0 8px 24px rgba(0,0,0,0.3);
-    }
-    .toast.success { border-color: rgba(57,211,83,0.4); color: var(--success); }
-    .toast.error { border-color: rgba(244,67,54,0.4); color: #f44336; }
-    .toast.info { border-color: rgba(255,107,53,0.4); color: var(--primary); }
-    .toast.twitch { border-color: rgba(145,70,255,0.5); color: var(--twitch); }
-    @keyframes toastIn { from { transform: translateX(60px); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
-
-    /* ─── RESPONSIVE ─── */
-    @media (max-width: 768px) {
-      header { padding: 0 1rem; }
-      nav { display: none; }
-      .mobile-menu-btn { display: flex !important; }
-      .lb-head, .lb-row { grid-template-columns: 40px 1fr 80px; }
-      .lb-head > *:nth-child(3), .lb-row > *:nth-child(3),
-      .lb-head > *:nth-child(4), .lb-row > *:nth-child(4) { display: none; }
-      .twitch-header { flex-direction: column; align-items: flex-start; }
-    }
-    .mobile-menu-btn {
-      display: none; width: 36px; height: 36px; border-radius: 8px;
-      background: rgba(255,107,53,0.1); border: 1px solid var(--border);
-      cursor: pointer; align-items: center; justify-content: center; font-size: 1.2rem;
-    }
-
-    /* ─── FOOTER ─── */
-    footer {
-      background: var(--surface); border-top: 1px solid var(--border);
-      padding: 2rem; text-align: center; color: var(--gray);
-      font-size: 0.9rem; margin-top: 4rem; position: relative; z-index: 1;
-    }
-    footer a { color: var(--primary); text-decoration: none; }
-    footer a:hover { text-decoration: underline; }
-
-    /* ─── PROGRESS BAR ANIMATE ─── */
-    .bar-fill { width: 0 !important; }
-    .bar-fill.animated { width: var(--target-w) !important; }
-
-    /* ─── TRAINING TRACKER (dashboard extras) ─── */
-    .quick-actions { display: flex; gap: 1rem; flex-wrap: wrap; margin-bottom: 2rem; }
-    .quick-action {
-      flex: 1; min-width: 160px; background: var(--surface); border: 1px solid var(--border);
-      border-radius: 12px; padding: 1.25rem 1.5rem;
-      cursor: pointer; transition: all 0.3s; text-align: center;
-    }
-    .quick-action:hover { border-color: var(--primary); background: rgba(255,107,53,0.05); transform: translateY(-2px); }
-    .quick-action-icon { font-size: 1.5rem; margin-bottom: 0.5rem; }
-    .quick-action-label { font-family: 'Barlow Condensed', sans-serif; font-size: 0.95rem; font-weight: 700; letter-spacing: 0.05em; color: var(--gray); text-transform: uppercase; }
-
-    .announcement-bar {
-      background: linear-gradient(90deg, rgba(255,107,53,0.12), rgba(247,147,30,0.06), rgba(255,107,53,0.12));
-      border: 1px solid var(--border); border-radius: 10px;
-      padding: 0.85rem 1.5rem; margin-bottom: 1.5rem;
-      display: flex; align-items: center; gap: 1rem; font-size: 0.95rem;
-    }
-    .ann-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--success); animation: blink 1.5s infinite; flex-shrink: 0; }
-    @keyframes blink { 0%,100% { opacity: 1; } 50% { opacity: 0.3; } }
-
-    /* skills page preview */
-    .skill-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 1rem; margin-bottom: 2rem; }
-    .skill-item {
-      background: var(--surface); border: 1px solid var(--border); border-radius: 10px;
-      padding: 1.25rem; cursor: pointer; transition: all 0.3s;
-    }
-    .skill-item:hover { border-color: var(--primary); transform: translateY(-3px); }
-    .skill-icon { font-size: 1.8rem; margin-bottom: 0.5rem; }
-    .skill-name { font-family: 'Barlow Condensed', sans-serif; font-size: 1rem; font-weight: 700; margin-bottom: 0.25rem; }
-    .skill-level { font-size: 0.8rem; color: var(--gray); margin-bottom: 0.5rem; }
-    .skill-bar { height: 4px; background: rgba(255,255,255,0.07); border-radius: 4px; overflow: hidden; }
-    .skill-bar-fill { height: 100%; background: linear-gradient(90deg, var(--primary), var(--secondary)); border-radius: 4px; }
-
-    /* ─── STREAM PAGE ─── */
-    .stream-page-embed {
-      border: 2px solid var(--twitch);
-      border-radius: 16px; overflow: hidden;
-      box-shadow: 0 0 60px rgba(145,70,255,0.2);
-      margin-bottom: 2rem;
-    }
-    .stream-page-header {
-      background: linear-gradient(90deg, rgba(145,70,255,0.18), rgba(145,70,255,0.04));
-      border-bottom: 1px solid rgba(145,70,255,0.3);
-      padding: 1rem 1.5rem;
-      display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 1rem;
-    }
-    .stream-offline-page {
-      text-align: center; padding: 5rem 2rem;
-      background: var(--surface); border: 2px dashed rgba(145,70,255,0.25); border-radius: 16px;
-      margin-bottom: 2rem;
-    }
-    .stream-offline-page .stream-offline-icon { font-size: 4rem; margin-bottom: 1rem; opacity: 0.5; }
-    .stream-offline-page h3 {
-      font-family: 'Barlow Condensed', sans-serif; font-size: 1.8rem; font-weight: 800;
-      color: var(--twitch); margin-bottom: 0.5rem;
-    }
-    .stream-offline-page p { color: var(--gray); margin-bottom: 1.5rem; }
-  </style>
+/* ── MODAL CHECKOUT ── */
+.modal-item{display:flex;justify-content:space-between;align-items:center;padding:.85rem 1rem;background:rgba(255,107,53,.04);border:1px solid var(--border);border-radius:8px;margin-bottom:.45rem}
+.modal-item-name{font-weight:700}
+.modal-item-price{font-family:'Barlow Condensed',sans-serif;font-size:1.2rem;font-weight:800;color:var(--primary)}
+.modal-total{font-family:'Barlow Condensed',sans-serif;font-size:1.6rem;font-weight:900;color:var(--primary);text-align:right;margin:1rem 0;padding-top:1rem;border-top:1px solid var(--border)}
+</style>
 </head>
 <body>
 
-<!-- HEADER -->
+<div id="cursor"></div>
+<div id="cursor-ring"></div>
+<div class="scanlines"></div>
+<div id="particles"></div>
+
+<!-- ══ HEADER ══ -->
 <header>
   <div class="header-left">
     <a class="logo" onclick="showPage('dashboard')">
@@ -800,28 +632,44 @@
       <span class="logo-text">FUHA</span>
     </a>
     <nav id="mainNav">
-      <a onclick="showPage('dashboard')" class="active" data-page="dashboard">Dashboard</a>
-      <a onclick="showPage('players')" data-page="players">Players</a>
-      <a onclick="showPage('schedule')" data-page="schedule">Schedule</a>
-      <a onclick="showPage('skills')" data-page="skills">Skills</a>
-      <a onclick="showPage('shop')" data-page="shop">Shop</a>
-      <a onclick="showPage('subscriptions')" data-page="subscriptions">Plans</a>
-      <a onclick="showPage('testimonials')" data-page="testimonials">Reviews</a>
-      <a onclick="showPage('faq')" data-page="faq">FAQ</a>
-      <a onclick="showPage('stream')" data-page="stream" id="streamNavBtn">📺 Stream</a>
+      <a onclick="showPage('dashboard')" class="active" data-page="dashboard" data-en="Dashboard" data-ru="Дэшборд" data-uk="Дашборд">Dashboard</a>
+      <a onclick="showPage('players')" data-page="players" data-en="Players" data-ru="Игроки" data-uk="Гравці">Players</a>
+      <a onclick="showPage('schedule')" data-page="schedule" data-en="Schedule" data-ru="Расписание" data-uk="Розклад">Schedule</a>
+      <a onclick="showPage('skills')" data-page="skills" data-en="Skills" data-ru="Навыки" data-uk="Навички">Skills</a>
+      <a onclick="showPage('shop')" data-page="shop" data-en="Shop" data-ru="Магазин" data-uk="Магазин">Shop</a>
+      <a onclick="showPage('subscriptions')" data-page="subscriptions" data-en="Plans" data-ru="Планы" data-uk="Плани">Plans</a>
+      <a onclick="showPage('testimonials')" data-page="testimonials" data-en="Reviews" data-ru="Отзывы" data-uk="Відгуки">Reviews</a>
+      <a onclick="showPage('faq')" data-page="faq" data-en="FAQ" data-ru="FAQ" data-uk="FAQ">FAQ</a>
+      <a onclick="showPage('stream')" data-page="stream" id="streamNavBtn" data-en="📺 Stream" data-ru="📺 Стрим" data-uk="📺 Стрім">📺 Stream</a>
     </nav>
   </div>
   <div class="header-right">
     <a href="https://t.me/axo_fuha" target="_blank" class="tg-btn">📱 Telegram</a>
-    <div class="cart-icon" onclick="showPage('cart')" title="Cart">
+    <div class="cart-icon icon-btn" onclick="showPage('cart')" title="Cart">
       🛒
       <span class="cart-badge hidden" id="cartBadge">0</span>
     </div>
-    <button class="theme-btn" onclick="toggleTheme()" title="Toggle theme">🌙</button>
+    <button class="icon-btn theme-btn" onclick="toggleTheme()">🌙</button>
     <div class="lang-selector">
-      <button class="lang-btn active" onclick="setLang(this,'en')">EN</button>
-      <button class="lang-btn" onclick="setLang(this,'ru')">РУ</button>
-      <button class="lang-btn" onclick="setLang(this,'uk')">УК</button>
+      <button class="lang-btn active" onclick="setLang('en',this)">EN</button>
+      <button class="lang-btn" onclick="setLang('ru',this)">РУ</button>
+      <button class="lang-btn" onclick="setLang('uk',this)">УК</button>
+    </div>
+    <!-- AUTH AREA -->
+    <div id="authArea">
+      <button class="auth-btn" onclick="openModal('authModal')" id="loginBtn">🔐 <span data-i18n="login">Login</span></button>
+    </div>
+    <div id="userArea" style="display:none">
+      <div class="user-dropdown">
+        <div class="user-avatar-btn" id="userAvatarBtn" onclick="toggleUserMenu()"></div>
+        <div class="user-dropdown-menu" id="userDropdownMenu">
+          <a class="user-dropdown-item" onclick="showPage('profile');toggleUserMenu()">👤 <span data-i18n="myProfile">My Profile</span></a>
+          <a class="user-dropdown-item" onclick="showPage('cart');toggleUserMenu()">🛒 <span data-i18n="myCart">My Cart</span></a>
+          <a class="user-dropdown-item" onclick="showPage('subscriptions');toggleUserMenu()">⭐ <span data-i18n="upgradePlan">Upgrade Plan</span></a>
+          <div class="user-dropdown-divider"></div>
+          <a class="user-dropdown-item danger" onclick="logout()">🚪 <span data-i18n="logout">Logout</span></a>
+        </div>
+      </div>
     </div>
     <button class="mobile-menu-btn" onclick="toggleMobileMenu()">☰</button>
   </div>
@@ -829,16 +677,217 @@
 
 <div id="toast-container"></div>
 
-<!-- ══════════════ DASHBOARD ══════════════ -->
-<section id="dashboard" class="page active">
-  <div class="container">
-
-    <div class="announcement-bar">
-      <div class="ann-dot"></div>
-      <span><strong>Live:</strong> Tournament qualifier starts in 2h 30m — <span style="color:var(--primary);cursor:pointer" onclick="showPage('schedule')">View Schedule →</span></span>
+<!-- ══ AUTH MODAL ══ -->
+<div class="modal-overlay" id="authModal">
+  <div class="modal-box" style="max-width:440px">
+    <div class="modal-head">
+      <h3 id="authModalTitle">Welcome to FUHA</h3>
+      <button class="modal-close" onclick="closeModal('authModal')">✕</button>
+    </div>
+    <div class="auth-tabs">
+      <button class="auth-tab active" onclick="switchAuthTab('login',this)">Login</button>
+      <button class="auth-tab" onclick="switchAuthTab('register',this)">Sign Up</button>
     </div>
 
-    <!-- TWITCH LIVE BLOCK (shown when live) -->
+    <!-- LOGIN FORM -->
+    <div id="loginForm">
+      <div class="form-group">
+        <label class="form-label">Email</label>
+        <div class="form-input-wrap">
+          <input class="form-input" type="email" id="loginEmail" placeholder="you@example.com" autocomplete="email">
+          <span class="form-input-icon">✉️</span>
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Password</label>
+        <div class="form-input-wrap">
+          <input class="form-input" type="password" id="loginPassword" placeholder="••••••••" autocomplete="current-password" style="padding-right:2.5rem">
+          <span class="form-input-icon password-toggle" onclick="togglePwd('loginPassword',this)">👁</span>
+        </div>
+      </div>
+      <div style="display:flex;justify-content:flex-end;margin-bottom:1.25rem">
+        <a style="font-size:.83rem;color:var(--primary);cursor:none" onclick="forgotPassword()">Forgot password?</a>
+      </div>
+      <button class="btn btn-full" onclick="doLogin()">Login to FUHA →</button>
+      <div class="auth-divider" style="margin-top:1.25rem">or continue with</div>
+      <div class="oauth-btns">
+        <button class="oauth-btn" onclick="oauthLogin('Google')">
+          <svg class="oauth-icon" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
+          Continue with Google
+        </button>
+        <button class="oauth-btn" onclick="oauthLogin('Steam')">
+          <svg class="oauth-icon" viewBox="0 0 24 24"><path fill="#1b2838" d="M11.979 0C5.678 0 .511 4.86.022 11.037l6.432 2.658c.545-.371 1.203-.59 1.912-.59.063 0 .125.004.188.006l2.861-4.142V8.91c0-2.495 2.028-4.524 4.524-4.524 2.494 0 4.524 2.031 4.524 4.527s-2.03 4.525-4.524 4.525h-.105l-4.076 2.911c0 .052.004.105.004.159 0 1.875-1.515 3.396-3.39 3.396-1.635 0-3.016-1.173-3.331-2.718L.436 15.27C1.862 20.307 6.486 24 11.979 24c6.624 0 11.992-5.368 11.992-12C23.971 5.37 18.603 0 11.979 0z" fill="#4299d9"/></svg>
+          Continue with Steam
+        </button>
+      </div>
+    </div>
+
+    <!-- REGISTER FORM -->
+    <div id="registerForm" style="display:none">
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Username</label>
+          <input class="form-input" type="text" id="regUsername" placeholder="AXO_fan">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Country</label>
+          <input class="form-input" type="text" id="regCountry" placeholder="UA 🇺🇦">
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Email</label>
+        <div class="form-input-wrap">
+          <input class="form-input" type="email" id="regEmail" placeholder="you@example.com">
+          <span class="form-input-icon">✉️</span>
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Password</label>
+        <div class="form-input-wrap">
+          <input class="form-input" type="password" id="regPassword" placeholder="Create strong password" oninput="checkStrength(this.value)" style="padding-right:2.5rem">
+          <span class="form-input-icon password-toggle" onclick="togglePwd('regPassword',this)">👁</span>
+        </div>
+        <div class="strength-bar"><div class="strength-fill" id="strengthFill"></div></div>
+        <div class="form-hint" id="strengthLabel">Enter a password</div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">CS2 Rank</label>
+        <select class="form-input" id="regRank" style="cursor:none">
+          <option value="">Select your rank...</option>
+          <option>Silver I - IV</option><option>Gold Nova I - IV</option>
+          <option>Master Guardian I - II</option><option>Distinguished Master Guardian</option>
+          <option>Legendary Eagle</option><option>Legendary Eagle Master</option>
+          <option>Supreme Master First Class</option><option>Global Elite</option>
+          <option>Premier 5000+</option>
+        </select>
+      </div>
+      <label class="terms-check">
+        <input type="checkbox" id="termsCheck">
+        <span>I agree to the <a href="#" onclick="toast('Terms page coming soon','info')">Terms of Service</a> and <a href="#">Privacy Policy</a></span>
+      </label>
+      <button class="btn btn-full" onclick="doRegister()">Create Account 🚀</button>
+      <div class="auth-divider" style="margin-top:1.25rem">or</div>
+      <div class="oauth-btns">
+        <button class="oauth-btn" onclick="oauthLogin('Google')">
+          <svg class="oauth-icon" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
+          Sign up with Google
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ PAYMENT MODAL ══ -->
+<div class="modal-overlay" id="payModal">
+  <div class="modal-box" style="max-width:500px">
+    <div class="modal-head">
+      <h3 id="payModalTitle">💳 Payment</h3>
+      <button class="modal-close" onclick="closeModal('payModal')">✕</button>
+    </div>
+    <div id="payItemPreview"></div>
+    <div class="pay-tabs">
+      <button class="pay-tab active" onclick="switchPayTab('card',this)">💳 Card</button>
+      <button class="pay-tab" onclick="switchPayTab('crypto',this)">₿ Crypto</button>
+      <button class="pay-tab" onclick="switchPayTab('paypal',this)">🅿️ PayPal</button>
+    </div>
+
+    <!-- CARD -->
+    <div id="payCard">
+      <div class="card-visual" id="cardVisual">
+        <div class="card-brand" style="position:absolute;top:1.2rem;right:1.2rem">
+          <div class="card-brand-circles"><span></span><span></span></div>
+        </div>
+        <div class="card-chip"></div>
+        <div class="card-number" id="cardNumDisplay">•••• •••• •••• ••••</div>
+        <div class="card-meta">
+          <div><div class="card-meta-label">Card Holder</div><div class="card-meta-val" id="cardNameDisplay">YOUR NAME</div></div>
+          <div><div class="card-meta-label">Expires</div><div class="card-meta-val" id="cardExpDisplay">MM/YY</div></div>
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Card Number</label>
+        <input class="form-input" type="text" id="cardNum" placeholder="1234 5678 9012 3456" maxlength="19" oninput="formatCard(this)">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Cardholder Name</label>
+        <input class="form-input" type="text" id="cardName" placeholder="AXO FUHA" oninput="document.getElementById('cardNameDisplay').textContent=this.value.toUpperCase()||'YOUR NAME'">
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Expiry</label>
+          <input class="form-input" type="text" id="cardExp" placeholder="MM/YY" maxlength="5" oninput="formatExp(this)">
+        </div>
+        <div class="form-group">
+          <label class="form-label">CVV</label>
+          <input class="form-input" type="password" id="cardCvv" placeholder="•••" maxlength="4">
+        </div>
+      </div>
+    </div>
+
+    <!-- CRYPTO -->
+    <div id="payCrypto" style="display:none">
+      <div class="crypto-grid">
+        <div class="crypto-opt selected" onclick="selectCrypto(this,'BTC')"><div class="crypto-icon">₿</div><div class="crypto-name">Bitcoin</div></div>
+        <div class="crypto-opt" onclick="selectCrypto(this,'ETH')"><div class="crypto-icon">Ξ</div><div class="crypto-name">Ethereum</div></div>
+        <div class="crypto-opt" onclick="selectCrypto(this,'USDT')"><div class="crypto-icon">💵</div><div class="crypto-name">USDT</div></div>
+        <div class="crypto-opt" onclick="selectCrypto(this,'SOL')"><div class="crypto-icon">◎</div><div class="crypto-name">Solana</div></div>
+        <div class="crypto-opt" onclick="selectCrypto(this,'TON')"><div class="crypto-icon">💎</div><div class="crypto-name">TON</div></div>
+        <div class="crypto-opt" onclick="selectCrypto(this,'LTC')"><div class="crypto-icon">Ł</div><div class="crypto-name">Litecoin</div></div>
+      </div>
+      <div style="background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:1.15rem;text-align:center;margin-bottom:1rem">
+        <div style="font-size:2.5rem;margin-bottom:.5rem">⬛</div>
+        <div style="font-family:'JetBrains Mono',monospace;font-size:.75rem;color:var(--gray);word-break:break-all" id="cryptoAddress">bc1qxy2kgdygjrsqtzq2n0yrf2493p83kkfjhx0wlh</div>
+        <button class="btn btn-ghost btn-sm" style="margin-top:.75rem" onclick="copyCryptoAddress()">📋 Copy Address</button>
+      </div>
+      <div class="form-hint" style="text-align:center">Send exact amount to the address above. Payment confirmed automatically.</div>
+    </div>
+
+    <!-- PAYPAL -->
+    <div id="payPaypal" style="display:none;text-align:center;padding:2rem 0">
+      <div style="font-size:3rem;margin-bottom:1rem">🅿️</div>
+      <p style="color:var(--gray);margin-bottom:1.5rem;font-size:.95rem">You'll be redirected to PayPal to complete payment securely.</p>
+      <div style="background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:1rem;margin-bottom:1.5rem">
+        <div style="font-size:.82rem;color:var(--gray);margin-bottom:.25rem">PayPal account</div>
+        <div style="font-family:'JetBrains Mono',monospace;font-size:.9rem;color:var(--primary)">payments@fuha.gg</div>
+      </div>
+    </div>
+
+    <div class="pay-secure"><span>🔒</span> 256-bit SSL encrypted — your data is safe</div>
+    <button class="btn btn-full" style="margin-top:1rem" onclick="confirmPayment()">Pay <span id="payBtnAmount">$0.00</span> →</button>
+  </div>
+</div>
+
+<!-- ══ CHECKOUT MODAL ══ -->
+<div class="modal-overlay" id="checkoutModal">
+  <div class="modal-box">
+    <div class="modal-head">
+      <h3>Confirm Order</h3>
+      <button class="modal-close" onclick="closeModal('checkoutModal')">✕</button>
+    </div>
+    <div id="modalItems"></div>
+    <div class="modal-total">Total: <span id="modalTotal">$0.00</span></div>
+    <button class="btn btn-full" onclick="openPayFromCheckout()" style="margin-bottom:.5rem">💳 Proceed to Payment</button>
+    <button class="btn btn-outline btn-full" onclick="closeModal('checkoutModal')">Cancel</button>
+  </div>
+</div>
+
+<!-- ══════════ DASHBOARD ══════════ -->
+<section id="dashboard" class="page active">
+  <div class="container">
+    <div class="announcement-bar">
+      <div class="ann-dot"></div>
+      <div class="ann-ticker">
+        <span>🔥 FUHA Season 2 is live — new maps, new coaches, bigger prizes &nbsp;&nbsp;&nbsp;</span>
+        <span>🏆 Tournament Qualifier starts in 2h 30m — <span style="color:var(--primary);cursor:none" onclick="showPage('schedule')">View Schedule →</span> &nbsp;&nbsp;&nbsp;</span>
+        <span>⚡ H9ito just hit a 30-kill game — insane stats &nbsp;&nbsp;&nbsp;</span>
+        <span>🎓 New course drop: Advanced AWP Mechanics — limited slots &nbsp;&nbsp;&nbsp;</span>
+        <span>🔥 FUHA Season 2 is live — new maps, new coaches, bigger prizes &nbsp;&nbsp;&nbsp;</span>
+        <span>🏆 Tournament Qualifier starts in 2h 30m &nbsp;&nbsp;&nbsp;</span>
+        <span>⚡ H9ito just hit a 30-kill game &nbsp;&nbsp;&nbsp;</span>
+        <span>🎓 New course drop: Advanced AWP Mechanics &nbsp;&nbsp;&nbsp;</span>
+      </div>
+    </div>
+
     <div id="twitchBlock">
       <div class="twitch-wrapper">
         <div class="twitch-header">
@@ -855,117 +904,77 @@
           </div>
         </div>
         <div class="twitch-embed-wrap">
-          <iframe
-            id="twitchIframe"
-            src="https://player.twitch.tv/?channel=AXO_HH&parent=localhost&autoplay=true&muted=true"
-            allowfullscreen>
-          </iframe>
+          <iframe id="twitchIframe" src="" allowfullscreen></iframe>
         </div>
       </div>
     </div>
-
-    <!-- TWITCH OFFLINE TEASER (shown when offline) -->
     <div class="twitch-offline-block" id="twitchOfflineBlock" onclick="showPage('stream')" style="display:none;">
       <div class="twitch-offline-icon">📺</div>
       <div class="twitch-offline-text">
         <strong>AXO_HH on Twitch</strong>
-        <span>Stream is currently offline — follow to get notified when live</span>
+        <span>Stream is currently offline — follow to get notified</span>
       </div>
       <div class="twitch-offline-arrow">→</div>
     </div>
 
+    <div id="xpBarBlock" style="display:none">
+      <div class="xp-bar-wrap">
+        <div class="xp-level"><span>LVL</span><span id="userLevel">1</span></div>
+        <div class="xp-bar-inner">
+          <div class="xp-bar-labels"><span id="xpLabel">0 XP</span><span id="xpNextLabel">100 XP to next level</span></div>
+          <div class="xp-track"><div class="xp-fill" id="xpFill" style="width:0%"></div></div>
+        </div>
+        <div style="font-family:'Barlow Condensed',sans-serif;font-size:.88rem;font-weight:700;color:var(--gray);text-transform:uppercase;letter-spacing:.07em;white-space:nowrap" id="xpPlanBadge"></div>
+      </div>
+    </div>
+
     <div class="hero-banner">
-      <div class="hero-title">CS2 Professional Training</div>
-      <h2>Level Up Your Game,<br>Dominate the Lobby</h2>
-      <p>Advanced training methods, personal coaching and analytics used by top-ranked players. Join FUHA and start climbing.</p>
+      <div class="hero-title" data-i18n="heroTag">CS2 Professional Training</div>
+      <h2 class="glitch" data-text="Level Up Your Game,">Level Up Your Game,<br>Dominate the Lobby</h2>
+      <p data-i18n="heroDesc">Advanced training methods, personal coaching and analytics used by top-ranked players. Join FUHA and start climbing.</p>
       <div class="hero-actions">
-        <button class="btn" onclick="showPage('shop')">🛒 Browse Courses</button>
-        <button class="btn btn-outline" onclick="showPage('subscriptions')">View Plans</button>
+        <button class="btn" onclick="showPage('shop')">🛒 <span data-i18n="browseCourses">Browse Courses</span></button>
+        <button class="btn btn-outline" onclick="showPage('subscriptions')" data-i18n="viewPlans">View Plans</button>
+        <button class="btn btn-ghost" onclick="activateAimbot()">🎯 Aimbot Mode</button>
       </div>
     </div>
 
     <div class="stats-grid">
-      <div class="stat-card" onclick="showPage('players')">
-        <div class="stat-num">3</div>
-        <div class="stat-label">Pro Players</div>
+      <div class="stat-card clickable" onclick="showPage('players')">
+        <div class="stat-num">3</div><div class="stat-label" data-i18n="proPlayers">Pro Players</div>
       </div>
       <div class="stat-card">
-        <div class="stat-num" id="sessionsCount">42</div>
-        <div class="stat-label">Sessions Done</div>
+        <div class="stat-num" id="sessionsCount">42</div><div class="stat-label" data-i18n="sessionsDone">Sessions Done</div>
       </div>
       <div class="stat-card">
-        <div class="stat-num">8.5</div>
-        <div class="stat-label">Avg Rating</div>
+        <div class="stat-num">8.5</div><div class="stat-label" data-i18n="avgRating">Avg Rating</div>
       </div>
       <div class="stat-card">
-        <div class="stat-num">156h</div>
-        <div class="stat-label">Training Hours</div>
+        <div class="stat-num">156h</div><div class="stat-label" data-i18n="trainingHours">Training Hours</div>
       </div>
-      <div class="stat-card" id="pointsCard">
-        <div class="stat-num">1,250</div>
-        <div class="stat-label">Total Points</div>
+      <div class="stat-card clickable" id="pointsCard">
+        <div class="stat-num" id="totalPoints">1,250</div><div class="stat-label" data-i18n="totalPoints">Total Points</div>
       </div>
-      <div class="stat-card" onclick="showPage('shop')">
-        <div class="stat-num">12</div>
-        <div class="stat-label">Courses</div>
+      <div class="stat-card clickable" onclick="showPage('shop')">
+        <div class="stat-num">12</div><div class="stat-label" data-i18n="courses">Courses</div>
       </div>
     </div>
 
     <div class="quick-actions">
-      <div class="quick-action" onclick="startSession()">
-        <div class="quick-action-icon">▶️</div>
-        <div class="quick-action-label">Start Session</div>
-      </div>
-      <div class="quick-action" onclick="showPage('schedule')">
-        <div class="quick-action-icon">📅</div>
-        <div class="quick-action-label">Schedule</div>
-      </div>
-      <div class="quick-action" onclick="showPage('players')">
-        <div class="quick-action-icon">👥</div>
-        <div class="quick-action-label">Team</div>
-      </div>
-      <div class="quick-action" onclick="showPage('skills')">
-        <div class="quick-action-icon">📈</div>
-        <div class="quick-action-label">My Skills</div>
-      </div>
-      <div class="quick-action" onclick="showPage('stream')">
-        <div class="quick-action-icon">📺</div>
-        <div class="quick-action-label">Watch Live</div>
-      </div>
-      <div class="quick-action" onclick="openSupport()">
-        <div class="quick-action-icon">💬</div>
-        <div class="quick-action-label">Support</div>
-      </div>
+      <div class="quick-action clickable" onclick="startSession()"><div class="quick-action-icon">▶️</div><div class="quick-action-label" data-i18n="startSession">Start Session</div></div>
+      <div class="quick-action clickable" onclick="showPage('schedule')"><div class="quick-action-icon">📅</div><div class="quick-action-label" data-i18n="schedule">Schedule</div></div>
+      <div class="quick-action clickable" onclick="showPage('players')"><div class="quick-action-icon">👥</div><div class="quick-action-label" data-i18n="team">Team</div></div>
+      <div class="quick-action clickable" onclick="showPage('skills')"><div class="quick-action-icon">📈</div><div class="quick-action-label" data-i18n="mySkills">My Skills</div></div>
+      <div class="quick-action clickable" onclick="showPage('stream')"><div class="quick-action-icon">📺</div><div class="quick-action-label" data-i18n="watchLive">Watch Live</div></div>
+      <div class="quick-action clickable" onclick="openSupport()"><div class="quick-action-icon">💬</div><div class="quick-action-label" data-i18n="support">Support</div></div>
     </div>
 
-    <h3 style="font-family:'Barlow Condensed',sans-serif;font-size:1.4rem;font-weight:800;margin-bottom:1rem;">
-      🏆 Global Leaderboard
-    </h3>
+    <h3 style="font-family:'Barlow Condensed',sans-serif;font-size:1.4rem;font-weight:900;margin-bottom:1rem">🏆 <span data-i18n="globalLB">Global Leaderboard</span></h3>
     <div class="leaderboard">
-      <div class="lb-head">
-        <div>#</div><div>Nickname</div><div>Role / Team</div><div>Rating</div><div>Score</div>
-      </div>
-      <div class="lb-row fuha" onclick="showPage('players')">
-        <div class="lb-rank gold">1</div>
-        <div class="lb-name">👑 AXO <span class="fuha-tag">FUHA</span></div>
-        <div class="lb-team">Leader / IGL</div>
-        <div class="lb-rating">Premier 2945</div>
-        <div class="lb-score">2945</div>
-      </div>
-      <div class="lb-row fuha" onclick="showPage('players')">
-        <div class="lb-rank silver">2</div>
-        <div class="lb-name">⚡ H9ito <span class="fuha-tag">FUHA</span></div>
-        <div class="lb-team">Entry Fragger</div>
-        <div class="lb-rating">Premier 2856</div>
-        <div class="lb-score">2856</div>
-      </div>
-      <div class="lb-row fuha" onclick="showPage('players')">
-        <div class="lb-rank bronze">3</div>
-        <div class="lb-name">🛡️ Danixx <span class="fuha-tag">FUHA</span></div>
-        <div class="lb-team">Support</div>
-        <div class="lb-rating">Premier 2734</div>
-        <div class="lb-score">2734</div>
-      </div>
+      <div class="lb-head"><div>#</div><div data-i18n="nickname">Nickname</div><div data-i18n="roleTeam">Role / Team</div><div data-i18n="rating">Rating</div><div data-i18n="score">Score</div></div>
+      <div class="lb-row fuha clickable" onclick="showPage('players')"><div class="lb-rank gold">1</div><div class="lb-name">👑 AXO <span class="fuha-tag">FUHA</span></div><div class="lb-team">Leader / IGL</div><div class="lb-rating">Premier 2945</div><div class="lb-score">2945</div></div>
+      <div class="lb-row fuha clickable" onclick="showPage('players')"><div class="lb-rank silver">2</div><div class="lb-name">⚡ H9ito <span class="fuha-tag">FUHA</span></div><div class="lb-team">Entry Fragger</div><div class="lb-rating">Premier 2856</div><div class="lb-score">2856</div></div>
+      <div class="lb-row fuha clickable" onclick="showPage('players')"><div class="lb-rank bronze">3</div><div class="lb-name">🛡️ Danixx <span class="fuha-tag">FUHA</span></div><div class="lb-team">Support</div><div class="lb-rating">Premier 2734</div><div class="lb-score">2734</div></div>
       <div class="lb-row"><div class="lb-rank">4</div><div class="lb-name">stonebank</div><div class="lb-team">AWPer / AGO</div><div class="lb-rating">Premier 2845</div><div class="lb-score">2845</div></div>
       <div class="lb-row"><div class="lb-rank">5</div><div class="lb-name">Jady</div><div class="lb-team">Entry / FaZe</div><div class="lb-rating">Premier 2801</div><div class="lb-score">2801</div></div>
       <div class="lb-row"><div class="lb-rank">6</div><div class="lb-name">JACKZ</div><div class="lb-team">Support / G2</div><div class="lb-rating">Premier 2756</div><div class="lb-score">2756</div></div>
@@ -977,190 +986,82 @@
   </div>
 </section>
 
-<!-- ══════════════ STREAM PAGE ══════════════ -->
-<section id="stream" class="page">
-  <div class="container">
-    <div class="section-title">Live Stream</div>
-    <div class="section-sub">Watch AXO_HH live on Twitch</div>
-    <div class="accent-line"></div>
-
-    <!-- Live state -->
-    <div id="streamLiveBlock" style="display:none;">
-      <div class="stream-page-embed">
-        <div class="stream-page-header">
-          <div style="display:flex;align-items:center;gap:0.75rem;">
-            <div class="live-badge">LIVE</div>
-            <div>
-              <div class="twitch-channel-name">🎮 AXO_HH</div>
-              <div class="twitch-game-info" id="streamPageGameInfo">Counter-Strike 2</div>
-            </div>
-          </div>
-          <div style="display:flex;align-items:center;gap:0.75rem;">
-            <div class="viewer-count"><span class="eye">👁</span> <span id="streamPageViewers">...</span> viewers</div>
-            <a href="https://twitch.tv/AXO_HH" target="_blank" class="twitch-open-btn">Open Twitch ↗</a>
-          </div>
-        </div>
-        <div class="twitch-embed-wrap" style="padding-top:56.25%;">
-          <iframe
-            id="twitchIframePage"
-            src="https://player.twitch.tv/?channel=AXO_HH&parent=localhost&autoplay=true&muted=false"
-            allowfullscreen>
-          </iframe>
-        </div>
-      </div>
-
-      <!-- Chat embed -->
-      <div style="margin-top:1rem;border:1px solid rgba(145,70,255,0.3);border-radius:12px;overflow:hidden;height:500px;">
-        <iframe
-          id="twitchChatFrame"
-          src="https://www.twitch.tv/embed/AXO_HH/chat?parent=localhost&darkpopout"
-          style="width:100%;height:100%;border:none;">
-        </iframe>
-      </div>
-    </div>
-
-    <!-- Offline state -->
-    <div id="streamOfflinePage" style="display:none;">
-      <div class="stream-offline-page">
-        <div class="stream-offline-icon">📺</div>
-        <h3>Stream is Offline</h3>
-        <p>AXO_HH is not streaming right now.<br>Follow on Twitch to get notified when the next stream starts!</p>
-        <a href="https://twitch.tv/AXO_HH" target="_blank" class="btn" style="margin-right:0.75rem;">
-          Follow on Twitch
-        </a>
-        <a href="https://t.me/axo_fuha" target="_blank" class="tg-btn" style="display:inline-flex;">
-          📱 Get Notified on Telegram
-        </a>
-      </div>
-    </div>
-
-    <!-- Loading state -->
-    <div id="streamLoadingBlock">
-      <div style="text-align:center;padding:4rem 2rem;color:var(--gray);">
-        <div style="font-size:2.5rem;margin-bottom:1rem;animation:hexPulse 1.5s infinite;">📺</div>
-        <p>Checking stream status...</p>
-      </div>
-    </div>
-
-    <!-- Past streams section -->
-    <div style="margin-top:2rem;">
-      <h3 style="font-family:'Barlow Condensed',sans-serif;font-size:1.4rem;font-weight:800;margin-bottom:1rem;color:var(--light);">Recent Streams</h3>
-      <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:1rem;">
-        <div class="schedule-card" onclick="window.open('https://twitch.tv/AXO_HH/videos','_blank')">
-          <div style="font-size:1.8rem;">🎬</div>
-          <div class="schedule-day">CS2 Ranked Grind</div>
-          <div style="font-size:0.85rem;color:var(--gray);">Premier ladder — Full session</div>
-          <div class="schedule-status">Past broadcast</div>
-        </div>
-        <div class="schedule-card" onclick="window.open('https://twitch.tv/AXO_HH/videos','_blank')">
-          <div style="font-size:1.8rem;">🎯</div>
-          <div class="schedule-day">Aim Training VOD</div>
-          <div style="font-size:0.85rem;color:var(--gray);">Workshop warm-up & DM session</div>
-          <div class="schedule-status">Past broadcast</div>
-        </div>
-        <div class="schedule-card" onclick="window.open('https://twitch.tv/AXO_HH/videos','_blank')">
-          <div style="font-size:1.8rem;">🏆</div>
-          <div class="schedule-day">Tournament Qualifier</div>
-          <div style="font-size:0.85rem;color:var(--gray);">FUHA team competitive match</div>
-          <div class="schedule-status">Past broadcast</div>
-        </div>
-        <div class="schedule-card" onclick="window.open('https://twitch.tv/AXO_HH/videos','_blank')">
-          <div style="font-size:1.8rem;">📹</div>
-          <div class="schedule-day">All Past Streams</div>
-          <div style="font-size:0.85rem;color:var(--gray);">Browse full VOD library on Twitch</div>
-          <div class="schedule-status" style="color:var(--twitch);">→ View on Twitch</div>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- ══════════════ PLAYERS ══════════════ -->
+<!-- ══════════ PLAYERS ══════════ -->
 <section id="players" class="page">
   <div class="container">
-    <div class="section-title">Team FUHA</div>
-    <div class="section-sub">Our roster of professional CS2 athletes</div>
+    <div class="section-title" data-i18n="teamFuha">Team FUHA</div>
+    <div class="section-sub" data-i18n="teamSub">Our roster of professional CS2 athletes</div>
     <div class="accent-line"></div>
     <div class="players-grid">
-
       <div class="player-card fuha">
-        <div class="player-rank-badge">1</div>
-        <div class="player-avatar">👑</div>
-        <div class="player-name">AXO</div>
-        <div class="player-role">Team Leader / In-Game Leader</div>
+        <div class="player-rank-badge">1</div><div class="player-avatar">👑</div>
+        <div class="player-name">AXO</div><div class="player-role">Team Leader / In-Game Leader</div>
         <div class="stat-bar"><div class="stat-bar-header"><span class="stat-bar-label">Leadership</span><span class="stat-bar-val">98%</span></div><div class="bar-track"><div class="bar-fill" style="--target-w:98%"></div></div></div>
         <div class="stat-bar"><div class="stat-bar-header"><span class="stat-bar-label">Game Sense</span><span class="stat-bar-val">95%</span></div><div class="bar-track"><div class="bar-fill" style="--target-w:95%"></div></div></div>
         <div class="stat-bar"><div class="stat-bar-header"><span class="stat-bar-label">Aim</span><span class="stat-bar-val">87%</span></div><div class="bar-track"><div class="bar-fill" style="--target-w:87%"></div></div></div>
         <div class="stat-bar"><div class="stat-bar-header"><span class="stat-bar-label">Movement</span><span class="stat-bar-val">93%</span></div><div class="bar-track"><div class="bar-fill" style="--target-w:93%"></div></div></div>
-        <div style="margin-top:1.5rem;display:flex;gap:0.5rem;">
+        <div style="margin-top:1.4rem;display:flex;gap:.5rem">
           <button class="btn btn-sm" onclick="toast('Opening AXO profile...','info')">Profile</button>
-          <button class="btn btn-sm btn-outline" onclick="toast('Coaching session booked with AXO!','success')">Book Session</button>
+          <button class="btn btn-sm btn-outline" onclick="bookSession('AXO')">Book Session</button>
         </div>
       </div>
-
       <div class="player-card fuha">
-        <div class="player-rank-badge">2</div>
-        <div class="player-avatar">⚡</div>
-        <div class="player-name">H9ito</div>
-        <div class="player-role">Entry Fragger</div>
+        <div class="player-rank-badge">2</div><div class="player-avatar">⚡</div>
+        <div class="player-name">H9ito</div><div class="player-role">Entry Fragger</div>
         <div class="stat-bar"><div class="stat-bar-header"><span class="stat-bar-label">Aim</span><span class="stat-bar-val">91%</span></div><div class="bar-track"><div class="bar-fill" style="--target-w:91%"></div></div></div>
         <div class="stat-bar"><div class="stat-bar-header"><span class="stat-bar-label">Aggression</span><span class="stat-bar-val">89%</span></div><div class="bar-track"><div class="bar-fill" style="--target-w:89%"></div></div></div>
         <div class="stat-bar"><div class="stat-bar-header"><span class="stat-bar-label">Dueling</span><span class="stat-bar-val">87%</span></div><div class="bar-track"><div class="bar-fill" style="--target-w:87%"></div></div></div>
         <div class="stat-bar"><div class="stat-bar-header"><span class="stat-bar-label">Reaction</span><span class="stat-bar-val">92%</span></div><div class="bar-track"><div class="bar-fill" style="--target-w:92%"></div></div></div>
-        <div style="margin-top:1.5rem;display:flex;gap:0.5rem;">
+        <div style="margin-top:1.4rem;display:flex;gap:.5rem">
           <button class="btn btn-sm" onclick="toast('Opening H9ito profile...','info')">Profile</button>
-          <button class="btn btn-sm btn-outline" onclick="toast('Coaching session booked with H9ito!','success')">Book Session</button>
+          <button class="btn btn-sm btn-outline" onclick="bookSession('H9ito')">Book Session</button>
         </div>
       </div>
-
       <div class="player-card fuha">
-        <div class="player-rank-badge">3</div>
-        <div class="player-avatar">🛡️</div>
-        <div class="player-name">Danixx</div>
-        <div class="player-role">Support Player</div>
+        <div class="player-rank-badge">3</div><div class="player-avatar">🛡️</div>
+        <div class="player-name">Danixx</div><div class="player-role">Support Player</div>
         <div class="stat-bar"><div class="stat-bar-header"><span class="stat-bar-label">Support</span><span class="stat-bar-val">94%</span></div><div class="bar-track"><div class="bar-fill" style="--target-w:94%"></div></div></div>
         <div class="stat-bar"><div class="stat-bar-header"><span class="stat-bar-label">Coordination</span><span class="stat-bar-val">91%</span></div><div class="bar-track"><div class="bar-fill" style="--target-w:91%"></div></div></div>
         <div class="stat-bar"><div class="stat-bar-header"><span class="stat-bar-label">Utility</span><span class="stat-bar-val">90%</span></div><div class="bar-track"><div class="bar-fill" style="--target-w:90%"></div></div></div>
         <div class="stat-bar"><div class="stat-bar-header"><span class="stat-bar-label">Tactics</span><span class="stat-bar-val">93%</span></div><div class="bar-track"><div class="bar-fill" style="--target-w:93%"></div></div></div>
-        <div style="margin-top:1.5rem;display:flex;gap:0.5rem;">
+        <div style="margin-top:1.4rem;display:flex;gap:.5rem">
           <button class="btn btn-sm" onclick="toast('Opening Danixx profile...','info')">Profile</button>
-          <button class="btn btn-sm btn-outline" onclick="toast('Coaching session booked with Danixx!','success')">Book Session</button>
+          <button class="btn btn-sm btn-outline" onclick="bookSession('Danixx')">Book Session</button>
         </div>
       </div>
-
     </div>
   </div>
 </section>
 
-<!-- ══════════════ SCHEDULE ══════════════ -->
+<!-- ══════════ SCHEDULE ══════════ -->
 <section id="schedule" class="page">
   <div class="container">
-    <div class="section-title">Weekly Schedule</div>
-    <div class="section-sub">Your training plan for the week</div>
+    <div class="section-title" data-i18n="weeklySchedule">Weekly Schedule</div>
+    <div class="section-sub" data-i18n="scheduleSub">Your training plan for the week</div>
     <div class="accent-line"></div>
     <div class="schedule-grid" id="scheduleGrid"></div>
   </div>
 </section>
 
-<!-- ══════════════ SKILLS ══════════════ -->
+<!-- ══════════ SKILLS ══════════ -->
 <section id="skills" class="page">
   <div class="container">
-    <div class="section-title">My Skills</div>
-    <div class="section-sub">Track your progress across all CS2 mechanics</div>
+    <div class="section-title" data-i18n="mySkillsTitle">My Skills</div>
+    <div class="section-sub" data-i18n="skillsSub">Track your progress across all CS2 mechanics</div>
     <div class="accent-line"></div>
     <div class="skill-grid" id="skillGrid"></div>
-    <button class="btn" onclick="trainRandomSkill()">⚡ Train Random Skill</button>
+    <button class="btn" onclick="trainRandomSkill()">⚡ <span data-i18n="trainRandom">Train Random Skill</span></button>
   </div>
 </section>
 
-<!-- ══════════════ SHOP ══════════════ -->
+<!-- ══════════ SHOP ══════════ -->
 <section id="shop" class="page">
   <div class="container">
-    <div class="section-title">Course Shop</div>
-    <div class="section-sub">Invest in your game — one-time purchases</div>
+    <div class="section-title" data-i18n="courseShop">Course Shop</div>
+    <div class="section-sub" data-i18n="shopSub">Invest in your game — one-time purchases</div>
     <div class="accent-line"></div>
     <div class="shop-filters">
-      <button class="filter-btn active" onclick="filterShop(this,'all')">All</button>
+      <button class="filter-btn active" onclick="filterShop(this,'all')" data-i18n="all">All</button>
       <button class="filter-btn" onclick="filterShop(this,'aim')">🎯 Aim</button>
       <button class="filter-btn" onclick="filterShop(this,'tactics')">🗺️ Tactics</button>
       <button class="filter-btn" onclick="filterShop(this,'coaching')">👥 Coaching</button>
@@ -1170,11 +1071,11 @@
   </div>
 </section>
 
-<!-- ══════════════ SUBSCRIPTIONS ══════════════ -->
+<!-- ══════════ SUBSCRIPTIONS ══════════ -->
 <section id="subscriptions" class="page">
   <div class="container">
-    <div class="section-title">Training Plans</div>
-    <div class="section-sub">Choose the plan that matches your ambition</div>
+    <div class="section-title" data-i18n="trainingPlans">Training Plans</div>
+    <div class="section-sub" data-i18n="plansSub">Choose the plan that matches your ambition</div>
     <div class="accent-line"></div>
     <div class="subs-grid">
       <div class="sub-card">
@@ -1190,7 +1091,7 @@
           <li><span class="cross">✗</span> <span style="opacity:.4">1v1 coaching</span></li>
           <li><span class="cross">✗</span> <span style="opacity:.4">Analytics dashboard</span></li>
         </ul>
-        <button class="btn btn-full" onclick="subscribe('Starter','4.99')">Start Free Trial</button>
+        <button class="btn btn-full" onclick="openPayModal('Starter Plan','4.99')">Start Free Trial</button>
       </div>
       <div class="sub-card featured">
         <div class="featured-badge">Most Popular</div>
@@ -1206,7 +1107,7 @@
           <li><span class="check">✓</span> Early access content</li>
           <li><span class="cross">✗</span> <span style="opacity:.4">Personal analyst</span></li>
         </ul>
-        <button class="btn btn-full" onclick="subscribe('Pro','9.99')">Start Free Trial</button>
+        <button class="btn btn-full" onclick="openPayModal('Pro Plan','9.99')">Start Free Trial</button>
       </div>
       <div class="sub-card">
         <div class="sub-name">Elite</div>
@@ -1221,507 +1122,860 @@
           <li><span class="check">✓</span> Team scrimmage access</li>
           <li><span class="check">✓</span> VIP Discord role</li>
         </ul>
-        <button class="btn btn-full" onclick="subscribe('Elite','19.99')">Start Free Trial</button>
+        <button class="btn btn-full" onclick="openPayModal('Elite Plan','19.99')">Start Free Trial</button>
       </div>
     </div>
   </div>
 </section>
 
-<!-- ══════════════ CART ══════════════ -->
+<!-- ══════════ CART ══════════ -->
 <section id="cart" class="page">
   <div class="container">
-    <div class="section-title">Shopping Cart</div>
+    <div class="section-title" data-i18n="shoppingCart">Shopping Cart</div>
     <div class="accent-line"></div>
     <div class="cart-layout">
-      <div class="cart-panel" id="cartItems">
-        <div class="empty-state">
-          <div class="empty-state-icon">🛒</div>
-          <p>Your cart is empty — <span style="color:var(--primary);cursor:pointer" onclick="showPage('shop')">browse courses →</span></p>
-        </div>
-      </div>
+      <div class="cart-panel" id="cartItems"></div>
       <div class="summary-panel">
-        <h3 style="font-family:'Barlow Condensed',sans-serif;font-size:1.3rem;font-weight:800;margin-bottom:1.25rem;">Order Summary</h3>
-        <div class="summary-row"><span>Subtotal</span><span id="subtotal">$0.00</span></div>
-        <div class="summary-row"><span>Tax (10%)</span><span id="tax">$0.00</span></div>
-        <div class="summary-row total"><span>Total</span><span id="total">$0.00</span></div>
-        <button class="btn btn-full" style="margin-top:1.25rem" onclick="openCheckout()">Checkout →</button>
-        <button class="btn btn-outline btn-full" style="margin-top:0.5rem" onclick="clearCart()">Clear Cart</button>
+        <h3 style="font-family:'Barlow Condensed',sans-serif;font-size:1.3rem;font-weight:900;margin-bottom:1.15rem" data-i18n="orderSummary">Order Summary</h3>
+        <div class="summary-row"><span data-i18n="subtotal">Subtotal</span><span id="subtotal">$0.00</span></div>
+        <div class="summary-row"><span data-i18n="tax">Tax (10%)</span><span id="tax">$0.00</span></div>
+        <div class="summary-row total"><span data-i18n="total">Total</span><span id="total">$0.00</span></div>
+        <button class="btn btn-full" style="margin-top:1.15rem" onclick="openCheckout()">Checkout →</button>
+        <button class="btn btn-outline btn-full" style="margin-top:.45rem" onclick="clearCart()">Clear Cart</button>
       </div>
     </div>
   </div>
 </section>
 
-<!-- ══════════════ TESTIMONIALS ══════════════ -->
+<!-- ══════════ PROFILE ══════════ -->
+<section id="profile" class="page">
+  <div class="container">
+    <div class="section-title" data-i18n="myProfile">My Profile</div>
+    <div class="accent-line"></div>
+    <div class="profile-layout">
+      <div class="profile-sidebar">
+        <div class="profile-card">
+          <div class="profile-big-avatar" id="profileAvatar">?</div>
+          <div class="profile-username" id="profileUsername">Guest</div>
+          <div class="profile-email" id="profileEmail">—</div>
+          <div class="profile-plan" id="profilePlan">⭐ Free</div>
+          <div style="margin-top:1.25rem">
+            <button class="btn btn-full btn-sm" onclick="showPage('subscriptions')">Upgrade Plan ↑</button>
+          </div>
+        </div>
+        <div class="profile-card">
+          <div style="font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:1.1rem;margin-bottom:.9rem">Stats</div>
+          <div class="profile-stats">
+            <div class="profile-stat"><div class="profile-stat-num" id="profileSessions">0</div><div class="profile-stat-label">Sessions</div></div>
+            <div class="profile-stat"><div class="profile-stat-num" id="profileXp">0</div><div class="profile-stat-label">XP</div></div>
+            <div class="profile-stat"><div class="profile-stat-num" id="profileLevel">1</div><div class="profile-stat-label">Level</div></div>
+            <div class="profile-stat"><div class="profile-stat-num" id="profileCourses">0</div><div class="profile-stat-label">Courses</div></div>
+          </div>
+        </div>
+      </div>
+      <div class="profile-main">
+        <div class="profile-section">
+          <h4>🏆 Achievements</h4>
+          <div class="achievement-list" id="achievementList"></div>
+        </div>
+        <div class="profile-section">
+          <h4>📚 My Courses</h4>
+          <div class="owned-courses" id="ownedCourses">
+            <div style="color:var(--gray);font-size:.9rem;grid-column:1/-1">No courses yet — <span style="color:var(--primary);cursor:none" onclick="showPage('shop')">browse shop →</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════ TESTIMONIALS ══════════ -->
 <section id="testimonials" class="page">
   <div class="container">
-    <div class="section-title">Player Reviews</div>
-    <div class="section-sub">What the community says about FUHA</div>
+    <div class="section-title" data-i18n="playerReviews">Player Reviews</div>
+    <div class="section-sub" data-i18n="reviewsSub">What the community says about FUHA</div>
     <div class="accent-line"></div>
     <div class="reviews-grid" id="reviewsGrid"></div>
   </div>
 </section>
 
-<!-- ══════════════ FAQ ══════════════ -->
+<!-- ══════════ FAQ ══════════ -->
 <section id="faq" class="page">
   <div class="container">
     <div class="section-title">FAQ</div>
-    <div class="section-sub">Got questions? We've got answers.</div>
+    <div class="section-sub" data-i18n="faqSub">Got questions? We've got answers.</div>
     <div class="accent-line"></div>
     <div class="faq-wrap" id="faqList"></div>
   </div>
 </section>
 
-<!-- ══════════════ CHECKOUT MODAL ══════════════ -->
-<div class="modal-overlay" id="checkoutModal">
-  <div class="modal-box">
-    <div class="modal-head">
-      <h3>Confirm Order</h3>
-      <button class="modal-close-btn" onclick="closeModal('checkoutModal')">✕</button>
+<!-- ══════════ STREAM ══════════ -->
+<section id="stream" class="page">
+  <div class="container">
+    <div class="section-title" data-i18n="liveStream">Live Stream</div>
+    <div class="section-sub">Watch AXO_HH live on Twitch</div>
+    <div class="accent-line"></div>
+    <div id="streamLiveBlock" style="display:none">
+      <div class="stream-page-embed">
+        <div class="stream-page-header">
+          <div style="display:flex;align-items:center;gap:.7rem">
+            <div class="live-badge">LIVE</div>
+            <div><div class="twitch-channel-name">🎮 AXO_HH</div><div class="twitch-game-info" id="streamPageGameInfo">Counter-Strike 2</div></div>
+          </div>
+          <div style="display:flex;align-items:center;gap:.7rem">
+            <div class="viewer-count"><span class="eye">👁</span> <span id="streamPageViewers">...</span> viewers</div>
+            <a href="https://twitch.tv/AXO_HH" target="_blank" class="twitch-open-btn">Open Twitch ↗</a>
+          </div>
+        </div>
+        <div class="twitch-embed-wrap" style="padding-top:56.25%">
+          <iframe id="twitchIframePage" src="" allowfullscreen></iframe>
+        </div>
+      </div>
+      <div style="margin-top:1rem;border:1px solid rgba(145,70,255,.28);border-radius:12px;overflow:hidden;height:480px">
+        <iframe id="twitchChatFrame" src="" style="width:100%;height:100%;border:none"></iframe>
+      </div>
     </div>
-    <div id="modalItems"></div>
-    <div class="modal-total">Total: <span id="modalTotal">$0.00</span></div>
-    <button class="btn btn-full" onclick="confirmOrder()" style="margin-bottom:0.5rem">✓ Confirm & Pay</button>
-    <button class="btn btn-outline btn-full" onclick="closeModal('checkoutModal')">Cancel</button>
+    <div id="streamOfflinePage" style="display:none">
+      <div class="stream-offline-page">
+        <div style="font-size:4rem;margin-bottom:1rem;opacity:.45">📺</div>
+        <h3>Stream is Offline</h3>
+        <p>AXO_HH is not streaming right now.<br>Follow on Twitch to get notified when live!</p>
+        <a href="https://twitch.tv/AXO_HH" target="_blank" class="btn" style="margin-right:.7rem">Follow on Twitch</a>
+        <a href="https://t.me/axo_fuha" target="_blank" class="tg-btn" style="display:inline-flex">📱 Get Notified</a>
+      </div>
+    </div>
+    <div id="streamLoadingBlock">
+      <div style="text-align:center;padding:4rem 2rem;color:var(--gray)">
+        <div style="font-size:2.5rem;margin-bottom:1rem;animation:hexPulse 1.5s infinite">📺</div>
+        <p>Checking stream status...</p>
+      </div>
+    </div>
+    <div style="margin-top:2rem">
+      <h3 style="font-family:'Barlow Condensed',sans-serif;font-size:1.4rem;font-weight:900;margin-bottom:1rem" data-i18n="recentStreams">Recent Streams</h3>
+      <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:1rem">
+        <div class="schedule-card clickable" onclick="window.open('https://twitch.tv/AXO_HH/videos','_blank')"><div style="font-size:1.7rem">🎬</div><div class="schedule-day">CS2 Ranked Grind</div><div style="font-size:.83rem;color:var(--gray)">Premier ladder — Full session</div><div class="schedule-status">Past broadcast</div></div>
+        <div class="schedule-card clickable" onclick="window.open('https://twitch.tv/AXO_HH/videos','_blank')"><div style="font-size:1.7rem">🎯</div><div class="schedule-day">Aim Training VOD</div><div style="font-size:.83rem;color:var(--gray)">Workshop warm-up & DM</div><div class="schedule-status">Past broadcast</div></div>
+        <div class="schedule-card clickable" onclick="window.open('https://twitch.tv/AXO_HH/videos','_blank')"><div style="font-size:1.7rem">🏆</div><div class="schedule-day">Tournament Qualifier</div><div style="font-size:.83rem;color:var(--gray)">FUHA team competitive match</div><div class="schedule-status">Past broadcast</div></div>
+        <div class="schedule-card clickable" onclick="window.open('https://twitch.tv/AXO_HH/videos','_blank')"><div style="font-size:1.7rem">📹</div><div class="schedule-day">All Past Streams</div><div style="font-size:.83rem;color:var(--gray)">Browse full VOD library</div><div class="schedule-status" style="color:var(--twitch)">→ View on Twitch</div></div>
+      </div>
+    </div>
   </div>
-</div>
+</section>
 
 <footer>
-  <p style="margin-bottom:0.5rem">© 2026 FUHA Training System. All rights reserved.</p>
+  <p style="margin-bottom:.4rem">© 2026 FUHA Training System. All rights reserved.</p>
   <p>Contact: <a href="https://t.me/axo_fuha" target="_blank">@axo_fuha on Telegram</a> · Watch: <a href="https://twitch.tv/AXO_HH" target="_blank">twitch.tv/AXO_HH</a></p>
+  <p style="margin-top:.6rem;font-size:.75rem;color:rgba(107,122,153,.5)">💡 Tip: Try the Konami Code ↑↑↓↓←→←→BA for a surprise 🎮</p>
 </footer>
 
 <script>
-/* ─── STATE ─── */
-let cart = [];
-let lightMode = false;
-let isStreamLive = false;
-const TWITCH_CHANNEL = 'AXO_HH';
+// ═══════════════════════════════════════════
+// STATE
+// ═══════════════════════════════════════════
+let cart=[], currentUser=null, currentLang='en', isStreamLive=false;
+let currentPayItem={name:'',price:0}, selectedCrypto='BTC';
+const TWITCH_CH='AXO_HH';
+let userXP=0, userLevel=1, userSessions=0, userPlan='Free', ownedCourseIds=[];
 
-/* ─── TWITCH STREAM CHECK ─── */
-// Twitch doesn't allow direct API calls from browser without OAuth for stream status.
-// We use the Twitch Player embed trick: load iframe and detect via postMessage / oEmbed.
-// The most reliable client-side approach is the oEmbed endpoint for thumbnail detection,
-// or simply always show the embed and let Twitch handle the offline state display.
-// 
-// For a real production site: use Twitch API (Helix /streams endpoint) from your backend.
-// Here we use the Twitch embed which natively shows "Channel is Offline" when not live,
-// AND we use the unofficial thumbnail trick to detect live status without a backend.
+// ═══════════════════════════════════════════
+// TRANSLATIONS
+// ═══════════════════════════════════════════
+const I18N={
+  en:{login:'Login',myProfile:'My Profile',myCart:'My Cart',upgradePlan:'Upgrade Plan',logout:'Logout',heroTag:'CS2 Professional Training',heroDesc:'Advanced training methods, personal coaching and analytics used by top-ranked players.',browseCourses:'Browse Courses',viewPlans:'View Plans',proPlayers:'Pro Players',sessionsDone:'Sessions Done',avgRating:'Avg Rating',trainingHours:'Training Hours',totalPoints:'Total Points',courses:'Courses',startSession:'Start Session',schedule:'Schedule',team:'Team',mySkills:'My Skills',watchLive:'Watch Live',support:'Support',globalLB:'Global Leaderboard',nickname:'Nickname',roleTeam:'Role / Team',rating:'Rating',score:'Score',teamFuha:'Team FUHA',teamSub:'Our roster of professional CS2 athletes',weeklySchedule:'Weekly Schedule',scheduleSub:'Your training plan for the week',mySkillsTitle:'My Skills',skillsSub:'Track your progress across all CS2 mechanics',trainRandom:'Train Random Skill',courseShop:'Course Shop',shopSub:'Invest in your game — one-time purchases',all:'All',trainingPlans:'Training Plans',plansSub:'Choose the plan that matches your ambition',shoppingCart:'Shopping Cart',orderSummary:'Order Summary',subtotal:'Subtotal',tax:'Tax (10%)',total:'Total',playerReviews:'Player Reviews',reviewsSub:'What the community says about FUHA',faqSub:"Got questions? We've got answers.",liveStream:'Live Stream',recentStreams:'Recent Streams'},
+  ru:{login:'Войти',myProfile:'Мой профиль',myCart:'Корзина',upgradePlan:'Повысить план',logout:'Выйти',heroTag:'CS2 Профессиональный Тренинг',heroDesc:'Продвинутые методы тренировок, персональный коучинг и аналитика от топ-игроков.',browseCourses:'Курсы',viewPlans:'Планы',proPlayers:'Про игроки',sessionsDone:'Сессий',avgRating:'Рейтинг',trainingHours:'Часов тренировок',totalPoints:'Очки',courses:'Курсы',startSession:'Начать',schedule:'Расписание',team:'Команда',mySkills:'Навыки',watchLive:'Смотреть стрим',support:'Поддержка',globalLB:'Таблица лидеров',nickname:'Никнейм',roleTeam:'Роль / Команда',rating:'Рейтинг',score:'Счёт',teamFuha:'Команда FUHA',teamSub:'Наш ростер профессиональных CS2 игроков',weeklySchedule:'Расписание недели',scheduleSub:'Твой план тренировок на неделю',mySkillsTitle:'Мои навыки',skillsSub:'Отслеживай прогресс по всем механикам CS2',trainRandom:'Тренировать случайный навык',courseShop:'Магазин курсов',shopSub:'Инвестируй в свою игру',all:'Все',trainingPlans:'Планы обучения',plansSub:'Выбери план под свои амбиции',shoppingCart:'Корзина',orderSummary:'Итого',subtotal:'Сумма',tax:'Налог (10%)',total:'Итого',playerReviews:'Отзывы игроков',reviewsSub:'Что сообщество говорит о FUHA',faqSub:'Есть вопросы? У нас есть ответы.',liveStream:'Прямой эфир',recentStreams:'Последние стримы'},
+  uk:{login:'Увійти',myProfile:'Мій профіль',myCart:'Кошик',upgradePlan:'Підвищити план',logout:'Вийти',heroTag:'CS2 Професійний Тренінг',heroDesc:'Просунуті методи тренувань, персональний коучинг та аналітика від топ-гравців.',browseCourses:'Курси',viewPlans:'Плани',proPlayers:'Про гравці',sessionsDone:'Сесій',avgRating:'Рейтинг',trainingHours:'Годин тренувань',totalPoints:'Очки',courses:'Курси',startSession:'Почати',schedule:'Розклад',team:'Команда',mySkills:'Навички',watchLive:'Дивитись стрім',support:'Підтримка',globalLB:'Таблиця лідерів',nickname:'Нікнейм',roleTeam:'Роль / Команда',rating:'Рейтинг',score:'Рахунок',teamFuha:'Команда FUHA',teamSub:'Наш ростер професійних CS2 гравців',weeklySchedule:'Розклад тижня',scheduleSub:'Твій план тренувань на тиждень',mySkillsTitle:'Мої навички',skillsSub:'Відстежуй прогрес по всіх механіках CS2',trainRandom:'Тренувати випадковий навик',courseShop:'Магазин курсів',shopSub:'Інвестуй у свою гру',all:'Все',trainingPlans:'Плани навчання',plansSub:"Обери план під свої амбіції",shoppingCart:'Кошик',orderSummary:'Підсумок',subtotal:'Сума',tax:'Податок (10%)',total:'Разом',playerReviews:'Відгуки гравців',reviewsSub:'Що спільнота каже про FUHA',faqSub:'Є питання? Маємо відповіді.',liveStream:'Пряма трансляція',recentStreams:'Останні стріми'},
+};
 
-async function checkTwitchStatus() {
-  try {
-    // Use Twitch's thumbnail URL trick: live streams have a thumbnail, offline don't load the same way.
-    // We use the official oEmbed endpoint which doesn't require auth.
-    const res = await fetch(
-      `https://api.twitch.tv/helix/streams?user_login=${TWITCH_CHANNEL}`,
-      {
-        headers: {
-          // Note: In production replace these with your real Client-ID and token
-          // For demo purposes, we fall back to embed-only detection
-          'Client-ID': 'PLACEHOLDER',
-          'Authorization': 'Bearer PLACEHOLDER'
-        }
-      }
-    );
-    // If no real API key, this will fail — we catch it below
-    const data = await res.json();
-    if (data.data && data.data.length > 0) {
-      const stream = data.data[0];
-      handleLiveStatus(true, stream.viewer_count, stream.game_name || 'Counter-Strike 2');
-    } else {
-      handleLiveStatus(false);
-    }
-  } catch (e) {
-    // No API key / CORS — fall back to always showing embed
-    // Twitch embed handles offline state natively
-    handleLiveStatus(null); // null = unknown, show embed anyway
-  }
-}
-
-function handleLiveStatus(live, viewers, game) {
-  const block = document.getElementById('twitchBlock');
-  const offlineBlock = document.getElementById('twitchOfflineBlock');
-  const streamLive = document.getElementById('streamLiveBlock');
-  const streamOffline = document.getElementById('streamOfflinePage');
-  const streamLoading = document.getElementById('streamLoadingBlock');
-  const navBtn = document.getElementById('streamNavBtn');
-
-  // Hide loading on stream page
-  if (streamLoading) streamLoading.style.display = 'none';
-
-  if (live === true) {
-    // LIVE
-    isStreamLive = true;
-    block.classList.add('visible');
-    offlineBlock.style.display = 'none';
-    if (streamLive) streamLive.style.display = 'block';
-    if (streamOffline) streamOffline.style.display = 'none';
-    if (navBtn) navBtn.classList.add('live-nav');
-    if (viewers) {
-      document.getElementById('viewerCount').textContent = viewers.toLocaleString();
-      const spv = document.getElementById('streamPageViewers');
-      if (spv) spv.textContent = viewers.toLocaleString();
-    }
-    if (game) {
-      document.getElementById('twitchGameInfo').textContent = '🎮 ' + game;
-      const spg = document.getElementById('streamPageGameInfo');
-      if (spg) spg.textContent = '🎮 ' + game;
-    }
-    // Show toast only once
-    if (!sessionStorage.getItem('liveNotified')) {
-      toast('🔴 AXO_HH is LIVE on Twitch!', 'twitch');
-      sessionStorage.setItem('liveNotified', '1');
-    }
-  } else if (live === false) {
-    // OFFLINE
-    isStreamLive = false;
-    block.classList.remove('visible');
-    offlineBlock.style.display = 'flex';
-    if (streamLive) streamLive.style.display = 'none';
-    if (streamOffline) streamOffline.style.display = 'block';
-    if (navBtn) navBtn.classList.remove('live-nav');
-  } else {
-    // UNKNOWN — show embed anyway (Twitch handles offline display internally)
-    isStreamLive = false;
-    block.classList.add('visible');
-    offlineBlock.style.display = 'none';
-    if (streamLive) streamLive.style.display = 'block';
-    if (streamOffline) streamOffline.style.display = 'none';
-    document.getElementById('viewerCount').textContent = '—';
-    const spv = document.getElementById('streamPageViewers');
-    if (spv) spv.textContent = '—';
-  }
-}
-
-// Update iframe parent to current hostname for Twitch embed to work
-function fixTwitchParent() {
-  const host = window.location.hostname || 'localhost';
-  ['twitchIframe','twitchIframePage'].forEach(id => {
-    const el = document.getElementById(id);
-    if (el) {
-      el.src = `https://player.twitch.tv/?channel=${TWITCH_CHANNEL}&parent=${host}&autoplay=true&muted=${id==='twitchIframe'?'true':'false'}`;
-    }
+function setLang(lang,btn){
+  currentLang=lang;
+  document.querySelectorAll('.lang-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  document.querySelectorAll('[data-i18n]').forEach(el=>{
+    const key=el.dataset.i18n;
+    if(I18N[lang][key]) el.textContent=I18N[lang][key];
   });
-  const chat = document.getElementById('twitchChatFrame');
-  if (chat) {
-    chat.src = `https://www.twitch.tv/embed/${TWITCH_CHANNEL}/chat?parent=${host}&darkpopout`;
-  }
+  document.querySelectorAll('nav a[data-'+lang+']').forEach(a=>{
+    a.textContent=a.dataset[lang];
+  });
+  toast({en:'Language: English 🇬🇧',ru:'Язык: Русский 🇷🇺',uk:'Мова: Українська 🇺🇦'}[lang],'info');
 }
 
-/* ─── DATA ─── */
-const SCHEDULE = [
-  { day:'Monday', icon:'💪', tasks:['Warm-up routine','Aim workshop','DM practice'], status:'completed' },
-  { day:'Tuesday', icon:'🎯', tasks:['Crosshair placement','Retake scenarios','VOD review'], status:'completed' },
-  { day:'Wednesday', icon:'🗺️', tasks:['Map control study','Scrim session','Post-scrim analysis'], status:'today' },
-  { day:'Thursday', icon:'🎮', tasks:['Reflex training','Ranked matches','Team debrief'], status:'upcoming' },
-  { day:'Friday', icon:'🏆', tasks:['Tournament warm-up','Strategy prep','Qualifier match'], status:'upcoming' },
-  { day:'Saturday', icon:'⚔️', tasks:['Competitive grind','Leaderboard push','Review'], status:'upcoming' },
-  { day:'Sunday', icon:'☕', tasks:['Light practice','Mental recovery','Goal setting'], status:'upcoming' },
-];
-
-const PRODUCTS = [
-  { id:'aim-master', icon:'🎯', name:'Aim Master', desc:'Advanced aiming techniques & crosshair drills', price:29.99, cat:'aim', badge:'hot' },
-  { id:'map-bundle', icon:'🗺️', name:'Map Bundle', desc:'Complete guide for all competitive maps', price:24.99, cat:'tactics' },
-  { id:'dm-pack', icon:'🎮', name:'DM Pack', desc:'30-day structured deathmatch training program', price:34.99, cat:'aim', badge:'new' },
-  { id:'pro-config', icon:'⚙️', name:'Pro Config', desc:'Professional settings, binds & launch options', price:19.99, cat:'config' },
-  { id:'analytics', icon:'📊', name:'Analytics Tool', desc:'Performance tracking & heatmaps dashboard', price:39.99, cat:'tactics', badge:'new' },
-  { id:'coaching-1v1', icon:'👥', name:'Coaching 1v1', desc:'Personal 1-hour session with a FUHA coach', price:49.99, cat:'coaching', badge:'hot' },
-  { id:'advanced-course', icon:'🔬', name:'Advanced Course', desc:'Deep-dive mechanics for experienced players', price:59.99, cat:'aim' },
-  { id:'master-class', icon:'🎓', name:'Master Class', desc:'Full pro masterclass bundle — 12 modules', price:99.99, cat:'tactics', badge:'sale' },
-  { id:'config-pack', icon:'⚙️', name:'Config Pack', desc:'10 pro gaming setups with explanations', price:44.99, cat:'config' },
-  { id:'replay', icon:'🎬', name:'Replay Analysis', desc:'Pro-coached replay commentary & breakdown', price:29.99, cat:'coaching' },
-  { id:'lb-pass', icon:'🌐', name:'Leaderboard Pass', desc:'Global rankings access & comparison tools', price:14.99, cat:'tactics' },
-  { id:'private-session', icon:'🔐', name:'Private Session', desc:'Exclusive 1v1 with a top professional player', price:99.99, cat:'coaching', badge:'hot' },
-];
-
-const REVIEWS = [
-  { author:'👑 AXO', tag:'FUHA — Team Leader', stars:5, text:'Built FUHA to help players improve like never before. The training system is world-class and we keep raising the bar.' },
-  { author:'⚡ H9ito', tag:'FUHA — Entry Fragger', stars:5, text:'The aim courses and analytics completely transformed how I approach warm-up. Best investment I\'ve made as a competitive player.' },
-  { author:'🛡️ Danixx', tag:'FUHA — Support', stars:5, text:'Coaching sessions helped me understand game sense on a completely different level. My positioning improved within weeks.' },
-  { author:'stonebank', tag:'AGO — AWPer', stars:5, text:'Outstanding platform. The AWP-specific guides are exceptional — finally something tailored to snipers.' },
-  { author:'Jady', tag:'FaZe — Entry', stars:5, text:'Incredible analytics and real support from coaches who actually play at the top level. Worth every penny.' },
-  { author:'JACKZ', tag:'G2 — Support', stars:4, text:'The best training system I\'ve used. Comprehensive content and a great community. Highly recommend to any serious player.' },
-];
-
-const FAQS = [
-  { q:'What is FUHA?', a:'FUHA is a professional CS2 training system created by competitive players to help you improve through structured courses, personal coaching sessions, and detailed performance analytics.' },
-  { q:'Is there a free trial?', a:'Yes! Every subscription plan includes a 7-day free trial. No credit card required to get started.' },
-  { q:'Can I cancel anytime?', a:'Absolutely — cancel at any time with zero penalties or hidden fees. We only want you here if you\'re getting value.' },
-  { q:'What payment methods are accepted?', a:'We accept Visa, Mastercard, PayPal, and major cryptocurrencies. All transactions are encrypted and secure.' },
-  { q:'Do you offer refunds?', a:'Yes. We offer a full 30-day money-back guarantee on all subscriptions if you\'re not satisfied for any reason.' },
-  { q:'How long are coaching sessions?', a:'Standard sessions are 60 minutes. Custom durations can be arranged — reach out on Telegram to discuss your needs.' },
-  { q:'Is there a leaderboard?', a:'Yes! We maintain a global leaderboard tracking Premier rating, session scores, and training progress across all members.' },
-  { q:'Can I download courses for offline use?', a:'Most courses can be downloaded for offline viewing. Look for the download icon on eligible course pages.' },
-  { q:'What rank do I need to join?', a:'FUHA welcomes all ranks — from Silver to Global Elite. Training is tailored to your current level and goals.' },
-  { q:'Is there a team/group discount?', a:'Yes! Teams of 5+ get 20% off Elite plans. Message us on Telegram with your team details.' },
-];
-
-const SKILLS = [
-  { icon:'🎯', name:'Aim', level:'Advanced', pct:78 },
-  { icon:'🧠', name:'Game Sense', level:'Intermediate', pct:62 },
-  { icon:'🗺️', name:'Map Knowledge', level:'Advanced', pct:85 },
-  { icon:'💣', name:'Utility Usage', level:'Intermediate', pct:54 },
-  { icon:'🏃', name:'Movement', level:'Beginner', pct:41 },
-  { icon:'📻', name:'Communication', level:'Advanced', pct:80 },
-  { icon:'🔫', name:'Spray Control', level:'Intermediate', pct:67 },
-  { icon:'👁️', name:'Crosshair Placement', level:'Intermediate', pct:70 },
-];
-
-/* ─── INIT ─── */
-document.addEventListener('DOMContentLoaded', () => {
-  fixTwitchParent();
-  checkTwitchStatus();
-  // Re-check every 3 minutes
-  setInterval(checkTwitchStatus, 3 * 60 * 1000);
-  renderSchedule();
-  renderProducts('all');
-  renderReviews();
-  renderFaq();
-  renderSkills();
+// ═══════════════════════════════════════════
+// CURSOR
+// ═══════════════════════════════════════════
+const cur=document.getElementById('cursor'),curRing=document.getElementById('cursor-ring');
+document.addEventListener('mousemove',e=>{
+  cur.style.left=e.clientX+'px'; cur.style.top=e.clientY+'px';
+  setTimeout(()=>{curRing.style.left=e.clientX+'px';curRing.style.top=e.clientY+'px'},60);
 });
 
-/* ─── PAGE NAVIGATION ─── */
-function showPage(id) {
-  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-  document.getElementById(id).classList.add('active');
-  document.querySelectorAll('nav a').forEach(a => {
-    a.classList.toggle('active', a.dataset.page === id);
-    // Preserve live-nav class on stream button
-    if (a.dataset.page === 'stream' && isStreamLive) a.classList.add('live-nav');
-  });
-  if (id === 'players') setTimeout(animateBars, 100);
-  window.scrollTo({ top: 0, behavior: 'smooth' });
-}
-
-/* ─── THEME ─── */
-function toggleTheme() {
-  lightMode = !lightMode;
-  document.body.classList.toggle('light', lightMode);
-  document.querySelector('.theme-btn').textContent = lightMode ? '🌙' : '☀️';
-}
-
-/* ─── LANGUAGE ─── */
-function setLang(btn, lang) {
-  document.querySelectorAll('.lang-btn').forEach(b => b.classList.remove('active'));
-  btn.classList.add('active');
-  toast(`Language: ${lang.toUpperCase()}`, 'info');
-}
-
-/* ─── TOAST ─── */
-function toast(msg, type = 'success') {
-  const icons = { success:'✓', error:'✕', info:'ℹ', twitch:'📺' };
-  const el = document.createElement('div');
-  el.className = `toast ${type}`;
-  el.innerHTML = `<span>${icons[type]||'ℹ'}</span> ${msg}`;
-  document.getElementById('toast-container').appendChild(el);
-  setTimeout(() => el.remove(), 3200);
-}
-
-/* ─── CART ─── */
-function addToCart(id, name, price) {
-  cart.push({ id, name, price });
-  updateCartUI();
-  toast(`${name} added to cart!`);
-}
-function removeFromCart(idx) {
-  cart.splice(idx, 1);
-  updateCartUI();
-  renderCartPage();
-  toast('Item removed', 'info');
-}
-function clearCart() {
-  if (!cart.length) { toast('Cart is already empty', 'error'); return; }
-  cart = [];
-  updateCartUI();
-  renderCartPage();
-  toast('Cart cleared', 'info');
-}
-function updateCartUI() {
-  const badge = document.getElementById('cartBadge');
-  badge.textContent = cart.length;
-  badge.classList.toggle('hidden', cart.length === 0);
-  renderCartPage();
-  updateSummary();
-}
-function renderCartPage() {
-  const el = document.getElementById('cartItems');
-  if (!cart.length) {
-    el.innerHTML = `<div class="empty-state"><div class="empty-state-icon">🛒</div><p>Your cart is empty — <span style="color:var(--primary);cursor:pointer" onclick="showPage('shop')">browse courses →</span></p></div>`;
-    return;
+// ═══════════════════════════════════════════
+// PARTICLES
+// ═══════════════════════════════════════════
+(function spawnParticles(){
+  const c=document.getElementById('particles');
+  for(let i=0;i<18;i++){
+    const p=document.createElement('div');p.className='particle';
+    p.style.left=Math.random()*100+'vw';
+    p.style.animationDuration=(8+Math.random()*14)+'s';
+    p.style.animationDelay=(-Math.random()*14)+'s';
+    p.style.width=p.style.height=(1+Math.random()*2)+'px';
+    p.style.opacity=Math.random()*.5;
+    c.appendChild(p);
   }
-  el.innerHTML = cart.map((item, i) => `
+})();
+
+// ═══════════════════════════════════════════
+// PAGE NAV
+// ═══════════════════════════════════════════
+function showPage(id){
+  if((id==='profile'||id==='cart')&&!currentUser){
+    toast('Please login first!','error'); openModal('authModal'); return;
+  }
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  document.querySelectorAll('nav a').forEach(a=>{
+    a.classList.toggle('active',a.dataset.page===id);
+    if(a.dataset.page==='stream'&&isStreamLive) a.classList.add('live-nav');
+  });
+  if(id==='players') setTimeout(animateBars,100);
+  if(id==='profile') updateProfilePage();
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+// ═══════════════════════════════════════════
+// THEME
+// ═══════════════════════════════════════════
+function toggleTheme(){
+  document.body.classList.toggle('light');
+  document.querySelector('.theme-btn').textContent=document.body.classList.contains('light')?'☀️':'🌙';
+}
+
+// ═══════════════════════════════════════════
+// TOAST
+// ═══════════════════════════════════════════
+function toast(msg,type='success'){
+  const icons={success:'✓',error:'✕',info:'ℹ',twitch:'📺'};
+  const el=document.createElement('div');
+  el.className=`toast ${type}`;
+  el.innerHTML=`<span>${icons[type]||'ℹ'}</span>${msg}`;
+  document.getElementById('toast-container').appendChild(el);
+  setTimeout(()=>el.remove(),3500);
+}
+
+// ═══════════════════════════════════════════
+// MODAL
+// ═══════════════════════════════════════════
+function openModal(id){document.getElementById(id).classList.add('active')}
+function closeModal(id){document.getElementById(id).classList.remove('active')}
+document.querySelectorAll('.modal-overlay').forEach(m=>{
+  m.addEventListener('click',e=>{if(e.target===m)m.classList.remove('active')});
+});
+
+// ═══════════════════════════════════════════
+// AUTH
+// ═══════════════════════════════════════════
+const DEMO_USERS=JSON.parse(localStorage.getItem('fuhaUsers')||'{}');
+
+function switchAuthTab(tab,btn){
+  document.querySelectorAll('.auth-tab').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById('loginForm').style.display=tab==='login'?'block':'none';
+  document.getElementById('registerForm').style.display=tab==='register'?'block':'none';
+  document.getElementById('authModalTitle').textContent=tab==='login'?'Welcome to FUHA':'Join FUHA';
+}
+
+function doLogin(){
+  const email=document.getElementById('loginEmail').value.trim();
+  const pass=document.getElementById('loginPassword').value;
+  if(!email||!pass){toast('Fill in all fields','error');return}
+  const users=JSON.parse(localStorage.getItem('fuhaUsers')||'{}');
+  if(users[email]&&users[email].password===btoa(pass)){
+    loginSuccess(users[email]);
+  } else if(email==='demo@fuha.gg'&&pass==='demo123'){
+    loginSuccess({username:'AXO_Fan',email:'demo@fuha.gg',rank:'Premier 5000+',plan:'Pro',xp:340,level:4,sessions:12,ownedCourses:['aim-master','pro-config']});
+  } else {
+    toast('Invalid email or password','error');
+    document.getElementById('loginPassword').style.borderColor='#f44336';
+    setTimeout(()=>document.getElementById('loginPassword').style.borderColor='',1500);
+  }
+}
+
+function doRegister(){
+  const username=document.getElementById('regUsername').value.trim();
+  const email=document.getElementById('regEmail').value.trim();
+  const pass=document.getElementById('regPassword').value;
+  const rank=document.getElementById('regRank').value;
+  if(!username||!email||!pass){toast('Fill in all fields','error');return}
+  if(pass.length<6){toast('Password must be 6+ characters','error');return}
+  if(!document.getElementById('termsCheck').checked){toast('Accept the terms first','error');return}
+  const users=JSON.parse(localStorage.getItem('fuhaUsers')||'{}');
+  if(users[email]){toast('Email already registered','error');return}
+  const userData={username,email,password:btoa(pass),rank:rank||'Unranked',plan:'Free',xp:0,level:1,sessions:0,ownedCourses:[]};
+  users[email]=userData;
+  localStorage.setItem('fuhaUsers',JSON.stringify(users));
+  loginSuccess(userData);
+  toast('Account created! Welcome to FUHA 🎉','success');
+}
+
+function loginSuccess(user){
+  currentUser=user;
+  userXP=user.xp||0; userLevel=user.level||1;
+  userSessions=user.sessions||0; userPlan=user.plan||'Free';
+  ownedCourseIds=user.ownedCourses||[];
+  closeModal('authModal');
+  document.getElementById('authArea').style.display='none';
+  document.getElementById('userArea').style.display='block';
+  const initials=user.username.substring(0,2).toUpperCase();
+  document.getElementById('userAvatarBtn').textContent=initials;
+  showXPBar();
+  toast(`Welcome back, ${user.username}! 👑`,'success');
+  if(!sessionStorage.getItem('liveNotified')&&isStreamLive){
+    setTimeout(()=>{toast('🔴 AXO_HH is LIVE on Twitch right now!','twitch');sessionStorage.setItem('liveNotified','1')},1500);
+  }
+  renderCartPage();
+}
+
+function logout(){
+  currentUser=null; cart=[];
+  document.getElementById('authArea').style.display='block';
+  document.getElementById('userArea').style.display='none';
+  document.getElementById('xpBarBlock').style.display='none';
+  document.getElementById('userDropdownMenu').classList.remove('open');
+  updateCartUI();
+  toast('Logged out — see you next time!','info');
+  showPage('dashboard');
+}
+
+function toggleUserMenu(){
+  document.getElementById('userDropdownMenu').classList.toggle('open');
+}
+document.addEventListener('click',e=>{
+  const menu=document.getElementById('userDropdownMenu');
+  if(menu&&!menu.contains(e.target)&&!document.getElementById('userAvatarBtn').contains(e.target)){
+    menu.classList.remove('open');
+  }
+});
+
+function oauthLogin(provider){
+  closeModal('authModal');
+  toast(`${provider} login coming soon!`,'info');
+}
+function forgotPassword(){toast('Password reset link sent to your email (demo)','info')}
+function togglePwd(id,btn){
+  const inp=document.getElementById(id);
+  inp.type=inp.type==='password'?'text':'password';
+  btn.textContent=inp.type==='password'?'👁':'🙈';
+}
+function checkStrength(val){
+  const fill=document.getElementById('strengthFill'),lbl=document.getElementById('strengthLabel');
+  let score=0;
+  if(val.length>=6)score++;if(val.length>=10)score++;
+  if(/[A-Z]/.test(val))score++;if(/[0-9]/.test(val))score++;if(/[^a-zA-Z0-9]/.test(val))score++;
+  const pct=[0,20,40,60,85,100][score];
+  const colors=['','#f44336','#ff9800','#ffcc00','#8bc34a','#4caf50'][score];
+  const labels=['Enter a password','Very weak','Weak','Fair','Strong','Very strong'][score];
+  fill.style.width=pct+'%'; fill.style.background=colors||'transparent';
+  lbl.textContent=labels;
+}
+
+// XP SYSTEM
+function showXPBar(){
+  document.getElementById('xpBarBlock').style.display='block';
+  const nextLevelXP=userLevel*100;
+  const pct=Math.min(100,(userXP/nextLevelXP)*100);
+  document.getElementById('userLevel').textContent=userLevel;
+  document.getElementById('xpLabel').textContent=userXP+' XP';
+  document.getElementById('xpNextLabel').textContent=(nextLevelXP-userXP)+' XP to next level';
+  document.getElementById('xpPlanBadge').textContent='⭐ '+userPlan;
+  setTimeout(()=>document.getElementById('xpFill').style.width=pct+'%',100);
+}
+function gainXP(amount){
+  if(!currentUser)return;
+  userXP+=amount;
+  const nextLevelXP=userLevel*100;
+  if(userXP>=nextLevelXP){userXP-=nextLevelXP;userLevel++;toast(`🎉 Level Up! You're now Level ${userLevel}!`,'success');spawnConfetti();}
+  showXPBar();
+  if(currentUser){currentUser.xp=userXP;currentUser.level=userLevel;saveUser()}
+}
+function saveUser(){
+  if(!currentUser)return;
+  const users=JSON.parse(localStorage.getItem('fuhaUsers')||'{}');
+  if(users[currentUser.email]){users[currentUser.email]=Object.assign(users[currentUser.email],{xp:userXP,level:userLevel,sessions:userSessions,ownedCourses:ownedCourseIds});localStorage.setItem('fuhaUsers',JSON.stringify(users));}
+}
+
+// PROFILE PAGE
+function updateProfilePage(){
+  if(!currentUser)return;
+  document.getElementById('profileAvatar').textContent=currentUser.username.substring(0,2).toUpperCase();
+  document.getElementById('profileUsername').textContent=currentUser.username;
+  document.getElementById('profileEmail').textContent=currentUser.email;
+  document.getElementById('profilePlan').textContent='⭐ '+userPlan+' Plan';
+  document.getElementById('profileSessions').textContent=userSessions;
+  document.getElementById('profileXp').textContent=userXP;
+  document.getElementById('profileLevel').textContent=userLevel;
+  document.getElementById('profileCourses').textContent=ownedCourseIds.length;
+  renderAchievements();
+  renderOwnedCourses();
+}
+function renderAchievements(){
+  const list=document.getElementById('achievementList');
+  const achs=[
+    {icon:'🎯',name:'First Blood',desc:'Complete your first training session',earned:userSessions>=1,badge:'Bronze'},
+    {icon:'🔥',name:'On Fire',desc:'Complete 10 sessions',earned:userSessions>=10,badge:'Silver'},
+    {icon:'👑',name:'FUHA Legend',desc:'Reach Level 5',earned:userLevel>=5,badge:'Gold'},
+    {icon:'📚',name:'Knowledge Seeker',desc:'Purchase 3 courses',earned:ownedCourseIds.length>=3,badge:'Silver'},
+    {icon:'💪',name:'Grinder',desc:'50 training sessions',earned:userSessions>=50,badge:'Gold'},
+    {icon:'🏆',name:'Pro Member',desc:'Subscribe to Pro or Elite plan',earned:userPlan!=='Free',badge:'Platinum'},
+  ];
+  list.innerHTML=achs.map(a=>`
+    <div class="achievement-item" style="${!a.earned?'opacity:.4;filter:grayscale(1)':''}">
+      <div class="achievement-icon">${a.icon}</div>
+      <div><div class="achievement-name">${a.name}</div><div class="achievement-desc">${a.desc}</div></div>
+      ${a.earned?`<div class="achievement-badge">${a.badge}</div>`:''}
+    </div>
+  `).join('');
+}
+function renderOwnedCourses(){
+  const el=document.getElementById('ownedCourses');
+  if(!ownedCourseIds.length){el.innerHTML='<div style="color:var(--gray);font-size:.9rem;grid-column:1/-1">No courses yet — <span style="color:var(--primary);cursor:none" onclick="showPage(\'shop\')">browse shop →</span></div>';return}
+  el.innerHTML=ownedCourseIds.map(id=>{
+    const p=PRODUCTS.find(x=>x.id===id);
+    if(!p)return '';
+    return `<div class="owned-course-card clickable"><div class="owned-course-icon">${p.icon}</div><div class="owned-course-name">${p.name}</div><div class="owned-course-status">✓ Owned</div></div>`;
+  }).join('');
+}
+
+// ═══════════════════════════════════════════
+// PAYMENT
+// ═══════════════════════════════════════════
+function openPayModal(name,price){
+  if(!currentUser){toast('Login to purchase','error');openModal('authModal');return}
+  currentPayItem={name,price:parseFloat(price)};
+  document.getElementById('payModalTitle').textContent='💳 '+name;
+  document.getElementById('payItemPreview').innerHTML=`<div class="modal-item"><div class="modal-item-name">${name}</div><div class="modal-item-price">$${parseFloat(price).toFixed(2)}</div></div>`;
+  document.getElementById('payBtnAmount').textContent='$'+parseFloat(price).toFixed(2);
+  openModal('payModal');
+}
+function switchPayTab(tab,btn){
+  document.querySelectorAll('.pay-tab').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  ['payCard','payCrypto','payPaypal'].forEach(id=>document.getElementById(id).style.display='none');
+  document.getElementById('pay'+tab.charAt(0).toUpperCase()+tab.slice(1)).style.display='block';
+}
+function formatCard(inp){
+  let v=inp.value.replace(/\D/g,'').substring(0,16);
+  v=v.replace(/(.{4})/g,'$1 ').trim();
+  inp.value=v;
+  const masked=v.padEnd(19,'•').replace(/[0-9]/g,(c,i)=>i<12?'•':c);
+  document.getElementById('cardNumDisplay').textContent=masked||'•••• •••• •••• ••••';
+}
+function formatExp(inp){
+  let v=inp.value.replace(/\D/g,'');
+  if(v.length>=2) v=v.substring(0,2)+'/'+v.substring(2,4);
+  inp.value=v;
+  document.getElementById('cardExpDisplay').textContent=v||'MM/YY';
+}
+function selectCrypto(el,coin){
+  document.querySelectorAll('.crypto-opt').forEach(o=>o.classList.remove('selected'));
+  el.classList.add('selected');selectedCrypto=coin;
+  const addrs={BTC:'bc1qxy2kgdygjrsqtzq2n0yrf2493p83kkfjhx0wlh',ETH:'0x742d35Cc6634C0532925a3b844Bc454e4438f44e',USDT:'TQn9Y2khEsLJW1ChVWFMSMeRDow5KcbLSE',SOL:'9WzDXwBbmkg8ZTbNMqUxvQRAyrZzDsGYdLVL9zYtAWWM',TON:'UQBvW8Y5FfDDgH2bOT0GCZ3R4j6dIPsK5e8n1cLmVVpp',LTC:'LcDmTUd5KCuHgdqRqkCvFCkGVRiKJfLjis'};
+  document.getElementById('cryptoAddress').textContent=addrs[coin]||addrs.BTC;
+}
+function copyCryptoAddress(){
+  const addr=document.getElementById('cryptoAddress').textContent;
+  navigator.clipboard.writeText(addr).then(()=>toast('Address copied!','success'));
+}
+function confirmPayment(){
+  const tab=[...document.querySelectorAll('.pay-tab')].find(b=>b.classList.contains('active'));
+  const method=tab?.textContent.trim()||'Card';
+  if(method.includes('Card')){
+    const num=document.getElementById('cardNum').value.replace(/\s/g,'');
+    if(num.length<16){toast('Enter valid card number','error');return}
+    if(!document.getElementById('cardName').value){toast('Enter cardholder name','error');return}
+    if(!document.getElementById('cardExp').value){toast('Enter expiry date','error');return}
+    if(!document.getElementById('cardCvv').value){toast('Enter CVV','error');return}
+  }
+  closeModal('payModal');
+  // Processing animation
+  toast('🔄 Processing payment...','info');
+  setTimeout(()=>{
+    toast(`✅ Payment of $${currentPayItem.price.toFixed(2)} confirmed!`,'success');
+    spawnConfetti();
+    if(currentPayItem.name.includes('Plan')){
+      userPlan=currentPayItem.name.replace(' Plan','');
+      if(currentUser){currentUser.plan=userPlan;saveUser()}
+      document.getElementById('xpPlanBadge').textContent='⭐ '+userPlan;
+      toast(`🚀 Welcome to ${userPlan} Plan!`,'success');
+    }
+    gainXP(50);
+  },2000);
+}
+function openPayFromCheckout(){
+  const sub=cart.reduce((s,i)=>s+i.price,0);
+  closeModal('checkoutModal');
+  currentPayItem={name:'FUHA Cart Order',price:sub*1.1};
+  document.getElementById('payModalTitle').textContent='💳 Cart Checkout';
+  document.getElementById('payItemPreview').innerHTML=`<div class="modal-item"><div class="modal-item-name">FUHA Cart (${cart.length} items)</div><div class="modal-item-price">$${(sub*1.1).toFixed(2)}</div></div>`;
+  document.getElementById('payBtnAmount').textContent='$'+(sub*1.1).toFixed(2);
+  openModal('payModal');
+}
+
+// ═══════════════════════════════════════════
+// CART
+// ═══════════════════════════════════════════
+function addToCart(id,name,price){
+  if(!currentUser){toast('Login to add to cart','error');openModal('authModal');return}
+  if(ownedCourseIds.includes(id)){toast('You already own this course!','info');return}
+  if(cart.find(i=>i.id===id)){toast('Already in cart','info');return}
+  cart.push({id,name,price});updateCartUI();toast(`${name} added to cart! 🛒`);
+}
+function removeFromCart(idx){cart.splice(idx,1);updateCartUI();renderCartPage();toast('Item removed','info')}
+function clearCart(){if(!cart.length){toast('Cart is empty','error');return}cart=[];updateCartUI();renderCartPage();toast('Cart cleared','info')}
+function updateCartUI(){
+  const badge=document.getElementById('cartBadge');
+  badge.textContent=cart.length;badge.classList.toggle('hidden',cart.length===0);
+  renderCartPage();updateSummary();
+}
+function renderCartPage(){
+  const el=document.getElementById('cartItems');
+  if(!cart.length){el.innerHTML=`<div class="empty-state"><div class="empty-state-icon">🛒</div><p>Your cart is empty — <span style="color:var(--primary);cursor:none" onclick="showPage('shop')">browse courses →</span></p></div>`;return}
+  el.innerHTML=cart.map((item,i)=>`
     <div class="cart-item">
       <div class="cart-item-icon">${PRODUCTS.find(p=>p.id===item.id)?.icon||'📦'}</div>
       <div><div class="cart-item-name">${item.name}</div><div class="cart-item-sub">One-time purchase</div></div>
       <div class="cart-item-price">$${item.price.toFixed(2)}</div>
       <button class="remove-btn" onclick="removeFromCart(${i})">✕</button>
-    </div>
-  `).join('');
+    </div>`).join('');
 }
-function updateSummary() {
-  const sub = cart.reduce((s,i)=>s+i.price, 0);
-  const tax = sub * 0.1;
-  document.getElementById('subtotal').textContent = '$'+sub.toFixed(2);
-  document.getElementById('tax').textContent = '$'+tax.toFixed(2);
-  document.getElementById('total').textContent = '$'+(sub+tax).toFixed(2);
+function updateSummary(){
+  const sub=cart.reduce((s,i)=>s+i.price,0),tax=sub*.1;
+  document.getElementById('subtotal').textContent='$'+sub.toFixed(2);
+  document.getElementById('tax').textContent='$'+tax.toFixed(2);
+  document.getElementById('total').textContent='$'+(sub+tax).toFixed(2);
 }
-
-/* ─── CHECKOUT ─── */
-function openCheckout() {
-  if (!cart.length) { toast('Your cart is empty!', 'error'); return; }
-  const sub = cart.reduce((s,i)=>s+i.price, 0);
-  const total = sub * 1.1;
-  document.getElementById('modalItems').innerHTML = cart.map(i=>`
-    <div class="modal-item">
-      <div class="modal-item-name">${i.name}</div>
-      <div class="modal-item-price">$${i.price.toFixed(2)}</div>
-    </div>
-  `).join('');
-  document.getElementById('modalTotal').textContent = '$'+total.toFixed(2);
-  document.getElementById('checkoutModal').classList.add('active');
-}
-function closeModal(id) { document.getElementById(id).classList.remove('active'); }
-function confirmOrder() {
-  closeModal('checkoutModal');
-  toast('🎉 Order confirmed! Check your email.', 'success');
-  cart = [];
-  updateCartUI();
+function openCheckout(){
+  if(!cart.length){toast('Cart is empty!','error');return}
+  const sub=cart.reduce((s,i)=>s+i.price,0);
+  document.getElementById('modalItems').innerHTML=cart.map(i=>`<div class="modal-item"><div class="modal-item-name">${i.name}</div><div class="modal-item-price">$${i.price.toFixed(2)}</div></div>`).join('');
+  document.getElementById('modalTotal').textContent='$'+(sub*1.1).toFixed(2);
+  openModal('checkoutModal');
 }
 
-/* ─── SUBSCRIPTIONS ─── */
-function subscribe(plan, price) {
-  toast(`🚀 Starting free trial for ${plan} ($${price}/mo)!`, 'success');
-}
+// ═══════════════════════════════════════════
+// DATA
+// ═══════════════════════════════════════════
+const SCHEDULE=[
+  {day:'Monday',icon:'💪',tasks:['Warm-up routine','Aim workshop','DM practice'],status:'completed'},
+  {day:'Tuesday',icon:'🎯',tasks:['Crosshair placement','Retake scenarios','VOD review'],status:'completed'},
+  {day:'Wednesday',icon:'🗺️',tasks:['Map control study','Scrim session','Post-scrim analysis'],status:'today'},
+  {day:'Thursday',icon:'🎮',tasks:['Reflex training','Ranked matches','Team debrief'],status:'upcoming'},
+  {day:'Friday',icon:'🏆',tasks:['Tournament warm-up','Strategy prep','Qualifier match'],status:'upcoming'},
+  {day:'Saturday',icon:'⚔️',tasks:['Competitive grind','Leaderboard push','Review'],status:'upcoming'},
+  {day:'Sunday',icon:'☕',tasks:['Light practice','Mental recovery','Goal setting'],status:'upcoming'},
+];
+const PRODUCTS=[
+  {id:'aim-master',icon:'🎯',name:'Aim Master',desc:'Advanced aiming techniques & crosshair drills',price:29.99,cat:'aim',badge:'hot'},
+  {id:'map-bundle',icon:'🗺️',name:'Map Bundle',desc:'Complete guide for all competitive maps',price:24.99,cat:'tactics'},
+  {id:'dm-pack',icon:'🎮',name:'DM Pack',desc:'30-day structured deathmatch training program',price:34.99,cat:'aim',badge:'new'},
+  {id:'pro-config',icon:'⚙️',name:'Pro Config',desc:'Professional settings, binds & launch options',price:19.99,cat:'config'},
+  {id:'analytics',icon:'📊',name:'Analytics Tool',desc:'Performance tracking & heatmaps dashboard',price:39.99,cat:'tactics',badge:'new'},
+  {id:'coaching-1v1',icon:'👥',name:'Coaching 1v1',desc:'Personal 1-hour session with a FUHA coach',price:49.99,cat:'coaching',badge:'hot'},
+  {id:'advanced-course',icon:'🔬',name:'Advanced Course',desc:'Deep-dive mechanics for experienced players',price:59.99,cat:'aim'},
+  {id:'master-class',icon:'🎓',name:'Master Class',desc:'Full pro masterclass bundle — 12 modules',price:99.99,cat:'tactics',badge:'sale'},
+  {id:'config-pack',icon:'⚙️',name:'Config Pack',desc:'10 pro gaming setups with explanations',price:44.99,cat:'config'},
+  {id:'replay',icon:'🎬',name:'Replay Analysis',desc:'Pro-coached replay commentary & breakdown',price:29.99,cat:'coaching'},
+  {id:'lb-pass',icon:'🌐',name:'Leaderboard Pass',desc:'Global rankings access & comparison tools',price:14.99,cat:'tactics'},
+  {id:'private-session',icon:'🔐',name:'Private Session',desc:'Exclusive 1v1 with a top professional player',price:99.99,cat:'coaching',badge:'hot'},
+];
+const REVIEWS=[
+  {author:'👑 AXO',tag:'FUHA — Team Leader',stars:5,text:'Built FUHA to help players improve like never before. The training system is world-class.'},
+  {author:'⚡ H9ito',tag:'FUHA — Entry Fragger',stars:5,text:'The aim courses and analytics completely transformed how I approach warm-up.'},
+  {author:'🛡️ Danixx',tag:'FUHA — Support',stars:5,text:'Coaching sessions helped me understand game sense on a completely different level.'},
+  {author:'stonebank',tag:'AGO — AWPer',stars:5,text:'Outstanding platform. The AWP-specific guides are exceptional.'},
+  {author:'Jady',tag:'FaZe — Entry',stars:5,text:'Incredible analytics and real support from coaches who play at the top level.'},
+  {author:'JACKZ',tag:'G2 — Support',stars:4,text:'The best training system I\'ve used. Comprehensive content and a great community.'},
+];
+const FAQS=[
+  {q:'What is FUHA?',a:'FUHA is a professional CS2 training system created by competitive players to help you improve through structured courses, coaching, and analytics.'},
+  {q:'Is there a free trial?',a:'Yes! Every subscription plan includes a 7-day free trial. No credit card required.'},
+  {q:'Can I cancel anytime?',a:'Absolutely — cancel at any time with zero penalties or hidden fees.'},
+  {q:'What payment methods are accepted?',a:'We accept Visa, Mastercard, PayPal, and major cryptocurrencies (BTC, ETH, USDT, SOL, TON).'},
+  {q:'Do you offer refunds?',a:'Yes. We offer a full 30-day money-back guarantee on all subscriptions.'},
+  {q:'How long are coaching sessions?',a:'Standard sessions are 60 minutes. Custom durations can be arranged.'},
+  {q:'Is there a leaderboard?',a:'Yes! We track Premier rating, session scores, and training progress across all members.'},
+  {q:'What rank do I need to join?',a:'FUHA welcomes all ranks — from Silver to Global Elite. Training is tailored to your level.'},
+  {q:'Is there a team discount?',a:'Yes! Teams of 5+ get 20% off Elite plans. Message us on Telegram.'},
+  {q:'How does the XP system work?',a:'Earn XP by completing sessions, purchasing courses, and training skills. Level up to unlock achievements!'},
+];
+const SKILLS=[
+  {icon:'🎯',name:'Aim',level:'Advanced',pct:78},
+  {icon:'🧠',name:'Game Sense',level:'Intermediate',pct:62},
+  {icon:'🗺️',name:'Map Knowledge',level:'Advanced',pct:85},
+  {icon:'💣',name:'Utility Usage',level:'Intermediate',pct:54},
+  {icon:'🏃',name:'Movement',level:'Beginner',pct:41},
+  {icon:'📻',name:'Communication',level:'Advanced',pct:80},
+  {icon:'🔫',name:'Spray Control',level:'Intermediate',pct:67},
+  {icon:'👁️',name:'Crosshair Placement',level:'Intermediate',pct:70},
+];
 
-/* ─── SCHEDULE ─── */
-function renderSchedule() {
-  document.getElementById('scheduleGrid').innerHTML = SCHEDULE.map((d,i) => `
-    <div class="schedule-card ${d.status==='completed'?'completed':''}" onclick="scheduleAction(${i})">
+// ═══════════════════════════════════════════
+// RENDER FUNCTIONS
+// ═══════════════════════════════════════════
+function renderSchedule(){
+  document.getElementById('scheduleGrid').innerHTML=SCHEDULE.map((d,i)=>`
+    <div class="schedule-card ${d.status==='completed'?'completed':d.status==='today'?'today-card':''} clickable" onclick="scheduleAction(${i})">
       <div class="schedule-icon">${d.icon}</div>
       <div class="schedule-day">${d.day}</div>
       <ul class="schedule-tasks">${d.tasks.map(t=>`<li>${t}</li>`).join('')}</ul>
-      <div class="schedule-status">${d.status==='completed'?'✓ Completed':d.status==='today'?'▶ Today':d.status==='upcoming'?'⌛ Upcoming':''}</div>
-    </div>
-  `).join('');
+      <div class="schedule-status">${{completed:'✓ Completed',today:'▶ Today',upcoming:'⌛ Upcoming'}[d.status]}</div>
+    </div>`).join('');
 }
-function scheduleAction(i) {
-  const d = SCHEDULE[i];
-  if (d.status === 'upcoming') toast(`${d.day} session added to your calendar!`);
-  else if (d.status === 'today') toast(`Starting today's training session!`);
-  else toast(`${d.day} already completed! Great work 💪`, 'info');
+function scheduleAction(i){
+  const d=SCHEDULE[i];
+  if(d.status==='upcoming'){toast(`${d.day} session added to calendar!`)}
+  else if(d.status==='today'){toast(`Starting today's training! 🎮`);gainXP(10)}
+  else{toast(`${d.day} complete! 💪 +5 XP`,'info');gainXP(5)}
 }
-
-/* ─── PRODUCTS ─── */
-function renderProducts(filter) {
-  const list = filter === 'all' ? PRODUCTS : PRODUCTS.filter(p => p.cat === filter);
-  const badgeMap = { hot:'badge-hot', new:'badge-new', sale:'badge-sale' };
-  document.getElementById('productsGrid').innerHTML = list.map(p => `
-    <div class="product-card">
-      ${p.badge ? `<div class="product-badge ${badgeMap[p.badge]}">${p.badge.toUpperCase()}</div>` : ''}
+function renderProducts(filter){
+  const list=filter==='all'?PRODUCTS:PRODUCTS.filter(p=>p.cat===filter);
+  const bm={hot:'badge-hot',new:'badge-new',sale:'badge-sale'};
+  document.getElementById('productsGrid').innerHTML=list.map(p=>{
+    const owned=ownedCourseIds.includes(p.id);
+    return `<div class="product-card">
+      ${p.badge?`<div class="product-badge ${bm[p.badge]}">${p.badge.toUpperCase()}</div>`:''}
       <div class="product-icon">${p.icon}</div>
       <div class="product-name">${p.name}</div>
       <div class="product-desc">${p.desc}</div>
-      <div class="product-price">$${p.price.toFixed(2)}${p.badge==='sale'?'<span class="old-price">$'+((p.price*1.3).toFixed(2))+'</span>':''}</div>
-      <button class="btn btn-full btn-sm" onclick="addToCart('${p.id}','${p.name}',${p.price})">Add to Cart</button>
-    </div>
-  `).join('');
+      <div class="product-price">$${p.price.toFixed(2)}${p.badge==='sale'?`<span class="old-price">$${(p.price*1.3).toFixed(2)}</span>`:''}</div>
+      ${owned?`<div class="product-owned">✓ Owned</div>`:
+       `<div style="display:flex;gap:.5rem">
+          <button class="btn btn-full btn-sm" onclick="addToCart('${p.id}','${p.name}',${p.price})">Add to Cart</button>
+          <button class="btn btn-sm btn-ghost" onclick="openPayModal('${p.name}','${p.price}')">Buy Now</button>
+        </div>`}
+    </div>`;
+  }).join('');
 }
-function filterShop(btn, cat) {
-  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
-  btn.classList.add('active');
-  renderProducts(cat);
-}
-
-/* ─── REVIEWS ─── */
-function renderReviews() {
-  document.getElementById('reviewsGrid').innerHTML = REVIEWS.map(r => `
+function filterShop(btn,cat){document.querySelectorAll('.filter-btn').forEach(b=>b.classList.remove('active'));btn.classList.add('active');renderProducts(cat)}
+function renderReviews(){
+  document.getElementById('reviewsGrid').innerHTML=REVIEWS.map(r=>`
     <div class="review-card">
       <div class="review-quote">"</div>
       <div class="review-stars">${'★'.repeat(r.stars)}${'☆'.repeat(5-r.stars)}</div>
       <div class="review-text">${r.text}</div>
       <div class="review-author">${r.author}</div>
       <div class="review-tag">${r.tag}</div>
-    </div>
-  `).join('');
+    </div>`).join('');
 }
-
-/* ─── FAQ ─── */
-function renderFaq() {
-  document.getElementById('faqList').innerHTML = FAQS.map((f,i) => `
-    <div class="faq-item" onclick="toggleFaq(this)">
+function renderFaq(){
+  document.getElementById('faqList').innerHTML=FAQS.map(f=>`
+    <div class="faq-item clickable" onclick="toggleFaq(this)">
       <div class="faq-q"><span>${f.q}</span><span class="faq-arrow">▼</span></div>
       <div class="faq-a">${f.a}</div>
-    </div>
-  `).join('');
+    </div>`).join('');
 }
-function toggleFaq(el) {
-  const wasOpen = el.classList.contains('open');
-  document.querySelectorAll('.faq-item').forEach(i => i.classList.remove('open'));
-  if (!wasOpen) el.classList.add('open');
-}
-
-/* ─── SKILLS ─── */
-function renderSkills() {
-  document.getElementById('skillGrid').innerHTML = SKILLS.map((s,i) => `
-    <div class="skill-item" onclick="practiceSkill(${i})">
+function toggleFaq(el){const o=el.classList.contains('open');document.querySelectorAll('.faq-item').forEach(i=>i.classList.remove('open'));if(!o)el.classList.add('open')}
+function renderSkills(){
+  document.getElementById('skillGrid').innerHTML=SKILLS.map((s,i)=>`
+    <div class="skill-item clickable" onclick="practiceSkill(${i})">
       <div class="skill-icon">${s.icon}</div>
       <div class="skill-name">${s.name}</div>
       <div class="skill-level">${s.level} · ${s.pct}%</div>
       <div class="skill-bar"><div class="skill-bar-fill" style="width:${s.pct}%"></div></div>
-    </div>
-  `).join('');
+    </div>`).join('');
 }
-function practiceSkill(i) {
-  const s = SKILLS[i];
-  if (s.pct < 100) {
-    s.pct = Math.min(100, s.pct + Math.floor(Math.random() * 5) + 1);
-    if (s.pct >= 80 && s.level === 'Beginner') s.level = 'Intermediate';
-    if (s.pct >= 90 && s.level === 'Intermediate') s.level = 'Advanced';
-    renderSkills();
-    toast(`${s.name} improved to ${s.pct}%! 💪`);
+function practiceSkill(i){
+  const s=SKILLS[i];
+  if(s.pct<100){
+    s.pct=Math.min(100,s.pct+Math.floor(Math.random()*5)+1);
+    if(s.pct>=80&&s.level==='Beginner')s.level='Intermediate';
+    if(s.pct>=90&&s.level==='Intermediate')s.level='Advanced';
+    renderSkills();toast(`${s.name} improved to ${s.pct}%! 💪`);gainXP(5);
+  } else toast(`${s.name} maxed! Legendary 🏆`,'info');
+}
+function trainRandomSkill(){practiceSkill(Math.floor(Math.random()*SKILLS.length))}
+function animateBars(){document.querySelectorAll('.bar-fill').forEach(el=>el.classList.add('animated'))}
+
+// ═══════════════════════════════════════════
+// DASHBOARD ACTIONS
+// ═══════════════════════════════════════════
+function startSession(){
+  const n=parseInt(document.getElementById('sessionsCount').textContent.replace(/,/g,''));
+  document.getElementById('sessionsCount').textContent=n+1;
+  userSessions++;gainXP(15);toast('Training session started! 🎮 Good luck!');
+  if(currentUser)saveUser();
+}
+function bookSession(player){
+  if(!currentUser){toast('Login to book a session','error');openModal('authModal');return}
+  toast(`Session booked with ${player}! Check your email 📧`,'success');
+  gainXP(10);
+}
+function openSupport(){window.open('https://t.me/axo_fuha','_blank')}
+
+// ═══════════════════════════════════════════
+// TWITCH
+// ═══════════════════════════════════════════
+function fixTwitchParent(){
+  const host=window.location.hostname||'localhost';
+  ['twitchIframe','twitchIframePage'].forEach(id=>{
+    const el=document.getElementById(id);
+    if(el)el.src=`https://player.twitch.tv/?channel=${TWITCH_CH}&parent=${host}&autoplay=true&muted=${id==='twitchIframe'}`;
+  });
+  const chat=document.getElementById('twitchChatFrame');
+  if(chat)chat.src=`https://www.twitch.tv/embed/${TWITCH_CH}/chat?parent=${host}&darkpopout`;
+}
+async function checkTwitchStatus(){
+  try{
+    const res=await fetch(`https://api.twitch.tv/helix/streams?user_login=${TWITCH_CH}`,{headers:{'Client-ID':'PLACEHOLDER','Authorization':'Bearer PLACEHOLDER'}});
+    const data=await res.json();
+    handleLiveStatus(data.data&&data.data.length>0,data.data?.[0]?.viewer_count,data.data?.[0]?.game_name);
+  }catch(e){handleLiveStatus(null)}
+}
+function handleLiveStatus(live,viewers,game){
+  const block=document.getElementById('twitchBlock'),off=document.getElementById('twitchOfflineBlock');
+  const sLive=document.getElementById('streamLiveBlock'),sOff=document.getElementById('streamOfflinePage'),sLoad=document.getElementById('streamLoadingBlock');
+  const navBtn=document.getElementById('streamNavBtn');
+  if(sLoad)sLoad.style.display='none';
+  if(live===true){
+    isStreamLive=true;block.classList.add('visible');off.style.display='none';
+    if(sLive)sLive.style.display='block';if(sOff)sOff.style.display='none';
+    if(navBtn)navBtn.classList.add('live-nav');
+    if(viewers){document.getElementById('viewerCount').textContent=viewers.toLocaleString();const spv=document.getElementById('streamPageViewers');if(spv)spv.textContent=viewers.toLocaleString()}
+    if(game){document.getElementById('twitchGameInfo').textContent='🎮 '+game;const spg=document.getElementById('streamPageGameInfo');if(spg)spg.textContent='🎮 '+game}
+  } else if(live===false){
+    isStreamLive=false;block.classList.remove('visible');off.style.display='flex';
+    if(sLive)sLive.style.display='none';if(sOff)sOff.style.display='block';
+    if(navBtn)navBtn.classList.remove('live-nav');
   } else {
-    toast(`${s.name} is maxed! Legendary 🏆`, 'info');
-  }
-}
-function trainRandomSkill() {
-  practiceSkill(Math.floor(Math.random() * SKILLS.length));
-}
-
-/* ─── PLAYER BARS ─── */
-function animateBars() {
-  document.querySelectorAll('.bar-fill').forEach(el => el.classList.add('animated'));
-}
-
-/* ─── DASHBOARD ACTIONS ─── */
-function startSession() {
-  const n = parseInt(document.getElementById('sessionsCount').textContent);
-  document.getElementById('sessionsCount').textContent = n + 1;
-  toast('Training session started! 🎮 Good luck!');
-}
-function openSupport() { window.open('https://t.me/axo_fuha', '_blank'); }
-
-/* ─── MOBILE MENU ─── */
-function toggleMobileMenu() {
-  const nav = document.getElementById('mainNav');
-  const isVisible = nav.style.display === 'flex';
-  nav.style.display = isVisible ? 'none' : 'flex';
-  if (!isVisible) {
-    nav.style.flexDirection = 'column';
-    nav.style.position = 'absolute';
-    nav.style.top = '64px';
-    nav.style.left = '0';
-    nav.style.right = '0';
-    nav.style.background = 'var(--surface)';
-    nav.style.padding = '1rem';
-    nav.style.borderBottom = '1px solid var(--border)';
-    nav.style.gap = '0.5rem';
-    nav.style.zIndex = '400';
+    isStreamLive=false;block.classList.add('visible');off.style.display='none';
+    if(sLive)sLive.style.display='block';if(sOff)sOff.style.display='none';
+    document.getElementById('viewerCount').textContent='—';
   }
 }
 
-/* ─── MODAL OUTSIDE CLICK ─── */
-document.getElementById('checkoutModal').addEventListener('click', function(e) {
-  if (e.target === this) closeModal('checkoutModal');
+// ═══════════════════════════════════════════
+// MOBILE MENU
+// ═══════════════════════════════════════════
+function toggleMobileMenu(){
+  const nav=document.getElementById('mainNav');
+  const vis=nav.style.display==='flex';
+  nav.style.display=vis?'none':'flex';
+  if(!vis){Object.assign(nav.style,{flexDirection:'column',position:'absolute',top:'64px',left:'0',right:'0',background:'var(--surface)',padding:'1rem',borderBottom:'1px solid var(--border)',gap:'.5rem',zIndex:'400'})}
+}
+
+// ═══════════════════════════════════════════
+// FUN & EASTER EGGS
+// ═══════════════════════════════════════════
+
+// CONFETTI
+function spawnConfetti(){
+  const colors=['#ff6b35','#f7931e','#ffcc00','#39d353','#00f5ff','#ff6b9d'];
+  for(let i=0;i<60;i++){
+    const c=document.createElement('div');c.className='confetti-piece';
+    c.style.left=Math.random()*100+'vw';c.style.top='-10px';
+    c.style.background=colors[Math.floor(Math.random()*colors.length)];
+    c.style.width=(6+Math.random()*8)+'px';c.style.height=(6+Math.random()*8)+'px';
+    c.style.borderRadius=Math.random()>.5?'50%':'2px';
+    c.style.animationDuration=(1.5+Math.random()*2)+'s';
+    c.style.animationDelay=(Math.random()*.5)+'s';
+    document.body.appendChild(c);
+    setTimeout(()=>c.remove(),3000);
+  }
+}
+
+// AIMBOT MODE 🎯
+let aimbotActive=false;
+function activateAimbot(){
+  aimbotActive=!aimbotActive;
+  const overlay=document.getElementById('aimbot-overlay');
+  if(!overlay){const o=document.createElement('div');o.id='aimbot-overlay';o.style.cssText='display:none;position:fixed;inset:0;z-index:99992;pointer-events:none';document.body.appendChild(o)}
+  const el=document.getElementById('aimbot-overlay');
+  if(aimbotActive){
+    el.style.display='block';
+    el.innerHTML='<div class="crosshair" id="aimbotCrosshair"><div class="crosshair-ring"></div></div>';
+    toast('🎯 Aimbot Mode ACTIVATED! (click again to disable)','info');
+    let targets=[];
+    const moveCrosshair=()=>{
+      if(!aimbotActive)return;
+      const allBtns=[...document.querySelectorAll('.btn,.quick-action,.stat-card,.player-card,.product-card')];
+      if(!allBtns.length){setTimeout(moveCrosshair,500);return}
+      const tgt=allBtns[Math.floor(Math.random()*allBtns.length)];
+      const r=tgt.getBoundingClientRect();
+      const cx=r.left+r.width/2,cy=r.top+r.height/2;
+      const ch=document.getElementById('aimbotCrosshair');
+      if(ch){ch.style.left=(cx-20)+'px';ch.style.top=(cy-20)+'px'}
+      setTimeout(moveCrosshair,600+Math.random()*400);
+    };
+    moveCrosshair();
+  } else {
+    el.style.display='none';el.innerHTML='';
+    toast('Aimbot Mode disabled','info');
+  }
+}
+
+// KONAMI CODE 🎮
+let konamiSeq=[],konamiCode=['ArrowUp','ArrowUp','ArrowDown','ArrowDown','ArrowLeft','ArrowRight','ArrowLeft','ArrowRight','b','a'];
+document.addEventListener('keydown',e=>{
+  konamiSeq.push(e.key);if(konamiSeq.length>10)konamiSeq.shift();
+  if(konamiSeq.join(',')===konamiCode.join(',')){
+    konamiSeq=[];
+    const flash=document.createElement('div');flash.className='konami-flash';document.body.appendChild(flash);
+    setTimeout(()=>flash.remove(),600);
+    spawnConfetti();
+    toast('🎮 KONAMI CODE ACTIVATED! +100 XP 🎉','success');
+    gainXP(100);
+    // Matrix-style rain effect for 3 seconds
+    const canvas=document.createElement('canvas');canvas.style.cssText='position:fixed;inset:0;z-index:99993;pointer-events:none;opacity:.4';document.body.appendChild(canvas);
+    canvas.width=window.innerWidth;canvas.height=window.innerHeight;
+    const ctx=canvas.getContext('2d');ctx.font='14px JetBrains Mono';
+    const cols=Math.floor(canvas.width/14),drops=Array(cols).fill(0);
+    const matrix=()=>{ctx.fillStyle='rgba(7,8,15,.05)';ctx.fillRect(0,0,canvas.width,canvas.height);ctx.fillStyle='#ff6b35';drops.forEach((y,i)=>{ctx.fillText(String.fromCharCode(0x30A0+Math.random()*96),i*14,y*14);if(y*14>canvas.height&&Math.random()>.975)drops[i]=0;drops[i]++});};
+    const matrixInterval=setInterval(matrix,33);
+    setTimeout(()=>{clearInterval(matrixInterval);canvas.remove()},3000);
+  }
+});
+
+// SECRET CLICK COUNTER on logo
+let logoClicks=0,logoTimer=null;
+document.querySelector('.logo').addEventListener('click',()=>{
+  logoClicks++;clearTimeout(logoTimer);
+  logoTimer=setTimeout(()=>logoClicks=0,2000);
+  if(logoClicks>=7){logoClicks=0;toast('🤫 You found the secret! AXO says hi 👑','info');spawnConfetti();gainXP(25)}
+});
+
+// RANDOM KILL FEED (fun popup)
+const killMessages=['⚡ H9ito just got an ACE on Dust2!','👑 AXO clutched a 1v4 on Nuke!','🛡️ Danixx dropped a 40-bomb!','🔥 FUHA is on a 12-match win streak!','🎯 AXO hit a no-scope from CT spawn!','💣 H9ito force-bought and won the round!'];
+let killFeedInterval=setInterval(()=>{
+  if(document.getElementById('dashboard').classList.contains('active')){
+    const msg=killMessages[Math.floor(Math.random()*killMessages.length)];
+    toast(msg,'info');
+  }
+},18000);
+
+// IDLE animation on stats
+document.querySelectorAll('.stat-num').forEach(el=>{
+  el.addEventListener('click',()=>{
+    el.style.animation='none';
+    setTimeout(()=>{el.style.animation='hexPulse .5s ease';},10);
+  });
+});
+
+// ═══════════════════════════════════════════
+// INIT
+// ═══════════════════════════════════════════
+document.addEventListener('DOMContentLoaded',()=>{
+  fixTwitchParent();checkTwitchStatus();
+  setInterval(checkTwitchStatus,3*60*1000);
+  renderSchedule();renderProducts('all');renderReviews();renderFaq();renderSkills();renderCartPage();
+  // Restore session if stored
+  const savedEmail=sessionStorage.getItem('fuhaCurrentUser');
+  if(savedEmail){
+    const users=JSON.parse(localStorage.getItem('fuhaUsers')||'{}');
+    if(users[savedEmail])loginSuccess(users[savedEmail]);
+  }
+  // Tip hint
+  setTimeout(()=>toast('💡 Try: Konami Code ↑↑↓↓←→←→BA','info'),4000);
 });
 </script>
 </body>
-</html>      
+</html>
