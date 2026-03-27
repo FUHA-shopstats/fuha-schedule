@@ -1,11 +1,9 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>FUHA — CS2 Pro Training</title>
-
-  <link rel="icon" type="image/png" href="./favicon.png">
-</head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FUHA — CS2 Pro Training</title>
 <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&family=Barlow+Condensed:wght@300;400;600;700;800;900&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
 <style>
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
@@ -586,20 +584,100 @@ nav a.live-nav::before{
 .user-dropdown-item.danger:hover{background:rgba(244,67,54,.08);color:#f44336}
 
 /* ── RESPONSIVE ── */
+.mobile-menu-btn{display:none;width:36px;height:36px;border-radius:8px;background:rgba(255,107,53,.08);border:1px solid var(--border);cursor:none;align-items:center;justify-content:center;font-size:1.2rem;color:var(--light);flex-shrink:0}
+
+/* Mobile bottom nav */
+.mobile-bottom-nav{display:none;position:fixed;bottom:0;left:0;right:0;z-index:490;background:rgba(7,8,15,.97);border-top:1px solid var(--border);backdrop-filter:blur(20px);padding:.5rem 0 calc(.5rem + env(safe-area-inset-bottom));flex-direction:row;justify-content:space-around;align-items:center}
+body.light .mobile-bottom-nav{background:rgba(255,255,255,.97)}
+.mob-nav-btn{display:flex;flex-direction:column;align-items:center;gap:.15rem;padding:.4rem .6rem;border-radius:8px;background:transparent;border:none;cursor:none;color:var(--gray);transition:all .2s;min-width:52px}
+.mob-nav-btn.active,.mob-nav-btn:hover{color:var(--primary)}
+.mob-nav-btn .mob-icon{font-size:1.35rem;line-height:1}
+.mob-nav-btn .mob-label{font-family:'Barlow Condensed',sans-serif;font-size:.6rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase}
+.mob-nav-live{position:relative}
+.mob-nav-live::after{content:'';position:absolute;top:4px;right:6px;width:6px;height:6px;background:#eb0400;border-radius:50%;border:1.5px solid var(--dark);animation:blink 1s infinite}
+
 @media(max-width:768px){
-  header{padding:0 1rem}
-  nav{display:none}
-  .mobile-menu-btn{display:flex!important}
-  .lb-head,.lb-row{grid-template-columns:40px 1fr 70px}
+  body{cursor:auto;padding-bottom:70px}
+  #cursor,#cursor-ring{display:none}
+  header{padding:0 .9rem;height:56px}
+  .logo-text{font-size:1.35rem}
+  .logo-mark{width:30px;height:30px;font-size:.85rem}
+  nav{display:none!important}
+  .tg-btn{display:none}
+  .lang-selector{display:none}
+  .mobile-menu-btn{display:flex}
+  .mobile-bottom-nav{display:flex}
+  .container{padding:1.25rem 1rem}
+  .section-title{font-size:1.8rem}
+  .hero-banner{padding:1.5rem}
+  .hero-banner h2{font-size:1.9rem}
+  .hero-banner p{font-size:.9rem}
+  .hero-actions{gap:.6rem}
+  .hero-actions .btn{padding:.5rem 1rem;font-size:.88rem}
+  .stats-grid{grid-template-columns:repeat(3,1fr);gap:.6rem}
+  .stat-card{padding:.9rem .5rem}
+  .stat-num{font-size:1.8rem}
+  .stat-label{font-size:.65rem}
+  .quick-actions{gap:.5rem}
+  .quick-action{min-width:calc(33% - .4rem);padding:.9rem .6rem}
+  .quick-action-icon{font-size:1.2rem}
+  .quick-action-label{font-size:.72rem}
+  .lb-head,.lb-row{grid-template-columns:36px 1fr 60px}
   .lb-head>*:nth-child(3),.lb-row>*:nth-child(3),
   .lb-head>*:nth-child(4),.lb-row>*:nth-child(4){display:none}
+  .lb-row{padding:.75rem .9rem;gap:.6rem}
+  .lb-rank{font-size:1.1rem}
+  .players-grid{grid-template-columns:1fr}
+  .schedule-grid{grid-template-columns:repeat(2,1fr)}
+  .products-grid{grid-template-columns:repeat(2,1fr);gap:.75rem}
+  .product-card{padding:1rem}
+  .product-icon{font-size:1.6rem;margin-bottom:.6rem}
+  .product-name{font-size:1rem}
+  .product-price{font-size:1.3rem;margin-bottom:.6rem}
+  .subs-grid{grid-template-columns:1fr}
+  .sub-card{padding:1.35rem}
+  .reviews-grid{grid-template-columns:1fr}
+  .profile-layout{grid-template-columns:1fr}
+  .cart-layout{grid-template-columns:1fr}
+  .summary-panel{position:static}
+  .xp-bar-wrap{padding:.9rem 1rem;gap:.8rem}
+  .xp-level{font-size:1.5rem}
+  .announcement-bar{padding:.65rem .9rem;font-size:.82rem}
+  .ann-ticker{display:none}
+  .ann-bar-static{display:block!important}
+  .modal-box{padding:1.35rem;border-radius:16px 16px 0 0;max-height:92vh;margin-top:auto}
+  .modal-overlay{align-items:flex-end;padding:0}
+  .skill-grid{grid-template-columns:repeat(2,1fr)}
+  .hero-banner::before{display:none}
+  footer{padding:1.25rem;margin-top:2rem;padding-bottom:calc(1.25rem + 70px)}
+  .xpPlanBadge-el{display:none}
+  .twitch-header{padding:.6rem .9rem}
+  .twitch-header-right .viewer-count{display:none}
+  .profile-card{padding:1.25rem}
+  .profile-big-avatar{width:72px;height:72px;font-size:1.8rem}
+  .owned-courses{grid-template-columns:repeat(2,1fr)}
+  .faq-wrap{padding:0}
+  .form-row{grid-template-columns:1fr}
+  .card-visual{height:150px}
+  .stream-offline-page{padding:3rem 1.5rem}
+  #twitchBlock{margin-bottom:1.25rem}
+  .rank-badge-section{padding:1rem}
 }
-.mobile-menu-btn{display:none;width:36px;height:36px;border-radius:8px;background:rgba(255,107,53,.08);border:1px solid var(--border);cursor:none;align-items:center;justify-content:center;font-size:1.2rem}
+
+@media(max-width:400px){
+  .stats-grid{grid-template-columns:repeat(2,1fr)}
+  .products-grid{grid-template-columns:1fr}
+  .schedule-grid{grid-template-columns:1fr}
+  .skill-grid{grid-template-columns:1fr}
+  .hero-banner h2{font-size:1.6rem}
+  .quick-action{min-width:calc(50% - .3rem)}
+}
 
 /* ── FOOTER ── */
 footer{background:var(--surface);border-top:1px solid var(--border);padding:2rem;text-align:center;color:var(--gray);font-size:.88rem;margin-top:4rem;position:relative;z-index:1}
 footer a{color:var(--primary);text-decoration:none}
 footer a:hover{text-decoration:underline}
+.ann-bar-static{display:none;font-size:.82rem;color:var(--gray)}
 
 /* ── XP BAR ── */
 .xp-bar-wrap{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:1.25rem 1.5rem;margin-bottom:1.5rem;display:flex;align-items:center;gap:1.25rem}
@@ -617,6 +695,59 @@ footer a:hover{text-decoration:underline}
 .modal-item-name{font-weight:700}
 .modal-item-price{font-family:'Barlow Condensed',sans-serif;font-size:1.2rem;font-weight:800;color:var(--primary)}
 .modal-total{font-family:'Barlow Condensed',sans-serif;font-size:1.6rem;font-weight:900;color:var(--primary);text-align:right;margin:1rem 0;padding-top:1rem;border-top:1px solid var(--border)}
+
+/* ── PROFILE EDITOR ── */
+.edit-avatar-wrap{position:relative;width:90px;margin:0 auto 1rem;cursor:none}
+.edit-avatar-overlay{position:absolute;inset:0;border-radius:50%;background:rgba(0,0,0,.55);display:flex;align-items:center;justify-content:center;opacity:0;transition:opacity .2s;font-size:.75rem;font-weight:700;color:#fff;text-align:center;line-height:1.3}
+.edit-avatar-wrap:hover .edit-avatar-overlay{opacity:1}
+.avatar-color-row{display:flex;gap:.5rem;justify-content:center;flex-wrap:wrap;margin:.75rem 0}
+.avatar-color-btn{width:26px;height:26px;border-radius:50%;border:2px solid transparent;cursor:none;transition:all .2s;flex-shrink:0}
+.avatar-color-btn.selected{border-color:#fff;transform:scale(1.2)}
+.avatar-emoji-row{display:flex;gap:.5rem;justify-content:center;flex-wrap:wrap;margin-bottom:.75rem}
+.avatar-emoji-btn{width:36px;height:36px;border-radius:8px;background:var(--surface);border:1.5px solid var(--border);cursor:none;font-size:1.1rem;display:flex;align-items:center;justify-content:center;transition:all .2s}
+.avatar-emoji-btn:hover,.avatar-emoji-btn.selected{border-color:var(--primary);background:rgba(255,107,53,.1)}
+.bio-field{width:100%;background:var(--surface);border:1.5px solid var(--border);border-radius:8px;padding:.65rem .9rem;color:var(--light);font-family:'Rajdhani',sans-serif;font-size:.95rem;font-weight:600;resize:none;outline:none;transition:border-color .2s;height:80px}
+.bio-field:focus{border-color:var(--primary)}
+.edit-tabs{display:flex;gap:.35rem;margin-bottom:1.25rem;background:var(--surface);border-radius:9px;padding:.25rem}
+.edit-tab{flex:1;padding:.4rem;border-radius:7px;border:none;background:transparent;color:var(--gray);cursor:none;font-family:'Barlow Condensed',sans-serif;font-size:.85rem;font-weight:700;letter-spacing:.07em;text-transform:uppercase;transition:all .2s}
+.edit-tab.active{background:var(--surface2);color:var(--light)}
+
+/* ── CS2 RANK DISPLAY ── */
+.rank-badge-section{background:linear-gradient(135deg,rgba(255,107,53,.08),rgba(247,147,30,.04));border:1px solid var(--border);border-radius:12px;padding:1.25rem;margin-bottom:1.25rem;display:flex;align-items:center;gap:1rem}
+.rank-star{font-size:2.5rem;flex-shrink:0}
+.rank-info{flex:1}
+.rank-name{font-family:'Barlow Condensed',sans-serif;font-size:1.3rem;font-weight:900;color:var(--light)}
+.rank-rating{font-family:'JetBrains Mono',monospace;font-size:.85rem;color:var(--primary)}
+
+/* ── MUSIC PLAYER EASTER EGG ── */
+#musicPlayer{display:none;position:fixed;bottom:80px;right:1.5rem;z-index:800;background:var(--surface2);border:1px solid var(--border);border-radius:14px;padding:1rem 1.25rem;width:240px;box-shadow:0 12px 40px rgba(0,0,0,.4);animation:fadeUp .3s ease}
+#musicPlayer.visible{display:block}
+.music-title{font-family:'Barlow Condensed',sans-serif;font-size:1rem;font-weight:800;margin-bottom:.2rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.music-artist{font-size:.78rem;color:var(--gray);margin-bottom:.75rem}
+.music-controls{display:flex;align-items:center;justify-content:center;gap:.75rem}
+.music-btn{background:transparent;border:none;cursor:none;font-size:1.2rem;color:var(--gray);transition:all .2s;padding:.2rem}
+.music-btn:hover,.music-btn.play{color:var(--primary)}
+.music-progress{width:100%;height:3px;background:rgba(255,255,255,.08);border-radius:3px;margin:.75rem 0;cursor:none;overflow:hidden}
+.music-progress-fill{height:100%;background:linear-gradient(90deg,var(--primary),var(--accent));border-radius:3px;transition:width .5s linear}
+.music-toggle{position:fixed;bottom:calc(80px + 10px);right:1.5rem;z-index:799}
+@media(max-width:768px){
+  #musicPlayer{bottom:calc(70px + 1rem);right:.75rem;width:220px}
+  .music-toggle{bottom:calc(70px + .5rem);right:.75rem}
+}
+
+/* ── TYPING EFFECT ── */
+.typing-cursor{display:inline-block;width:2px;height:1em;background:var(--primary);margin-left:2px;animation:blink .8s step-end infinite;vertical-align:middle}
+
+/* ── SWIPE HINT (mobile) ── */
+.swipe-hint{display:none;text-align:center;font-size:.75rem;color:var(--gray);padding:.5rem;margin-top:-.5rem;margin-bottom:.5rem}
+@media(max-width:768px){.swipe-hint{display:block}}
+
+/* ── STREAK BADGE ── */
+.streak-badge{display:inline-flex;align-items:center;gap:.35rem;background:linear-gradient(135deg,rgba(255,204,0,.15),rgba(255,107,53,.1));border:1px solid rgba(255,204,0,.3);border-radius:20px;padding:.25rem .75rem;font-family:'Barlow Condensed',sans-serif;font-size:.85rem;font-weight:800;color:var(--accent);letter-spacing:.05em}
+
+/* ── NOTIFICATION DOT ── */
+.notif-dot{display:none;position:absolute;top:-3px;right:-3px;width:8px;height:8px;background:#eb0400;border-radius:50%;border:1.5px solid var(--dark);animation:blink 1.2s infinite}
+.notif-dot.show{display:block}
 </style>
 </head>
 <body>
@@ -625,6 +756,94 @@ footer a:hover{text-decoration:underline}
 <div id="cursor-ring"></div>
 <div class="scanlines"></div>
 <div id="particles"></div>
+
+<!-- MOBILE BOTTOM NAV -->
+<nav class="mobile-bottom-nav" id="mobileBottomNav">
+  <button class="mob-nav-btn active" onclick="showPage('dashboard')" data-mob="dashboard"><span class="mob-icon">🏠</span><span class="mob-label">Home</span></button>
+  <button class="mob-nav-btn" onclick="showPage('shop')" data-mob="shop"><span class="mob-icon">🛒</span><span class="mob-label">Shop</span></button>
+  <button class="mob-nav-btn" onclick="showPage('skills')" data-mob="skills"><span class="mob-icon">📈</span><span class="mob-label">Skills</span></button>
+  <button class="mob-nav-btn mob-nav-live" onclick="showPage('stream')" data-mob="stream" id="mobStreamBtn"><span class="mob-icon">📺</span><span class="mob-label">Live</span></button>
+  <button class="mob-nav-btn" onclick="mobileMoreMenu()" data-mob="more"><span class="mob-icon">⋯</span><span class="mob-label">More</span></button>
+</nav>
+
+<!-- MOBILE MORE DRAWER -->
+<div class="modal-overlay" id="mobileMoreModal">
+  <div class="modal-box" style="max-width:100%;border-radius:20px 20px 0 0;padding-bottom:calc(1.5rem + env(safe-area-inset-bottom))">
+    <div style="width:36px;height:4px;background:var(--border);border-radius:2px;margin:0 auto .75rem"></div>
+    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:.75rem;padding:.5rem 0">
+      <div style="text-align:center;padding:.75rem .5rem;border-radius:10px;background:var(--surface);border:1px solid var(--border);cursor:none" onclick="showPage('players');closeModal('mobileMoreModal')"><div style="font-size:1.5rem;margin-bottom:.25rem">👥</div><div style="font-family:'Barlow Condensed',sans-serif;font-size:.78rem;font-weight:700;color:var(--gray)">Players</div></div>
+      <div style="text-align:center;padding:.75rem .5rem;border-radius:10px;background:var(--surface);border:1px solid var(--border);cursor:none" onclick="showPage('schedule');closeModal('mobileMoreModal')"><div style="font-size:1.5rem;margin-bottom:.25rem">📅</div><div style="font-family:'Barlow Condensed',sans-serif;font-size:.78rem;font-weight:700;color:var(--gray)">Schedule</div></div>
+      <div style="text-align:center;padding:.75rem .5rem;border-radius:10px;background:var(--surface);border:1px solid var(--border);cursor:none" onclick="showPage('subscriptions');closeModal('mobileMoreModal')"><div style="font-size:1.5rem;margin-bottom:.25rem">⭐</div><div style="font-family:'Barlow Condensed',sans-serif;font-size:.78rem;font-weight:700;color:var(--gray)">Plans</div></div>
+      <div style="text-align:center;padding:.75rem .5rem;border-radius:10px;background:var(--surface);border:1px solid var(--border);cursor:none" onclick="showPage('profile');closeModal('mobileMoreModal')"><div style="font-size:1.5rem;margin-bottom:.25rem">👤</div><div style="font-family:'Barlow Condensed',sans-serif;font-size:.78rem;font-weight:700;color:var(--gray)">Profile</div></div>
+      <div style="text-align:center;padding:.75rem .5rem;border-radius:10px;background:var(--surface);border:1px solid var(--border);cursor:none" onclick="showPage('testimonials');closeModal('mobileMoreModal')"><div style="font-size:1.5rem;margin-bottom:.25rem">💬</div><div style="font-family:'Barlow Condensed',sans-serif;font-size:.78rem;font-weight:700;color:var(--gray)">Reviews</div></div>
+      <div style="text-align:center;padding:.75rem .5rem;border-radius:10px;background:var(--surface);border:1px solid var(--border);cursor:none" onclick="showPage('faq');closeModal('mobileMoreModal')"><div style="font-size:1.5rem;margin-bottom:.25rem">❓</div><div style="font-family:'Barlow Condensed',sans-serif;font-size:.78rem;font-weight:700;color:var(--gray)">FAQ</div></div>
+      <div style="text-align:center;padding:.75rem .5rem;border-radius:10px;background:var(--surface);border:1px solid var(--border);cursor:none" onclick="openSupport();closeModal('mobileMoreModal')"><div style="font-size:1.5rem;margin-bottom:.25rem">📱</div><div style="font-family:'Barlow Condensed',sans-serif;font-size:.78rem;font-weight:700;color:var(--gray)">Telegram</div></div>
+      <div style="text-align:center;padding:.75rem .5rem;border-radius:10px;background:var(--surface);border:1px solid var(--border);cursor:none" onclick="toggleTheme();closeModal('mobileMoreModal')"><div style="font-size:1.5rem;margin-bottom:.25rem" id="mobileThemeIcon">🌙</div><div style="font-family:'Barlow Condensed',sans-serif;font-size:.78rem;font-weight:700;color:var(--gray)">Theme</div></div>
+    </div>
+    <div style="display:flex;gap:.5rem;margin-top:.75rem">
+      <button class="lang-btn active" onclick="setLang('en',this)">EN</button>
+      <button class="lang-btn" onclick="setLang('ru',this)">РУ</button>
+      <button class="lang-btn" onclick="setLang('uk',this)">УК</button>
+    </div>
+  </div>
+</div>
+
+<!-- PROFILE EDITOR MODAL -->
+<div class="modal-overlay" id="profileEditModal">
+  <div class="modal-box" style="max-width:500px">
+    <div class="modal-head">
+      <h3>✏️ Edit Profile</h3>
+      <button class="modal-close" onclick="closeModal('profileEditModal')">✕</button>
+    </div>
+    <div class="edit-tabs">
+      <button class="edit-tab active" onclick="switchEditTab('avatar',this)">Avatar</button>
+      <button class="edit-tab" onclick="switchEditTab('info',this)">Info</button>
+      <button class="edit-tab" onclick="switchEditTab('cs2',this)">CS2</button>
+    </div>
+    <div id="editTabAvatar">
+      <div style="text-align:center;margin-bottom:1rem">
+        <div class="edit-avatar-wrap" onclick="cycleAvatarEmoji()">
+          <div class="profile-big-avatar" id="editAvatarPreview" style="margin:0 auto">?</div>
+          <div class="edit-avatar-overlay">✏️<br>tap to change</div>
+        </div>
+      </div>
+      <div style="font-family:'Barlow Condensed',sans-serif;font-size:.8rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--gray);margin-bottom:.5rem">Choose Emoji</div>
+      <div class="avatar-emoji-row" id="emojiRow"></div>
+      <div style="font-family:'Barlow Condensed',sans-serif;font-size:.8rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--gray);margin-bottom:.5rem">Color</div>
+      <div class="avatar-color-row" id="colorRow"></div>
+    </div>
+    <div id="editTabInfo" style="display:none">
+      <div class="form-group"><label class="form-label">Username</label><input class="form-input" type="text" id="editUsername" placeholder="Your nickname"></div>
+      <div class="form-group"><label class="form-label">Country</label><input class="form-input" type="text" id="editCountry" placeholder="UA 🇺🇦"></div>
+      <div class="form-group"><label class="form-label">Bio</label><textarea class="bio-field" id="editBio" placeholder="Tell the community about yourself..."></textarea></div>
+      <div class="form-group"><label class="form-label">Discord</label><input class="form-input" type="text" id="editDiscord" placeholder="username#0000"></div>
+    </div>
+    <div id="editTabCs2" style="display:none">
+      <div class="form-group"><label class="form-label">Main Map</label><select class="form-input" id="editMap" style="cursor:none"><option>Dust2</option><option>Mirage</option><option>Inferno</option><option>Nuke</option><option>Ancient</option><option>Anubis</option><option>Vertigo</option></select></div>
+      <div class="form-group"><label class="form-label">Role</label><select class="form-input" id="editRole" style="cursor:none"><option>Entry Fragger</option><option>Support</option><option>AWPer</option><option>IGL</option><option>Lurker</option><option>Rifler</option></select></div>
+      <div class="form-group"><label class="form-label">Premier Rating</label><input class="form-input" type="number" id="editRating" placeholder="e.g. 12500" min="0" max="35000"></div>
+      <div class="form-group"><label class="form-label">Hours in CS2</label><input class="form-input" type="number" id="editHours" placeholder="e.g. 2400"></div>
+      <div class="form-group"><label class="form-label">Favourite Weapon</label><select class="form-input" id="editWeapon" style="cursor:none"><option>AK-47</option><option>M4A4</option><option>M4A1-S</option><option>AWP</option><option>Deagle</option></select></div>
+    </div>
+    <button class="btn btn-full" style="margin-top:1.25rem" onclick="saveProfileEdit()">💾 Save Changes</button>
+  </div>
+</div>
+
+<!-- MUSIC PLAYER -->
+<div id="musicPlayer">
+  <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:.4rem">
+    <div><div class="music-title" id="musicTitle">CSGO Frag Mix Vol.1</div><div class="music-artist">🎮 FUHA Vibes</div></div>
+    <button onclick="document.getElementById('musicPlayer').classList.remove('visible')" style="background:none;border:none;cursor:none;color:var(--gray);font-size:1rem">✕</button>
+  </div>
+  <div class="music-progress" onclick="seekMusic(event)"><div class="music-progress-fill" id="musicFill" style="width:0%"></div></div>
+  <div style="display:flex;justify-content:space-between;font-family:'JetBrains Mono',monospace;font-size:.68rem;color:var(--gray);margin-top:-.4rem;margin-bottom:.4rem"><span id="musicTime">0:00</span><span id="musicDur">3:24</span></div>
+  <div class="music-controls">
+    <button class="music-btn" onclick="prevTrack()">⏮</button>
+    <button class="music-btn play" id="playBtn" onclick="togglePlay()">▶️</button>
+    <button class="music-btn" onclick="nextTrack()">⏭</button>
+    <button class="music-btn" id="muteBtn" onclick="toggleMute()" style="font-size:.9rem">🔊</button>
+  </div>
+</div>
 
 <!-- ══ HEADER ══ -->
 <header>
@@ -1152,26 +1371,52 @@ footer a:hover{text-decoration:underline}
 <!-- ══════════ PROFILE ══════════ -->
 <section id="profile" class="page">
   <div class="container">
-    <div class="section-title" data-i18n="myProfile">My Profile</div>
-    <div class="accent-line"></div>
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1.5rem;flex-wrap:wrap;gap:1rem">
+      <div><div class="section-title" data-i18n="myProfile">My Profile</div><div class="accent-line" style="margin-bottom:0"></div></div>
+      <button class="btn btn-ghost btn-sm" onclick="openProfileEditor()">✏️ Edit Profile</button>
+    </div>
     <div class="profile-layout">
       <div class="profile-sidebar">
         <div class="profile-card">
           <div class="profile-big-avatar" id="profileAvatar">?</div>
           <div class="profile-username" id="profileUsername">Guest</div>
+          <div style="font-size:.82rem;color:var(--gray);margin:.15rem 0" id="profileCountry"></div>
           <div class="profile-email" id="profileEmail">—</div>
           <div class="profile-plan" id="profilePlan">⭐ Free</div>
-          <div style="margin-top:1.25rem">
-            <button class="btn btn-full btn-sm" onclick="showPage('subscriptions')">Upgrade Plan ↑</button>
+          <div id="profileBioWrap" style="margin-top:.75rem;font-size:.88rem;color:var(--gray);display:none;line-height:1.5;font-style:italic" id="profileBio"></div>
+          <div id="profileCs2Info" style="display:none;margin-top:.9rem;text-align:left">
+            <div class="rank-badge-section" style="margin-bottom:.75rem">
+              <div class="rank-star" id="profileRoleIcon">🎮</div>
+              <div class="rank-info">
+                <div class="rank-name" id="profileRole">—</div>
+                <div class="rank-rating" id="profileRatingDisplay">Premier —</div>
+              </div>
+            </div>
+            <div style="display:flex;gap:.5rem;flex-wrap:wrap;font-size:.8rem">
+              <span style="background:var(--surface2);border:1px solid var(--border);border-radius:6px;padding:.2rem .6rem;color:var(--gray)" id="profileMap">🗺️ —</span>
+              <span style="background:var(--surface2);border:1px solid var(--border);border-radius:6px;padding:.2rem .6rem;color:var(--gray)" id="profileWeapon">🔫 —</span>
+              <span style="background:var(--surface2);border:1px solid var(--border);border-radius:6px;padding:.2rem .6rem;color:var(--gray)" id="profileHours">⏱ —h</span>
+            </div>
+          </div>
+          <div style="margin-top:1.15rem;display:flex;flex-direction:column;gap:.45rem">
+            <button class="btn btn-full btn-sm" onclick="openProfileEditor()">✏️ Edit Profile</button>
+            <button class="btn btn-full btn-sm btn-outline" onclick="showPage('subscriptions')">Upgrade Plan ↑</button>
           </div>
         </div>
         <div class="profile-card">
-          <div style="font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:1.1rem;margin-bottom:.9rem">Stats</div>
+          <div style="font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:1.1rem;margin-bottom:.9rem">📊 Stats</div>
           <div class="profile-stats">
             <div class="profile-stat"><div class="profile-stat-num" id="profileSessions">0</div><div class="profile-stat-label">Sessions</div></div>
             <div class="profile-stat"><div class="profile-stat-num" id="profileXp">0</div><div class="profile-stat-label">XP</div></div>
             <div class="profile-stat"><div class="profile-stat-num" id="profileLevel">1</div><div class="profile-stat-label">Level</div></div>
             <div class="profile-stat"><div class="profile-stat-num" id="profileCourses">0</div><div class="profile-stat-label">Courses</div></div>
+          </div>
+          <div style="margin-top:.9rem" id="profileStreakWrap" style="display:none">
+            <div class="streak-badge" id="profileStreakBadge">🔥 0 day streak</div>
+          </div>
+          <div id="profileDiscordWrap" style="display:none;margin-top:.75rem">
+            <div style="font-size:.75rem;color:var(--gray);margin-bottom:.2rem">Discord</div>
+            <div style="font-family:'JetBrains Mono',monospace;font-size:.82rem;color:var(--primary)" id="profileDiscord"></div>
           </div>
         </div>
       </div>
@@ -1185,6 +1430,10 @@ footer a:hover{text-decoration:underline}
           <div class="owned-courses" id="ownedCourses">
             <div style="color:var(--gray);font-size:.9rem;grid-column:1/-1">No courses yet — <span style="color:var(--primary);cursor:none" onclick="showPage('shop')">browse shop →</span></div>
           </div>
+        </div>
+        <div class="profile-section">
+          <h4>📈 Skill Snapshot</h4>
+          <div id="profileSkillSnapshot"></div>
         </div>
       </div>
     </div>
@@ -1340,6 +1589,8 @@ function showPage(id){
     a.classList.toggle('active',a.dataset.page===id);
     if(a.dataset.page==='stream'&&isStreamLive) a.classList.add('live-nav');
   });
+  // Update mobile bottom nav
+  document.querySelectorAll('.mob-nav-btn').forEach(b=>b.classList.toggle('active',b.dataset.mob===id));
   if(id==='players') setTimeout(animateBars,100);
   if(id==='profile') updateProfilePage();
   window.scrollTo({top:0,behavior:'smooth'});
@@ -1428,14 +1679,17 @@ function loginSuccess(user){
   closeModal('authModal');
   document.getElementById('authArea').style.display='none';
   document.getElementById('userArea').style.display='block';
-  const initials=user.username.substring(0,2).toUpperCase();
-  document.getElementById('userAvatarBtn').textContent=initials;
+  const emoji=user.avatarEmoji||user.username.substring(0,2).toUpperCase();
+  const avatarBtn=document.getElementById('userAvatarBtn');
+  avatarBtn.textContent=emoji;
+  if(user.avatarColor!=null)avatarBtn.style.background=AVATAR_COLORS[user.avatarColor];
+  sessionStorage.setItem('fuhaCurrentUser',user.email);
   showXPBar();
   toast(`Welcome back, ${user.username}! 👑`,'success');
   if(!sessionStorage.getItem('liveNotified')&&isStreamLive){
     setTimeout(()=>{toast('🔴 AXO_HH is LIVE on Twitch right now!','twitch');sessionStorage.setItem('liveNotified','1')},1500);
   }
-  renderCartPage();
+  renderCartPage();renderProducts('all');
 }
 
 function logout(){
@@ -1862,8 +2116,9 @@ function toggleMobileMenu(){
   const nav=document.getElementById('mainNav');
   const vis=nav.style.display==='flex';
   nav.style.display=vis?'none':'flex';
-  if(!vis){Object.assign(nav.style,{flexDirection:'column',position:'absolute',top:'64px',left:'0',right:'0',background:'var(--surface)',padding:'1rem',borderBottom:'1px solid var(--border)',gap:'.5rem',zIndex:'400'})}
+  if(!vis){Object.assign(nav.style,{flexDirection:'column',position:'absolute',top:'56px',left:'0',right:'0',background:'var(--surface)',padding:'1rem',borderBottom:'1px solid var(--border)',gap:'.5rem',zIndex:'400'})}
 }
+function mobileMoreMenu(){openModal('mobileMoreModal')}
 
 // ═══════════════════════════════════════════
 // FUN & EASTER EGGS
@@ -1963,20 +2218,218 @@ document.querySelectorAll('.stat-num').forEach(el=>{
 });
 
 // ═══════════════════════════════════════════
+// PROFILE EDITOR
+// ═══════════════════════════════════════════
+const AVATAR_EMOJIS=['👑','⚡','🛡️','🎯','🔥','💀','🤖','🐉','🦊','🎮','💎','🏆','🦅','🐺','⚔️','🌪️'];
+const AVATAR_COLORS=['linear-gradient(135deg,#ff6b35,#f7931e)','linear-gradient(135deg,#9146ff,#7b3fe4)','linear-gradient(135deg,#00c6ff,#0072ff)','linear-gradient(135deg,#39d353,#2ea043)','linear-gradient(135deg,#ff006e,#8338ec)','linear-gradient(135deg,#ffcc00,#ff6b35)','linear-gradient(135deg,#00f5ff,#0088cc)','linear-gradient(135deg,#f44336,#b71c1c)'];
+const RAW_COLORS=['#ff6b35','#9146ff','#00c6ff','#39d353','#ff006e','#ffcc00','#00f5ff','#f44336'];
+let editAvatarEmoji=0, editAvatarColor=0;
+
+function openProfileEditor(){
+  if(!currentUser){toast('Login first','error');openModal('authModal');return}
+  // Pre-fill
+  const u=currentUser;
+  document.getElementById('editUsername').value=u.username||'';
+  document.getElementById('editCountry').value=u.country||'';
+  document.getElementById('editBio').value=u.bio||'';
+  document.getElementById('editDiscord').value=u.discord||'';
+  document.getElementById('editMap').value=u.mainMap||'Dust2';
+  document.getElementById('editRole').value=u.role||'Entry Fragger';
+  document.getElementById('editRating').value=u.rating||'';
+  document.getElementById('editHours').value=u.hours||'';
+  document.getElementById('editWeapon').value=u.weapon||'AK-47';
+  editAvatarEmoji=AVATAR_EMOJIS.indexOf(u.avatarEmoji||'👑');
+  if(editAvatarEmoji<0)editAvatarEmoji=0;
+  editAvatarColor=u.avatarColor||0;
+  renderEmojiPicker();renderColorPicker();updateEditPreview();
+  openModal('profileEditModal');
+}
+
+function renderEmojiPicker(){
+  document.getElementById('emojiRow').innerHTML=AVATAR_EMOJIS.map((e,i)=>
+    `<div class="avatar-emoji-btn ${i===editAvatarEmoji?'selected':''}" onclick="selectEmoji(${i})">${e}</div>`
+  ).join('');
+}
+function renderColorPicker(){
+  document.getElementById('colorRow').innerHTML=RAW_COLORS.map((c,i)=>
+    `<div class="avatar-color-btn ${i===editAvatarColor?'selected':''}" style="background:${c}" onclick="selectColor(${i})"></div>`
+  ).join('');
+}
+function selectEmoji(i){editAvatarEmoji=i;renderEmojiPicker();updateEditPreview()}
+function selectColor(i){editAvatarColor=i;renderColorPicker();updateEditPreview()}
+function cycleAvatarEmoji(){editAvatarEmoji=(editAvatarEmoji+1)%AVATAR_EMOJIS.length;renderEmojiPicker();updateEditPreview()}
+function updateEditPreview(){
+  const el=document.getElementById('editAvatarPreview');
+  el.textContent=AVATAR_EMOJIS[editAvatarEmoji];
+  el.style.background=AVATAR_COLORS[editAvatarColor];
+  el.style.fontSize='2rem';
+}
+
+function switchEditTab(tab,btn){
+  document.querySelectorAll('.edit-tab').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  ['editTabAvatar','editTabInfo','editTabCs2'].forEach(id=>document.getElementById(id).style.display='none');
+  const map={avatar:'editTabAvatar',info:'editTabInfo',cs2:'editTabCs2'};
+  document.getElementById(map[tab]).style.display='block';
+}
+
+function saveProfileEdit(){
+  if(!currentUser)return;
+  currentUser.username=document.getElementById('editUsername').value.trim()||currentUser.username;
+  currentUser.country=document.getElementById('editCountry').value.trim();
+  currentUser.bio=document.getElementById('editBio').value.trim();
+  currentUser.discord=document.getElementById('editDiscord').value.trim();
+  currentUser.mainMap=document.getElementById('editMap').value;
+  currentUser.role=document.getElementById('editRole').value;
+  currentUser.rating=document.getElementById('editRating').value;
+  currentUser.hours=document.getElementById('editHours').value;
+  currentUser.weapon=document.getElementById('editWeapon').value;
+  currentUser.avatarEmoji=AVATAR_EMOJIS[editAvatarEmoji];
+  currentUser.avatarColor=editAvatarColor;
+  // Update header avatar
+  const initials=currentUser.avatarEmoji||currentUser.username.substring(0,2).toUpperCase();
+  document.getElementById('userAvatarBtn').textContent=currentUser.avatarEmoji||currentUser.username.substring(0,2).toUpperCase();
+  document.getElementById('userAvatarBtn').style.background=AVATAR_COLORS[editAvatarColor];
+  saveUser();
+  closeModal('profileEditModal');
+  updateProfilePage();
+  toast('Profile updated! 🎉','success');gainXP(10);
+}
+
+function updateProfilePage(){
+  if(!currentUser)return;
+  const u=currentUser;
+  const emoji=u.avatarEmoji||u.username.substring(0,2).toUpperCase();
+  const avatarEl=document.getElementById('profileAvatar');
+  avatarEl.textContent=emoji;
+  avatarEl.style.background=AVATAR_COLORS[u.avatarColor||0];
+  avatarEl.style.fontSize=u.avatarEmoji?'2rem':'2.2rem';
+  document.getElementById('profileUsername').textContent=u.username;
+  document.getElementById('profileEmail').textContent=u.email;
+  const countryEl=document.getElementById('profileCountry');
+  if(u.country){countryEl.textContent=u.country;countryEl.style.display='block'}else{countryEl.style.display='none'}
+  document.getElementById('profilePlan').textContent='⭐ '+userPlan+' Plan';
+  const bioEl=document.getElementById('profileBioWrap');
+  if(u.bio){bioEl.textContent='"'+u.bio+'"';bioEl.style.display='block'}else{bioEl.style.display='none'}
+  // CS2 info
+  const cs2Wrap=document.getElementById('profileCs2Info');
+  if(u.role||u.rating){
+    cs2Wrap.style.display='block';
+    const roleIcons={IGL:'👑','Entry Fragger':'⚡',Support:'🛡️',AWPer:'🎯',Lurker:'👤',Rifler:'🔫'};
+    document.getElementById('profileRoleIcon').textContent=roleIcons[u.role]||'🎮';
+    document.getElementById('profileRole').textContent=u.role||'Player';
+    document.getElementById('profileRatingDisplay').textContent=u.rating?`Premier ${parseInt(u.rating).toLocaleString()}`:'Rating: —';
+    document.getElementById('profileMap').textContent='🗺️ '+(u.mainMap||'—');
+    document.getElementById('profileWeapon').textContent='🔫 '+(u.weapon||'—');
+    document.getElementById('profileHours').textContent='⏱ '+(u.hours||'—')+'h';
+  } else cs2Wrap.style.display='none';
+  // Discord
+  const discEl=document.getElementById('profileDiscordWrap');
+  if(u.discord){document.getElementById('profileDiscord').textContent=u.discord;discEl.style.display='block'}else{discEl.style.display='none'}
+  // Stats
+  document.getElementById('profileSessions').textContent=userSessions;
+  document.getElementById('profileXp').textContent=userXP;
+  document.getElementById('profileLevel').textContent=userLevel;
+  document.getElementById('profileCourses').textContent=ownedCourseIds.length;
+  // Streak
+  const streak=parseInt(localStorage.getItem('fuhaStreak')||'0');
+  document.getElementById('profileStreakBadge').textContent=`🔥 ${streak} day streak`;
+  document.getElementById('profileStreakWrap').style.display='block';
+  renderAchievements();renderOwnedCourses();renderSkillSnapshot();
+}
+
+function renderSkillSnapshot(){
+  const el=document.getElementById('profileSkillSnapshot');
+  if(!el)return;
+  el.innerHTML=SKILLS.map(s=>`
+    <div class="stat-bar" style="margin-bottom:.7rem">
+      <div class="stat-bar-header"><span class="stat-bar-label">${s.icon} ${s.name}</span><span class="stat-bar-val">${s.pct}%</span></div>
+      <div class="bar-track"><div class="bar-fill animated" style="--target-w:${s.pct}%;width:${s.pct}%"></div></div>
+    </div>`).join('');
+}
+
+// ═══════════════════════════════════════════
+// MUSIC PLAYER (virtual / fake but fun)
+// ═══════════════════════════════════════════
+const TRACKS=[
+  {title:'CSGO Frag Mix Vol.1',dur:'3:24',durSec:204},
+  {title:'Clutch Round Anthem',dur:'4:12',durSec:252},
+  {title:'Headshot Compilation',dur:'2:58',durSec:178},
+  {title:'FUHA Training BGM',dur:'5:01',durSec:301},
+  {title:'Lofi CS2 Study Beat',dur:'3:45',durSec:225},
+];
+let musicTrack=0,musicPlaying=false,musicMuted=false,musicProgress=0,musicTimer=null;
+
+function togglePlay(){
+  musicPlaying=!musicPlaying;
+  document.getElementById('playBtn').textContent=musicPlaying?'⏸️':'▶️';
+  if(musicPlaying){
+    musicTimer=setInterval(()=>{
+      if(!musicPlaying)return;
+      musicProgress+=100/TRACKS[musicTrack].durSec;
+      if(musicProgress>=100){musicProgress=0;nextTrack();return}
+      document.getElementById('musicFill').style.width=musicProgress+'%';
+      const sec=Math.round((musicProgress/100)*TRACKS[musicTrack].durSec);
+      document.getElementById('musicTime').textContent=Math.floor(sec/60)+':'+(sec%60+'').padStart(2,'0');
+    },1000);
+  } else clearInterval(musicTimer);
+}
+function nextTrack(){musicTrack=(musicTrack+1)%TRACKS.length;loadTrack()}
+function prevTrack(){musicTrack=(musicTrack-1+TRACKS.length)%TRACKS.length;loadTrack()}
+function loadTrack(){
+  musicProgress=0;document.getElementById('musicFill').style.width='0%';
+  document.getElementById('musicTime').textContent='0:00';
+  document.getElementById('musicTitle').textContent=TRACKS[musicTrack].title;
+  document.getElementById('musicDur').textContent=TRACKS[musicTrack].dur;
+  if(musicPlaying){clearInterval(musicTimer);musicPlaying=false;togglePlay()}
+}
+function toggleMute(){musicMuted=!musicMuted;document.getElementById('muteBtn').textContent=musicMuted?'🔇':'🔊'}
+function seekMusic(e){const w=e.currentTarget.offsetWidth;musicProgress=(e.offsetX/w)*100;document.getElementById('musicFill').style.width=musicProgress+'%'}
+function openMusicPlayer(){document.getElementById('musicPlayer').classList.add('visible')}
+
+// ═══════════════════════════════════════════
+// DAILY STREAK
+// ═══════════════════════════════════════════
+function checkStreak(){
+  const today=new Date().toDateString();
+  const last=localStorage.getItem('fuhaLastVisit');
+  let streak=parseInt(localStorage.getItem('fuhaStreak')||'0');
+  if(last===today){return}
+  const yesterday=new Date(Date.now()-86400000).toDateString();
+  if(last===yesterday){streak++}else{streak=1}
+  localStorage.setItem('fuhaStreak',streak);
+  localStorage.setItem('fuhaLastVisit',today);
+  if(streak>1)setTimeout(()=>toast(`🔥 Day ${streak} streak! +${streak*5} XP`,'info'),2000);
+}
+
+// ═══════════════════════════════════════════
 // INIT
 // ═══════════════════════════════════════════
 document.addEventListener('DOMContentLoaded',()=>{
   fixTwitchParent();checkTwitchStatus();
   setInterval(checkTwitchStatus,3*60*1000);
   renderSchedule();renderProducts('all');renderReviews();renderFaq();renderSkills();renderCartPage();
-  // Restore session if stored
+  checkStreak();
+  // Restore session
   const savedEmail=sessionStorage.getItem('fuhaCurrentUser');
   if(savedEmail){
     const users=JSON.parse(localStorage.getItem('fuhaUsers')||'{}');
     if(users[savedEmail])loginSuccess(users[savedEmail]);
   }
-  // Tip hint
-  setTimeout(()=>toast('💡 Try: Konami Code ↑↑↓↓←→←→BA','info'),4000);
+  // Tip
+  setTimeout(()=>toast('🎵 Press M to open music player!','info'),5000);
+  // Typing effect on hero
+  const h2=document.querySelector('.hero-banner h2');
+  if(h2){h2.dataset.text='Level Up Your Game,'}
+});
+
+// M key opens music
+document.addEventListener('keydown',e=>{
+  if(e.key==='m'||e.key==='M'){
+    if(!e.target.matches('input,textarea,select')){
+      openMusicPlayer();
+    }
+  }
 });
 </script>
 </body>
