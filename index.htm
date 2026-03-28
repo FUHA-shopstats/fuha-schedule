@@ -1381,77 +1381,7 @@ document.querySelectorAll('.modal-overlay').forEach(m=>{
 // ═══════════════════════════════════════════
 // ── GOOGLE OAUTH (REAL) ──────────────────────
 // ═══════════════════════════════════════════
-function oauthLoginGoogle(){
-  if(GOOGLE_CLIENT_ID==='YOUR_GOOGLE_CLIENT_ID'){
-    toast('⚙️ Google OAuth: замените GOOGLE_CLIENT_ID в коде','error');
-    return;
-  }
-  const params=new URLSearchParams({
-    client_id:    GOOGLE_CLIENT_ID,
-    redirect_uri: window.location.origin+window.location.pathname,
-    response_type:'token',
-    scope:        'openid email profile',
-    state:        'google_login',
-  });
-  window.location.href='https://accounts.google.com/o/oauth2/v2/auth?'+params;
-}
 
-// ═══════════════════════════════════════════
-// ── STEAM OPENID (REAL) ─────────────────────
-// ═══════════════════════════════════════════
-function oauthLoginSteam(){
-  const returnUrl=encodeURIComponent(window.location.href.split('?')[0]+'?steam_return=1');
-  const realm=encodeURIComponent(window.location.origin);
-  const steamUrl=
-    'https://steamcommunity.com/openid/login'
-    +'?openid.ns='+encodeURIComponent('http://specs.openid.net/auth/2.0')
-    +'&openid.mode=checkid_setup'
-    +'&openid.return_to='+returnUrl
-    +'&openid.realm='+realm
-    +'&openid.identity='+encodeURIComponent('http://specs.openid.net/auth/2.0/identifier_select')
-    +'&openid.claimed_id='+encodeURIComponent('http://specs.openid.net/auth/2.0/identifier_select');
-  window.location.href=steamUrl;
-}
-
-// Handle OAuth return redirects on page load
-(function handleOAuthReturn(){
-  const params=new URLSearchParams(window.location.search);
-  const hash=new URLSearchParams(window.location.hash.slice(1));
-
-  // Google returns access_token in URL hash
-  if(hash.get('access_token')&&(params.get('state')==='google_login'||hash.get('state')==='google_login')){
-    const token=hash.get('access_token');
-    history.replaceState({},'',window.location.pathname);
-    fetch('https://www.googleapis.com/oauth2/v3/userinfo',{headers:{Authorization:'Bearer '+token}})
-      .then(r=>r.json())
-      .then(info=>{
-        const users=JSON.parse(localStorage.getItem('fuhaUsers')||'{}');
-        const key='google_'+info.sub;
-        if(!users[key]){
-          users[key]={username:info.name||info.email.split('@')[0],email:info.email,avatarEmoji:'🔵',avatarColor:2,plan:'Free',xp:0,level:1,sessions:0,ownedCourses:[],googleId:info.sub};
-          localStorage.setItem('fuhaUsers',JSON.stringify(users));
-        }
-        setTimeout(()=>loginSuccess(users[key]),400);
-        toast('✅ Вход через Google выполнен!','success');
-      })
-      .catch(()=>toast('Ошибка Google авторизации','error'));
-    return;
-  }
-
-  // Steam returns claimed_id in query params
-  if(params.get('steam_return')==='1'&&params.get('openid.claimed_id')){
-    const steamId=params.get('openid.claimed_id').split('/').pop();
-    history.replaceState({},'',window.location.pathname);
-    const users=JSON.parse(localStorage.getItem('fuhaUsers')||'{}');
-    const key='steam_'+steamId;
-    if(!users[key]){
-      users[key]={username:'Steam_'+steamId.slice(-6),email:'steam_'+steamId+'@steam.local',avatarEmoji:'🎮',avatarColor:3,plan:'Free',xp:0,level:1,sessions:0,ownedCourses:[],steamId:steamId};
-      localStorage.setItem('fuhaUsers',JSON.stringify(users));
-    }
-    setTimeout(()=>loginSuccess(users[key]),400);
-    toast('✅ Вход через Steam! 🎮','success');
-  }
-})();
 
 // ═══════════════════════════════════════════
 // AUTH
@@ -2255,9 +2185,6 @@ document.addEventListener('DOMContentLoaded',()=>{
 // ═══════════════════════════════════════════════════════
 // REAL GOOGLE OAUTH + REAL STEAM OPENID + buySubscription
 // ═══════════════════════════════════════════════════════
-
-// ⚠️ Замените YOUR_GOOGLE_CLIENT_ID на ваш Client ID из console.cloud.google.com
-const GOOGLE_CLIENT_ID = 'YOUR_GOOGLE_CLIENT_ID';
 
 // ── Google & Steam Login SIMULATION ──────────────────────
 // Работает локально без каких-либо настроек.
