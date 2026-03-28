@@ -366,8 +366,36 @@ nav a.live-nav::before{
 .bar-fill.animated{width:var(--target-w)!important}
 
 /* ── SCHEDULE ── */
-.schedule-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:1.15rem}
-.schedule-card{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:1.4rem;cursor:none;transition:all .3s;display:flex;flex-direction:column;gap:.65rem}
+.schedule-outer{position:relative}
+.schedule-nav{display:flex;gap:.5rem;margin-bottom:.75rem;justify-content:flex-end}
+.schedule-nav-btn{
+  width:34px;height:34px;border-radius:8px;
+  background:var(--surface);border:1px solid var(--border);
+  cursor:none;display:flex;align-items:center;justify-content:center;
+  font-size:1rem;color:var(--gray);transition:all .2s;flex-shrink:0;
+}
+.schedule-nav-btn:hover{border-color:var(--primary);color:var(--primary);background:rgba(255,107,53,.08)}
+.schedule-nav-btn:disabled{opacity:.3;pointer-events:none}
+.schedule-scroll-wrap{
+  overflow-x:auto;overflow-y:visible;
+  scroll-behavior:smooth;
+  -webkit-overflow-scrolling:touch;
+  scrollbar-width:none;
+  padding-bottom:.5rem;
+  cursor:grab;
+}
+.schedule-scroll-wrap:active{cursor:grabbing}
+.schedule-scroll-wrap::-webkit-scrollbar{display:none}
+.schedule-grid{
+  display:flex;gap:1rem;
+  width:max-content;
+  padding:.25rem .1rem .5rem;
+}
+.schedule-card{
+  background:var(--surface);border:1px solid var(--border);border-radius:12px;
+  padding:1.4rem;cursor:none;transition:all .3s;display:flex;flex-direction:column;gap:.65rem;
+  width:200px;flex-shrink:0;
+}
 .schedule-card:hover{transform:translateY(-4px);border-color:var(--primary);box-shadow:0 12px 28px rgba(255,107,53,.12)}
 .schedule-card.completed{border-color:var(--success);background:rgba(57,211,83,.04)}
 .schedule-card.today-card{border-color:var(--primary);box-shadow:0 0 0 1px var(--primary),0 8px 24px rgba(255,107,53,.2);animation:todayPulse 2s ease-in-out infinite}
@@ -381,6 +409,15 @@ nav a.live-nav::before{
 .schedule-status{font-size:.72rem;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--gray)}
 .schedule-card.completed .schedule-status{color:var(--success)}
 .schedule-card.today-card .schedule-status{color:var(--primary)}
+/* scroll dots indicator */
+.schedule-dots{display:flex;gap:.35rem;justify-content:center;margin-top:.65rem}
+.schedule-dot{width:6px;height:6px;border-radius:50%;background:var(--border);transition:all .3s;cursor:none}
+.schedule-dot.active{width:18px;border-radius:3px;background:var(--primary)}
+@media(max-width:768px){
+  .schedule-card{width:175px;padding:1.1rem;cursor:auto}
+  .schedule-nav{display:none}
+  .schedule-scroll-wrap{cursor:auto}
+}
 
 /* ── SKILLS ── */
 .skill-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:1rem;margin-bottom:2rem}
@@ -628,7 +665,6 @@ body.light .mobile-bottom-nav{background:rgba(255,255,255,.97)}
   .lb-row{padding:.75rem .9rem;gap:.6rem}
   .lb-rank{font-size:1.1rem}
   .players-grid{grid-template-columns:1fr}
-  .schedule-grid{grid-template-columns:repeat(2,1fr)}
   .products-grid{grid-template-columns:repeat(2,1fr);gap:.75rem}
   .product-card{padding:1rem}
   .product-icon{font-size:1.6rem;margin-bottom:.6rem}
@@ -667,7 +703,6 @@ body.light .mobile-bottom-nav{background:rgba(255,255,255,.97)}
 @media(max-width:400px){
   .stats-grid{grid-template-columns:repeat(2,1fr)}
   .products-grid{grid-template-columns:1fr}
-  .schedule-grid{grid-template-columns:1fr}
   .skill-grid{grid-template-columns:1fr}
   .hero-banner h2{font-size:1.6rem}
   .quick-action{min-width:calc(50% - .3rem)}
@@ -1443,7 +1478,16 @@ footer a:hover{text-decoration:underline}
     <div class="section-title" data-i18n="weeklySchedule">Weekly Schedule</div>
     <div class="section-sub" data-i18n="scheduleSub">Your training plan for the week</div>
     <div class="accent-line"></div>
-    <div class="schedule-grid" id="scheduleGrid"></div>
+    <div class="schedule-outer">
+      <div class="schedule-nav">
+        <button class="schedule-nav-btn" id="schedPrev" onclick="scheduleScroll(-1)">←</button>
+        <button class="schedule-nav-btn" id="schedNext" onclick="scheduleScroll(1)">→</button>
+      </div>
+      <div class="schedule-scroll-wrap" id="scheduleWrap">
+        <div class="schedule-grid" id="scheduleGrid"></div>
+      </div>
+      <div class="schedule-dots" id="scheduleDots"></div>
+    </div>
   </div>
 </section>
 
@@ -2299,14 +2343,73 @@ const SKILLS=[
 // RENDER FUNCTIONS
 // ═══════════════════════════════════════════
 function renderSchedule(){
-  document.getElementById('scheduleGrid').innerHTML=SCHEDULE.map((d,i)=>`
+  const grid=document.getElementById('scheduleGrid');
+  grid.innerHTML=SCHEDULE.map((d,i)=>`
     <div class="schedule-card ${d.status==='completed'?'completed':d.status==='today'?'today-card':''} clickable" onclick="scheduleAction(${i})">
       <div class="schedule-icon">${d.icon}</div>
       <div class="schedule-day">${d.day}</div>
       <ul class="schedule-tasks">${d.tasks.map(t=>`<li>${t}</li>`).join('')}</ul>
       <div class="schedule-status">${{completed:'✓ Completed',today:'▶ Today',upcoming:'⌛ Upcoming'}[d.status]}</div>
     </div>`).join('');
+
+  // render dots
+  const dotsEl=document.getElementById('scheduleDots');
+  if(dotsEl){
+    dotsEl.innerHTML=SCHEDULE.map((_,i)=>
+      `<div class="schedule-dot ${i===0?'active':''}" id="sdot${i}" onclick="scheduleScrollTo(${i})"></div>`
+    ).join('');
+  }
+
+  // scroll listener → update active dot + nav buttons
+  const wrap=document.getElementById('scheduleWrap');
+  if(wrap){
+    wrap.addEventListener('scroll',()=>updateScheduleState(),{passive:true});
+
+    // touch/mouse drag swipe
+    let startX=0,scrollStart=0,isDragging=false;
+    wrap.addEventListener('mousedown',e=>{isDragging=true;startX=e.pageX;scrollStart=wrap.scrollLeft;wrap.style.userSelect='none'});
+    wrap.addEventListener('mousemove',e=>{if(!isDragging)return;wrap.scrollLeft=scrollStart-(e.pageX-startX)});
+    wrap.addEventListener('mouseup',()=>{isDragging=false;wrap.style.userSelect=''});
+    wrap.addEventListener('mouseleave',()=>{isDragging=false;wrap.style.userSelect=''});
+  }
+
+  // auto-scroll to today card
+  setTimeout(()=>{
+    const todayIdx=SCHEDULE.findIndex(d=>d.status==='today');
+    if(todayIdx>0) scheduleScrollTo(todayIdx);
+    updateScheduleState();
+  },150);
 }
+
+function updateScheduleState(){
+  const wrap=document.getElementById('scheduleWrap');
+  if(!wrap) return;
+  const cardW=wrap.querySelector('.schedule-card')?.offsetWidth||200;
+  const gap=16;
+  const idx=Math.round(wrap.scrollLeft/(cardW+gap));
+  // update dots
+  document.querySelectorAll('.schedule-dot').forEach((d,i)=>d.classList.toggle('active',i===idx));
+  // update nav buttons
+  const prev=document.getElementById('schedPrev');
+  const next=document.getElementById('schedNext');
+  if(prev) prev.disabled=wrap.scrollLeft<10;
+  if(next) next.disabled=wrap.scrollLeft>=(wrap.scrollWidth-wrap.clientWidth-10);
+}
+
+function scheduleScrollTo(idx){
+  const wrap=document.getElementById('scheduleWrap');
+  if(!wrap) return;
+  const cardW=wrap.querySelector('.schedule-card')?.offsetWidth||200;
+  wrap.scrollTo({left:idx*(cardW+16),behavior:'smooth'});
+}
+
+function scheduleScroll(dir){
+  const wrap=document.getElementById('scheduleWrap');
+  if(!wrap) return;
+  const cardW=wrap.querySelector('.schedule-card')?.offsetWidth||200;
+  wrap.scrollBy({left:dir*(cardW+16),behavior:'smooth'});
+}
+
 function scheduleAction(i){
   const d=SCHEDULE[i];
   if(d.status==='upcoming'){toast(`${d.day} session added to calendar!`)}
