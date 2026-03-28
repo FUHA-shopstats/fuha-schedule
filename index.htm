@@ -1064,17 +1064,57 @@ footer a:hover{text-decoration:underline}
     </div>
 
     <!-- PAYPAL -->
-    <div id="payPaypal" style="display:none;text-align:center;padding:2rem 0">
-      <div style="font-size:3rem;margin-bottom:1rem">🅿️</div>
-      <p style="color:var(--gray);margin-bottom:1.5rem;font-size:.95rem">You'll be redirected to PayPal to complete payment securely.</p>
-      <div style="background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:1rem;margin-bottom:1.5rem">
-        <div style="font-size:.82rem;color:var(--gray);margin-bottom:.25rem">PayPal account</div>
-        <div style="font-family:'JetBrains Mono',monospace;font-size:.9rem;color:var(--primary)">payments@fuha.gg</div>
+    <div id="payPaypal" style="display:none">
+      <!-- PayPal branding -->
+      <div style="background:linear-gradient(135deg,#003087,#009cde);border-radius:14px;padding:1.5rem;text-align:center;margin-bottom:1.25rem;position:relative;overflow:hidden">
+        <div style="position:absolute;inset:0;background:url('data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%2240%22 height=%2240%22><circle cx=%2220%22 cy=%2220%22 r=%2218%22 fill=%22none%22 stroke=%22rgba(255,255,255,.06)%22 stroke-width=%221%22/></svg>') repeat;opacity:.5"></div>
+        <svg viewBox="0 0 124 33" style="height:28px;margin-bottom:.75rem" xmlns="http://www.w3.org/2000/svg">
+          <path d="M46.2 7.5h-7.4c-.5 0-.9.4-1 .9l-3 19c-.1.4.2.7.6.7h3.7c.5 0 .9-.4 1-.9l.8-5.2c.1-.5.5-.9 1-.9h2.3c4.8 0 7.6-2.3 8.3-6.9.3-2 0-3.6-.9-4.7-1-1.2-2.8-2-5.4-2zm.8 6.8c-.4 2.6-2.4 2.6-4.3 2.6h-1.1l.8-4.9c0-.3.3-.5.6-.5h.5c1.3 0 2.5 0 3.2.7.4.5.5 1.2.3 2.1zM68.7 14.2h-3.7c-.3 0-.6.2-.6.5l-.2.9-.3-.4c-.8-1.2-2.7-1.6-4.5-1.6-4.2 0-7.8 3.2-8.5 7.6-.4 2.2.1 4.3 1.4 5.8 1.1 1.3 2.8 1.9 4.7 1.9 3.4 0 5.3-2.2 5.3-2.2l-.2.9c-.1.4.2.7.6.7h3.3c.5 0 .9-.4 1-.9l2-12.5c.1-.4-.2-.7-.3-.7zm-5.1 7.4c-.4 2.1-2.1 3.5-4.3 3.5-1.1 0-2-.4-2.6-1-.6-.7-.8-1.6-.6-2.6.3-2.1 2.2-3.5 4.3-3.5 1.1 0 2 .4 2.6 1 .6.6.8 1.6.6 2.6zM88.2 14.2h-3.7c-.3 0-.7.2-.9.5l-5.1 7.5-2.2-7.2c-.1-.5-.6-.8-1-.8h-3.7c-.4 0-.7.4-.6.8l4.1 12-3.9 5.4c-.3.4 0 1 .5 1h3.7c.3 0 .7-.2.9-.4l12.4-18c.3-.3 0-.8-.5-.8z" fill="#fff"/>
+          <path d="M99.4 7.5H92c-.5 0-.9.4-1 .9l-3 19c-.1.4.2.7.6.7h4c.3 0 .7-.3.7-.6l.9-5.5c.1-.5.5-.9 1-.9h2.3c4.8 0 7.6-2.3 8.3-6.9.3-2 0-3.6-.9-4.7-1-1.2-2.7-2-5.5-2zm.8 6.8c-.4 2.6-2.4 2.6-4.3 2.6h-1l.7-4.9c.1-.3.3-.5.6-.5h.5c1.3 0 2.5 0 3.2.7.5.5.5 1.2.3 2.1zM122.1 14.2h-3.7c-.3 0-.6.2-.6.5l-.2.9-.3-.4c-.8-1.2-2.7-1.6-4.5-1.6-4.2 0-7.8 3.2-8.5 7.6-.4 2.2.1 4.3 1.4 5.8 1.1 1.3 2.8 1.9 4.7 1.9 3.4 0 5.3-2.2 5.3-2.2l-.2.9c-.1.4.2.7.6.7h3.3c.5 0 .9-.4 1-.9l2-12.5c0-.4-.2-.7-.3-.7zm-5.2 7.4c-.4 2.1-2.1 3.5-4.3 3.5-1.1 0-2-.4-2.6-1-.6-.7-.8-1.6-.6-2.6.3-2.1 2.2-3.5 4.3-3.5 1.1 0 2 .4 2.6 1 .6.6.9 1.6.6 2.6z" fill="#fff"/>
+          <path d="M7.3 2.5C5.5 2.5 4 3.8 3.8 5.6L.3 27.9c-.2 1.3.8 2.5 2.1 2.5h6.5l1.6-10.2-.1.4 2-12.9c.2-1.4 1.4-2.5 2.8-2.5H22c.8 0 1.6.1 2.3.3C23.7 3.3 21.5 2.5 19 2.5H7.3z" fill="#003087"/>
+          <path d="M24.3 5.5c-.7-.2-1.5-.3-2.3-.3h-6.9c-1.4 0-2.6 1.1-2.8 2.5L10.3 20.6l-.1.4L8.6 31h5.2c1.4 0 2.6-1.1 2.8-2.5l.1-.4 1.6-10.2.1-.4c.2-1.4 1.4-2.5 2.8-2.5h1.8c5.7 0 10.1-2.3 11.4-9-.6-.4-1.3-.7-2.1-.9-.7-.3-1.5-.5-2.3-.6-.6-.1-1.1-.1-1.7 0z" fill="#009cde"/>
+          <path d="M9.9 7.8C10.1 6.4 11.3 5.3 12.7 5.3h6.9c.8 0 1.6.1 2.3.3.7.2 1.4.5 2 .9.5.3.9.7 1.2 1.1 1.4-7.4-1.5-9.1-9-9.1H4.4C3 .5 1.8 1.6 1.6 3L-2 25c-.2 1.4.8 2.6 2.1 2.6h6.5L9.9 7.8z" fill="#012169"/>
+        </svg>
+        <div style="color:rgba(255,255,255,.9);font-size:.92rem;margin-bottom:.35rem">Secure checkout via PayPal</div>
+        <div style="color:rgba(255,255,255,.65);font-size:.78rem">You'll be redirected to PayPal to complete your payment</div>
+      </div>
+
+      <!-- Order summary -->
+      <div style="background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:1rem 1.15rem;margin-bottom:1rem">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:.5rem">
+          <span style="font-size:.85rem;color:var(--gray)">Item</span>
+          <span style="font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:.95rem" id="ppItemName">—</span>
+        </div>
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:.5rem">
+          <span style="font-size:.85rem;color:var(--gray)">Currency</span>
+          <span style="font-size:.88rem;color:var(--light)">USD</span>
+        </div>
+        <div style="height:1px;background:var(--border);margin:.5rem 0"></div>
+        <div style="display:flex;justify-content:space-between;align-items:center">
+          <span style="font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:1rem">Total</span>
+          <span style="font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:1.3rem;color:#009cde" id="ppTotal">$0.00</span>
+        </div>
+      </div>
+
+      <!-- What happens next -->
+      <div style="display:flex;flex-direction:column;gap:.5rem;margin-bottom:1rem">
+        <div style="display:flex;align-items:center;gap:.65rem;font-size:.83rem;color:var(--gray)">
+          <span style="width:20px;height:20px;border-radius:50%;background:rgba(0,156,222,.15);display:flex;align-items:center;justify-content:center;font-size:.7rem;flex-shrink:0;color:#009cde">1</span>
+          Click "Pay with PayPal" below
+        </div>
+        <div style="display:flex;align-items:center;gap:.65rem;font-size:.83rem;color:var(--gray)">
+          <span style="width:20px;height:20px;border-radius:50%;background:rgba(0,156,222,.15);display:flex;align-items:center;justify-content:center;font-size:.7rem;flex-shrink:0;color:#009cde">2</span>
+          Log in to PayPal or pay as guest with your card
+        </div>
+        <div style="display:flex;align-items:center;gap:.65rem;font-size:.83rem;color:var(--gray)">
+          <span style="width:20px;height:20px;border-radius:50%;background:rgba(0,156,222,.15);display:flex;align-items:center;justify-content:center;font-size:.7rem;flex-shrink:0;color:#009cde">3</span>
+          Confirm payment — access unlocked instantly ✓
+        </div>
       </div>
     </div>
 
     <div class="pay-secure"><span>🔒</span> 256-bit SSL encrypted — your data is safe</div>
-    <button class="btn btn-full" style="margin-top:1rem" onclick="confirmPayment()">Pay <span id="payBtnAmount">$0.00</span> →</button>
+    <button class="btn btn-full" style="margin-top:1rem" id="payMainBtn" onclick="confirmPayment()">Pay <span id="payBtnAmount">$0.00</span> →</button>
   </div>
 </div>
 
@@ -1805,19 +1845,46 @@ function renderOwnedCourses(){
 // ═══════════════════════════════════════════
 // PAYMENT
 // ═══════════════════════════════════════════
+// ── PayPal config ──────────────────────────
+// Replace with your actual PayPal email or PayPal.me link
+const PAYPAL_EMAIL = 'sansusa623@gmail.com'; // PayPal account
+// ────────────────────────────────────────────
+
 function openPayModal(name,price){
   if(!currentUser){toast('Login to purchase','error');openModal('authModal');return}
   currentPayItem={name,price:parseFloat(price)};
   document.getElementById('payModalTitle').textContent='💳 '+name;
   document.getElementById('payItemPreview').innerHTML=`<div class="modal-item"><div class="modal-item-name">${name}</div><div class="modal-item-price">$${parseFloat(price).toFixed(2)}</div></div>`;
   document.getElementById('payBtnAmount').textContent='$'+parseFloat(price).toFixed(2);
+  // Sync PayPal summary fields
+  const ppName=document.getElementById('ppItemName');
+  const ppTotal=document.getElementById('ppTotal');
+  if(ppName) ppName.textContent=name;
+  if(ppTotal) ppTotal.textContent='$'+parseFloat(price).toFixed(2);
+  // Reset to card tab
+  const firstTab=document.querySelector('.pay-tab');
+  if(firstTab) switchPayTab('card',firstTab);
   openModal('payModal');
 }
 function switchPayTab(tab,btn){
   document.querySelectorAll('.pay-tab').forEach(b=>b.classList.remove('active'));
   btn.classList.add('active');
   ['payCard','payCrypto','payPaypal'].forEach(id=>document.getElementById(id).style.display='none');
-  document.getElementById('pay'+tab.charAt(0).toUpperCase()+tab.slice(1)).style.display='block';
+  const map={card:'payCard',crypto:'payCrypto',paypal:'payPaypal'};
+  document.getElementById(map[tab]).style.display='block';
+  // Change main button style for PayPal tab
+  const mainBtn=document.getElementById('payMainBtn');
+  if(!mainBtn) return;
+  if(tab==='paypal'){
+    mainBtn.style.background='linear-gradient(135deg,#003087,#009cde)';
+    mainBtn.innerHTML='<svg viewBox="0 0 24 24" style="height:16px;fill:white;margin-right:4px"><path d="M20.067 8.478c.492.315.844.825.983 1.39.671-4.336-2.974-6.15-6.7-6.15H7.927c-.538 0-1.003.377-1.093.906L4.44 18.626h3.807l.956-6.033.84-5.315h4.13c3.012 0 5.5 1.012 5.894 4.2z"/><path d="M8.995 13.817l-.913 5.77H4.275l.193-1.217H8.23l.765-4.553zM20.067 8.478c-.394-3.188-2.882-4.2-5.894-4.2h-4.13l-.84 5.315h3.807c3.726 0 7.371 1.814 6.7 6.15.474-1.908-.152-4.45-1.643-7.265z" opacity=".6"/></svg>Pay with PayPal $<span id="payBtnAmount2">'+(currentPayItem.price||0).toFixed(2)+'</span>';
+    // Sync amount
+    const amt=document.getElementById('payBtnAmount');
+    if(amt) mainBtn.querySelector('#payBtnAmount2') && (mainBtn.querySelector('#payBtnAmount2').textContent=(currentPayItem.price||0).toFixed(2));
+  } else {
+    mainBtn.style.background='';
+    mainBtn.innerHTML='Pay <span id="payBtnAmount">$'+(currentPayItem.price||0).toFixed(2)+'</span> →';
+  }
 }
 function formatCard(inp){
   let v=inp.value.replace(/\D/g,'').substring(0,16);
@@ -1843,39 +1910,117 @@ function copyCryptoAddress(){
   navigator.clipboard.writeText(addr).then(()=>toast('Address copied!','success'));
 }
 function confirmPayment(){
-  const tab=[...document.querySelectorAll('.pay-tab')].find(b=>b.classList.contains('active'));
-  const method=tab?.textContent.trim()||'Card';
+  const tabs=[...document.querySelectorAll('.pay-tab')];
+  const activeTab=tabs.find(b=>b.classList.contains('active'));
+  const method=activeTab?.textContent.trim()||'Card';
+
+  // ── PayPal: redirect to real PayPal payment ──
+  if(method.includes('PayPal')){
+    const amount=currentPayItem.price.toFixed(2);
+    const itemName=encodeURIComponent('FUHA — '+currentPayItem.name);
+    const note=encodeURIComponent('FUHA CS2 Training: '+currentPayItem.name);
+    // Build PayPal.me link (simplest, no API key needed)
+    // Format: https://www.paypal.com/paypalme/USERNAME/AMOUNT
+    // OR direct invoice: https://www.paypal.com/cgi-bin/webscr
+    const paypalUrl=`https://www.paypal.com/cgi-bin/webscr?cmd=_xclick`
+      +`&business=${encodeURIComponent(PAYPAL_EMAIL)}`
+      +`&item_name=${itemName}`
+      +`&amount=${amount}`
+      +`&currency_code=USD`
+      +`&no_shipping=1`
+      +`&return=${encodeURIComponent(window.location.href+'?paid=1')}`
+      +`&cancel_return=${encodeURIComponent(window.location.href)}`
+      +`&custom=${encodeURIComponent((currentUser?.email||'guest')+'|'+currentPayItem.name)}`
+      +`&notify_url=`; // add your IPN url here if you have a backend
+    closeModal('payModal');
+    toast('🔄 Redirecting to PayPal...','info');
+    setTimeout(()=>{
+      window.open(paypalUrl,'_blank');
+      // Optimistically mark as paid after redirect (in production verify via IPN/webhook)
+      toast('✅ Complete the payment in the PayPal window!','success');
+      handlePurchaseSuccess();
+    },800);
+    return;
+  }
+
+  // ── Card: validate fields ──
   if(method.includes('Card')){
     const num=document.getElementById('cardNum').value.replace(/\s/g,'');
     if(num.length<16){toast('Enter valid card number','error');return}
-    if(!document.getElementById('cardName').value){toast('Enter cardholder name','error');return}
+    if(!document.getElementById('cardName').value.trim()){toast('Enter cardholder name','error');return}
     if(!document.getElementById('cardExp').value){toast('Enter expiry date','error');return}
     if(!document.getElementById('cardCvv').value){toast('Enter CVV','error');return}
   }
+
+  // ── Crypto: already has address shown, just confirm ──
+  if(method.includes('Crypto')){
+    closeModal('payModal');
+    toast(`📋 Send $${currentPayItem.price.toFixed(2)} worth of ${selectedCrypto} to the shown address`,'info');
+    setTimeout(()=>{toast('⏳ Payment will be confirmed after 1 blockchain confirmation','info')},2000);
+    return;
+  }
+
+  // ── Card: simulate processing ──
   closeModal('payModal');
-  // Processing animation
   toast('🔄 Processing payment...','info');
   setTimeout(()=>{
     toast(`✅ Payment of $${currentPayItem.price.toFixed(2)} confirmed!`,'success');
-    spawnConfetti();
-    if(currentPayItem.name.includes('Plan')){
-      userPlan=currentPayItem.name.replace(' Plan','');
-      if(currentUser){currentUser.plan=userPlan;saveUser()}
-      document.getElementById('xpPlanBadge').textContent='⭐ '+userPlan;
-      toast(`🚀 Welcome to ${userPlan} Plan!`,'success');
-    }
-    gainXP(50);
+    handlePurchaseSuccess();
   },2000);
 }
+
+function handlePurchaseSuccess(){
+  spawnConfetti();
+  // Unlock the purchased item
+  if(currentPayItem.name.includes('Plan')){
+    userPlan=currentPayItem.name.replace(' Plan','');
+    if(currentUser){currentUser.plan=userPlan;saveUser()}
+    const xpBadge=document.getElementById('xpPlanBadge');
+    if(xpBadge) xpBadge.textContent='⭐ '+userPlan;
+    setTimeout(()=>toast(`🚀 Welcome to ${userPlan} Plan!`,'success'),600);
+  } else {
+    // Find product by name and add to owned
+    const product=PRODUCTS.find(p=>p.name===currentPayItem.name);
+    if(product&&!ownedCourseIds.includes(product.id)){
+      ownedCourseIds.push(product.id);
+      if(currentUser){currentUser.ownedCourses=ownedCourseIds;saveUser()}
+      // Remove from cart if present
+      const idx=cart.findIndex(i=>i.id===product.id);
+      if(idx>=0){cart.splice(idx,1);updateCartUI();}
+      renderProducts('all');
+      setTimeout(()=>toast(`📚 "${currentPayItem.name}" added to your library!`,'success'),600);
+    }
+  }
+  gainXP(50);
+}
+
 function openPayFromCheckout(){
   const sub=cart.reduce((s,i)=>s+i.price,0);
   closeModal('checkoutModal');
   currentPayItem={name:'FUHA Cart Order',price:sub*1.1};
   document.getElementById('payModalTitle').textContent='💳 Cart Checkout';
   document.getElementById('payItemPreview').innerHTML=`<div class="modal-item"><div class="modal-item-name">FUHA Cart (${cart.length} items)</div><div class="modal-item-price">$${(sub*1.1).toFixed(2)}</div></div>`;
+  const ppName=document.getElementById('ppItemName');
+  const ppTotal=document.getElementById('ppTotal');
+  if(ppName) ppName.textContent=`Cart (${cart.length} items)`;
+  if(ppTotal) ppTotal.textContent='$'+(sub*1.1).toFixed(2);
   document.getElementById('payBtnAmount').textContent='$'+(sub*1.1).toFixed(2);
+  const firstTab=document.querySelector('.pay-tab');
+  if(firstTab) switchPayTab('card',firstTab);
   openModal('payModal');
 }
+
+// Check if returning from PayPal redirect
+(function checkPaypalReturn(){
+  if(window.location.search.includes('paid=1')){
+    setTimeout(()=>{
+      toast('🎉 PayPal payment received! Thank you!','success');
+      spawnConfetti();
+      // Clean URL
+      history.replaceState({},'',window.location.pathname);
+    },500);
+  }
+})();
 
 // ═══════════════════════════════════════════
 // CART
