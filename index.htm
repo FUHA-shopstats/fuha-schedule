@@ -24,245 +24,89 @@ body{
   min-height:100vh;overflow-x:hidden;transition:background .4s,color .4s;
   cursor:none;
 }
-
-/* ── CUSTOM CURSOR ── */
-#cursor{
-  position:fixed;width:12px;height:12px;background:var(--primary);
-  border-radius:50%;pointer-events:none;z-index:99999;
-  transition:transform .1s,width .2s,height .2s,background .2s;
-  transform:translate(-50%,-50%);
-}
-#cursor-ring{
-  position:fixed;width:36px;height:36px;border:1.5px solid var(--primary);
-  border-radius:50%;pointer-events:none;z-index:99998;opacity:.5;
-  transform:translate(-50%,-50%);transition:transform .15s ease,opacity .2s;
-}
-body:has(a:hover,button:hover,.clickable:hover) #cursor{
-  width:20px;height:20px;background:var(--accent);
-}
-body:has(a:hover,button:hover,.clickable:hover) #cursor-ring{
-  width:52px;height:52px;opacity:.2;
-}
-
-/* ── NOISE + GRID OVERLAY ── */
-body::before{
-  content:'';position:fixed;inset:0;
-  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.04'/%3E%3C/svg%3E");
-  pointer-events:none;z-index:9998;opacity:.35;
-}
-body::after{
-  content:'';position:fixed;inset:0;
-  background-image:linear-gradient(rgba(255,107,53,.025) 1px,transparent 1px),
-    linear-gradient(90deg,rgba(255,107,53,.025) 1px,transparent 1px);
-  background-size:44px 44px;pointer-events:none;z-index:0;
-}
-
-/* ── SCANLINE EFFECT ── */
-.scanlines{
-  position:fixed;inset:0;pointer-events:none;z-index:9997;
-  background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,0,0,.03) 2px,rgba(0,0,0,.03) 4px);
-}
-
-/* ── PARTICLES ── */
+#cursor{position:fixed;width:12px;height:12px;background:var(--primary);border-radius:50%;pointer-events:none;z-index:99999;transition:transform .1s,width .2s,height .2s,background .2s;transform:translate(-50%,-50%)}
+#cursor-ring{position:fixed;width:36px;height:36px;border:1.5px solid var(--primary);border-radius:50%;pointer-events:none;z-index:99998;opacity:.5;transform:translate(-50%,-50%);transition:transform .15s ease,opacity .2s}
+body:has(a:hover,button:hover,.clickable:hover) #cursor{width:20px;height:20px;background:var(--accent)}
+body:has(a:hover,button:hover,.clickable:hover) #cursor-ring{width:52px;height:52px;opacity:.2}
+body::before{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.04'/%3E%3C/svg%3E");pointer-events:none;z-index:9998;opacity:.35}
+body::after{content:'';position:fixed;inset:0;background-image:linear-gradient(rgba(255,107,53,.025) 1px,transparent 1px),linear-gradient(90deg,rgba(255,107,53,.025) 1px,transparent 1px);background-size:44px 44px;pointer-events:none;z-index:0}
+.scanlines{position:fixed;inset:0;pointer-events:none;z-index:9997;background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,0,0,.03) 2px,rgba(0,0,0,.03) 4px)}
 #particles{position:fixed;inset:0;pointer-events:none;z-index:1;overflow:hidden}
-.particle{
-  position:absolute;width:2px;height:2px;background:var(--primary);border-radius:50%;
-  animation:particleFall linear infinite;opacity:0;
-}
-@keyframes particleFall{
-  0%{opacity:0;transform:translateY(-10px)}
-  10%{opacity:.6}
-  90%{opacity:.3}
-  100%{opacity:0;transform:translateY(100vh)}
-}
-
-/* ── HEADER ── */
-header{
-  position:sticky;top:0;z-index:500;
-  background:rgba(7,8,15,.96);border-bottom:1px solid var(--border);
-  backdrop-filter:blur(24px);
-  display:flex;align-items:center;justify-content:space-between;
-  padding:0 2rem;height:64px;
-}
+.particle{position:absolute;width:2px;height:2px;background:var(--primary);border-radius:50%;animation:particleFall linear infinite;opacity:0}
+@keyframes particleFall{0%{opacity:0;transform:translateY(-10px)}10%{opacity:.6}90%{opacity:.3}100%{opacity:0;transform:translateY(100vh)}}
+header{position:sticky;top:0;z-index:500;background:rgba(7,8,15,.96);border-bottom:1px solid var(--border);backdrop-filter:blur(24px);display:flex;align-items:center;justify-content:space-between;padding:0 2rem;height:64px}
 body.light header{background:rgba(255,255,255,.97)}
 .header-left{display:flex;align-items:center;gap:1.5rem}
 .logo{display:flex;align-items:center;gap:.7rem;text-decoration:none;cursor:none}
-.logo-mark{
-  width:38px;height:38px;
-  background:linear-gradient(135deg,var(--primary),var(--secondary));
-  clip-path:polygon(50% 0%,100% 25%,100% 75%,50% 100%,0% 75%,0% 25%);
-  display:flex;align-items:center;justify-content:center;
-  font-size:1rem;font-weight:900;color:#fff;
-  animation:hexPulse 3s ease-in-out infinite;flex-shrink:0;
-}
-@keyframes hexPulse{
-  0%,100%{filter:brightness(1)}
-  50%{filter:brightness(1.3) drop-shadow(0 0 8px var(--primary))}
-}
-.logo-text{
-  font-family:'Barlow Condensed',sans-serif;font-size:1.7rem;font-weight:900;
-  background:linear-gradient(135deg,var(--primary),var(--secondary));
-  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
-  letter-spacing:.06em;
-}
+.logo-mark{width:38px;height:38px;background:linear-gradient(135deg,var(--primary),var(--secondary));clip-path:polygon(50% 0%,100% 25%,100% 75%,50% 100%,0% 75%,0% 25%);display:flex;align-items:center;justify-content:center;font-size:1rem;font-weight:900;color:#fff;animation:hexPulse 3s ease-in-out infinite;flex-shrink:0}
+@keyframes hexPulse{0%,100%{filter:brightness(1)}50%{filter:brightness(1.3) drop-shadow(0 0 8px var(--primary))}}
+.logo-text{font-family:'Barlow Condensed',sans-serif;font-size:1.7rem;font-weight:900;background:linear-gradient(135deg,var(--primary),var(--secondary));-webkit-background-clip:text;-webkit-text-fill-color:transparent;letter-spacing:.06em}
 nav{display:flex;gap:.2rem}
-nav a{
-  font-family:'Barlow Condensed',sans-serif;font-size:.92rem;font-weight:700;
-  letter-spacing:.1em;color:var(--gray);text-decoration:none;text-transform:uppercase;
-  padding:.4rem .75rem;border-radius:6px;cursor:none;transition:all .2s;position:relative;
-}
+nav a{font-family:'Barlow Condensed',sans-serif;font-size:.92rem;font-weight:700;letter-spacing:.1em;color:var(--gray);text-decoration:none;text-transform:uppercase;padding:.4rem .75rem;border-radius:6px;cursor:none;transition:all .2s;position:relative}
 nav a:hover,nav a.active{color:var(--primary);background:rgba(255,107,53,.08)}
-nav a.active::after{
-  content:'';position:absolute;bottom:-1px;left:50%;transform:translateX(-50%);
-  width:18px;height:2px;background:var(--primary);border-radius:2px;
-}
+nav a.active::after{content:'';position:absolute;bottom:-1px;left:50%;transform:translateX(-50%);width:18px;height:2px;background:var(--primary);border-radius:2px}
 nav a.live-nav{color:var(--twitch)!important;background:rgba(145,70,255,.08)!important}
-nav a.live-nav::before{
-  content:'';display:inline-block;width:6px;height:6px;background:var(--twitch);
-  border-radius:50%;margin-right:5px;animation:blink 1s infinite;vertical-align:middle;
-}
+nav a.live-nav::before{content:'';display:inline-block;width:6px;height:6px;background:var(--twitch);border-radius:50%;margin-right:5px;animation:blink 1s infinite;vertical-align:middle}
 .header-right{display:flex;align-items:center;gap:.6rem}
-.tg-btn{
-  background:linear-gradient(135deg,var(--telegram),#006bb3);color:#fff;
-  padding:.38rem .9rem;border-radius:6px;font-family:'Barlow Condensed',sans-serif;
-  font-weight:700;font-size:.88rem;letter-spacing:.05em;border:none;cursor:none;
-  text-decoration:none;display:inline-flex;align-items:center;gap:.35rem;transition:all .2s;
-}
+.tg-btn{background:linear-gradient(135deg,var(--telegram),#006bb3);color:#fff;padding:.38rem .9rem;border-radius:6px;font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:.88rem;letter-spacing:.05em;border:none;cursor:none;text-decoration:none;display:inline-flex;align-items:center;gap:.35rem;transition:all .2s}
 .tg-btn:hover{transform:translateY(-1px);box-shadow:0 4px 16px rgba(0,136,204,.4)}
-.icon-btn{
-  width:36px;height:36px;border-radius:8px;background:rgba(255,107,53,.08);
-  border:1px solid var(--border);cursor:none;display:flex;align-items:center;
-  justify-content:center;font-size:1rem;transition:all .2s;color:var(--gray);
-}
+.icon-btn{width:36px;height:36px;border-radius:8px;background:rgba(255,107,53,.08);border:1px solid var(--border);cursor:none;display:flex;align-items:center;justify-content:center;font-size:1rem;transition:all .2s;color:var(--gray)}
 .icon-btn:hover{background:rgba(255,107,53,.18);border-color:var(--primary);color:var(--primary)}
 .lang-selector{display:flex;gap:.2rem}
-.lang-btn{
-  padding:.28rem .55rem;background:transparent;border:1px solid var(--border);
-  color:var(--gray);border-radius:5px;cursor:none;
-  font-family:'Barlow Condensed',sans-serif;font-size:.8rem;font-weight:700;
-  letter-spacing:.05em;transition:all .2s;
-}
+.lang-btn{padding:.28rem .55rem;background:transparent;border:1px solid var(--border);color:var(--gray);border-radius:5px;cursor:none;font-family:'Barlow Condensed',sans-serif;font-size:.8rem;font-weight:700;letter-spacing:.05em;transition:all .2s}
 .lang-btn.active,.lang-btn:hover{background:var(--primary);border-color:var(--primary);color:#fff}
 .cart-icon{position:relative}
-.cart-badge{
-  position:absolute;top:-6px;right:-6px;min-width:18px;height:18px;
-  border-radius:9px;background:var(--primary);color:#fff;font-size:.68rem;
-  font-weight:700;font-family:'JetBrains Mono',monospace;
-  display:flex;align-items:center;justify-content:center;padding:0 3px;
-}
+.cart-badge{position:absolute;top:-6px;right:-6px;min-width:18px;height:18px;border-radius:9px;background:var(--primary);color:#fff;font-size:.68rem;font-weight:700;font-family:'JetBrains Mono',monospace;display:flex;align-items:center;justify-content:center;padding:0 3px}
 .cart-badge.hidden{display:none}
-
-/* USER AVATAR IN HEADER */
-.user-avatar-btn{
-  width:36px;height:36px;border-radius:50%;cursor:none;border:2px solid var(--primary);
-  background:linear-gradient(135deg,var(--primary),var(--secondary));
-  display:flex;align-items:center;justify-content:center;
-  font-size:.85rem;font-weight:800;color:#fff;
-  font-family:'Barlow Condensed',sans-serif;letter-spacing:.03em;
-  transition:all .2s;box-shadow:0 0 0 0 var(--glow);
-}
+.user-avatar-btn{width:36px;height:36px;border-radius:50%;cursor:none;border:2px solid var(--primary);background:linear-gradient(135deg,var(--primary),var(--secondary));display:flex;align-items:center;justify-content:center;font-size:.85rem;font-weight:800;color:#fff;font-family:'Barlow Condensed',sans-serif;letter-spacing:.03em;transition:all .2s;box-shadow:0 0 0 0 var(--glow)}
 .user-avatar-btn:hover{box-shadow:0 0 0 4px var(--glow2)}
-.auth-btn{
-  background:linear-gradient(135deg,var(--primary),var(--secondary));
-  color:#fff;padding:.38rem 1rem;border-radius:7px;
-  font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:.92rem;
-  letter-spacing:.06em;border:none;cursor:none;transition:all .2s;
-}
+.auth-btn{background:linear-gradient(135deg,var(--primary),var(--secondary));color:#fff;padding:.38rem 1rem;border-radius:7px;font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:.92rem;letter-spacing:.06em;border:none;cursor:none;transition:all .2s}
 .auth-btn:hover{transform:translateY(-1px);box-shadow:0 6px 20px var(--glow)}
-
-/* ── PAGES ── */
 .page{display:none;position:relative;z-index:1}
 .page.active{display:block;animation:fadeUp .4s ease}
 @keyframes fadeUp{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
 .container{max-width:1400px;margin:0 auto;padding:2.5rem 2rem}
-
-/* ── SECTION HEADINGS ── */
 .section-title{font-family:'Barlow Condensed',sans-serif;font-size:2.6rem;font-weight:900;letter-spacing:.04em;color:var(--light);margin-bottom:.2rem}
 .section-sub{font-size:1rem;color:var(--gray);margin-bottom:2rem;font-weight:500}
 .accent-line{width:48px;height:3px;background:linear-gradient(90deg,var(--primary),var(--secondary));border-radius:2px;margin-bottom:1.5rem}
-
-/* ── BUTTONS ── */
-.btn{
-  background:linear-gradient(135deg,var(--primary),var(--secondary));color:#fff;
-  border:none;padding:.65rem 1.4rem;border-radius:8px;cursor:none;
-  font-family:'Barlow Condensed',sans-serif;font-size:1rem;font-weight:800;
-  letter-spacing:.06em;transition:all .2s;display:inline-flex;align-items:center;gap:.4rem;
-}
+.btn{background:linear-gradient(135deg,var(--primary),var(--secondary));color:#fff;border:none;padding:.65rem 1.4rem;border-radius:8px;cursor:none;font-family:'Barlow Condensed',sans-serif;font-size:1rem;font-weight:800;letter-spacing:.06em;transition:all .2s;display:inline-flex;align-items:center;gap:.4rem}
 .btn:hover{transform:translateY(-2px);box-shadow:0 8px 24px var(--glow)}
 .btn:active{transform:translateY(0)}
 .btn-sm{padding:.42rem .9rem;font-size:.88rem}
 .btn-outline{background:transparent;border:1.5px solid var(--border);color:var(--gray)}
 .btn-outline:hover{border-color:var(--primary);color:var(--primary);box-shadow:none}
 .btn-full{width:100%;justify-content:center}
-.btn-twitch{background:linear-gradient(135deg,var(--twitch),#7b3fe4)}
 .btn-ghost{background:rgba(255,107,53,.08);color:var(--primary);border:1px solid var(--border)}
 .btn-ghost:hover{background:rgba(255,107,53,.18);border-color:var(--primary);box-shadow:none}
-
-/* ── MODALS ── */
-.modal-overlay{
-  display:none;position:fixed;inset:0;z-index:2000;
-  background:rgba(0,0,0,.75);backdrop-filter:blur(8px);
-  align-items:center;justify-content:center;padding:1rem;
-}
+.modal-overlay{display:none;position:fixed;inset:0;z-index:2000;background:rgba(0,0,0,.75);backdrop-filter:blur(8px);align-items:center;justify-content:center;padding:1rem}
 .modal-overlay.active{display:flex;animation:fadeIn .2s}
 @keyframes fadeIn{from{opacity:0}to{opacity:1}}
-.modal-box{
-  background:var(--surface2);border:1px solid var(--border);
-  border-radius:20px;padding:2rem;width:100%;max-width:480px;
-  max-height:90vh;overflow-y:auto;animation:slideUp .3s ease;
-  position:relative;
-}
+.modal-box{background:var(--surface2);border:1px solid var(--border);border-radius:20px;padding:2rem;width:100%;max-width:480px;max-height:90vh;overflow-y:auto;animation:slideUp .3s ease;position:relative}
 @keyframes slideUp{from{transform:translateY(28px);opacity:0}to{transform:translateY(0);opacity:1}}
 .modal-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:1.75rem}
 .modal-head h3{font-family:'Barlow Condensed',sans-serif;font-size:1.7rem;font-weight:900}
-.modal-close{
-  width:32px;height:32px;border-radius:8px;border:1px solid var(--border);
-  background:transparent;color:var(--gray);cursor:none;font-size:1.1rem;
-  display:flex;align-items:center;justify-content:center;transition:all .2s;
-}
+.modal-close{width:32px;height:32px;border-radius:8px;border:1px solid var(--border);background:transparent;color:var(--gray);cursor:none;font-size:1.1rem;display:flex;align-items:center;justify-content:center;transition:all .2s}
 .modal-close:hover{border-color:var(--primary);color:var(--primary)}
-
-/* ── AUTH MODAL ── */
 .auth-tabs{display:flex;gap:.5rem;margin-bottom:1.75rem;background:var(--surface);border-radius:10px;padding:.3rem}
-.auth-tab{
-  flex:1;padding:.5rem;border-radius:8px;border:none;background:transparent;
-  color:var(--gray);cursor:none;font-family:'Barlow Condensed',sans-serif;
-  font-size:1rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;transition:all .2s;
-}
+.auth-tab{flex:1;padding:.5rem;border-radius:8px;border:none;background:transparent;color:var(--gray);cursor:none;font-family:'Barlow Condensed',sans-serif;font-size:1rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;transition:all .2s}
 .auth-tab.active{background:linear-gradient(135deg,var(--primary),var(--secondary));color:#fff}
 .form-group{margin-bottom:1.1rem}
-.form-label{
-  display:block;font-size:.82rem;font-weight:700;letter-spacing:.08em;
-  text-transform:uppercase;color:var(--gray);margin-bottom:.45rem;
-}
-.form-input{
-  width:100%;background:var(--surface);border:1.5px solid var(--border);
-  border-radius:8px;padding:.75rem 1rem;color:var(--light);
-  font-family:'Rajdhani',sans-serif;font-size:1rem;font-weight:600;
-  transition:all .2s;outline:none;cursor:none;
-}
+.form-label{display:block;font-size:.82rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--gray);margin-bottom:.45rem}
+.form-input{width:100%;background:var(--surface);border:1.5px solid var(--border);border-radius:8px;padding:.75rem 1rem;color:var(--light);font-family:'Rajdhani',sans-serif;font-size:1rem;font-weight:600;transition:all .2s;outline:none;cursor:none}
 .form-input:focus{border-color:var(--primary);box-shadow:0 0 0 3px var(--glow2)}
 .form-input::placeholder{color:var(--gray);opacity:.6}
 .form-input-wrap{position:relative}
-.form-input-icon{
-  position:absolute;right:.9rem;top:50%;transform:translateY(-50%);
-  color:var(--gray);cursor:none;font-size:1rem;
-}
+.form-input-icon{position:absolute;right:.9rem;top:50%;transform:translateY(-50%);color:var(--gray);cursor:none;font-size:1rem}
 .password-toggle{cursor:none}
 .form-hint{font-size:.8rem;color:var(--gray);margin-top:.35rem}
 .auth-divider{text-align:center;color:var(--gray);font-size:.85rem;margin:1.25rem 0;position:relative}
-.auth-divider::before,.auth-divider::after{
-  content:'';position:absolute;top:50%;width:42%;height:1px;background:var(--border);
-}
+.auth-divider::before,.auth-divider::after{content:'';position:absolute;top:50%;width:42%;height:1px;background:var(--border)}
 .auth-divider::before{left:0}.auth-divider::after{right:0}
 .oauth-btns{display:flex;flex-direction:column;gap:.6rem}
-.oauth-btn{
-  display:flex;align-items:center;gap:.75rem;padding:.65rem 1rem;
-  border:1.5px solid var(--border);border-radius:8px;background:transparent;
-  color:var(--light);cursor:none;font-family:'Rajdhani',sans-serif;
-  font-size:.95rem;font-weight:700;transition:all .2s;width:100%;
-}
+.oauth-btn{display:flex;align-items:center;gap:.75rem;padding:.65rem 1rem;border:1.5px solid var(--border);border-radius:8px;background:transparent;color:var(--light);cursor:none;font-family:'Rajdhani',sans-serif;font-size:.95rem;font-weight:700;transition:all .2s;width:100%}
 .oauth-btn:hover{border-color:var(--primary);background:rgba(255,107,53,.06)}
+.oauth-btn.google-btn:hover{border-color:#4285F4;background:rgba(66,133,244,.06)}
+.oauth-btn.steam-btn:hover{border-color:#1b9aef;background:rgba(27,154,239,.06)}
 .oauth-icon{width:20px;height:20px;flex-shrink:0}
 .form-row{display:grid;grid-template-columns:1fr 1fr;gap:.75rem}
 .strength-bar{height:4px;background:rgba(255,255,255,.07);border-radius:4px;overflow:hidden;margin-top:.4rem}
@@ -270,54 +114,28 @@ nav a.live-nav::before{
 .terms-check{display:flex;align-items:flex-start;gap:.6rem;font-size:.85rem;color:var(--gray);margin-bottom:1rem}
 .terms-check input{margin-top:.15rem;accent-color:var(--primary)}
 .terms-check a{color:var(--primary)}
-
-/* ── TOAST ── */
 #toast-container{position:fixed;top:76px;right:1.5rem;z-index:9000;display:flex;flex-direction:column;gap:.45rem}
-.toast{
-  background:var(--surface2);border:1px solid var(--border);border-radius:10px;
-  padding:.8rem 1.15rem;font-weight:700;font-size:.93rem;max-width:320px;
-  display:flex;align-items:center;gap:.6rem;
-  animation:toastIn .35s cubic-bezier(.34,1.56,.64,1);
-  box-shadow:0 8px 24px rgba(0,0,0,.35);
-}
+.toast{background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:.8rem 1.15rem;font-weight:700;font-size:.93rem;max-width:320px;display:flex;align-items:center;gap:.6rem;animation:toastIn .35s cubic-bezier(.34,1.56,.64,1);box-shadow:0 8px 24px rgba(0,0,0,.35)}
 .toast.success{border-color:rgba(57,211,83,.5);color:var(--success)}
 .toast.error{border-color:rgba(244,67,54,.5);color:#f44336}
 .toast.info{border-color:rgba(255,107,53,.4);color:var(--primary)}
 .toast.twitch{border-color:rgba(145,70,255,.5);color:var(--twitch)}
 @keyframes toastIn{from{transform:translateX(60px);opacity:0}to{transform:translateX(0);opacity:1}}
 @keyframes blink{0%,100%{opacity:1}50%{opacity:.25}}
-
-/* ── HERO BANNER ── */
-.hero-banner{
-  background:linear-gradient(135deg,rgba(255,107,53,.1),rgba(247,147,30,.04));
-  border:1px solid var(--border);border-radius:18px;padding:2.5rem;
-  margin-bottom:2rem;position:relative;overflow:hidden;
-}
-.hero-banner::before{
-  content:'FUHA';position:absolute;right:-10px;bottom:-30px;
-  font-family:'Barlow Condensed',sans-serif;font-size:10rem;font-weight:900;
-  color:rgba(255,107,53,.04);line-height:1;pointer-events:none;user-select:none;
-  animation:heroTextPulse 6s ease-in-out infinite;
-}
+.hero-banner{background:linear-gradient(135deg,rgba(255,107,53,.1),rgba(247,147,30,.04));border:1px solid var(--border);border-radius:18px;padding:2.5rem;margin-bottom:2rem;position:relative;overflow:hidden}
+.hero-banner::before{content:'FUHA';position:absolute;right:-10px;bottom:-30px;font-family:'Barlow Condensed',sans-serif;font-size:10rem;font-weight:900;color:rgba(255,107,53,.04);line-height:1;pointer-events:none;user-select:none;animation:heroTextPulse 6s ease-in-out infinite}
 @keyframes heroTextPulse{0%,100%{opacity:.4}50%{opacity:1}}
 .hero-title{font-family:'Barlow Condensed',sans-serif;font-size:1rem;font-weight:700;letter-spacing:.15em;color:var(--primary);text-transform:uppercase;margin-bottom:.5rem}
 .hero-banner h2{font-family:'Barlow Condensed',sans-serif;font-size:2.9rem;font-weight:900;color:var(--light);margin-bottom:.7rem;line-height:1.05}
 .hero-banner p{color:var(--gray);font-size:1.05rem;max-width:580px;margin-bottom:1.5rem}
 .hero-actions{display:flex;gap:1rem;flex-wrap:wrap}
-
-/* ── STATS ── */
 .stats-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:1rem;margin-bottom:2rem}
-.stat-card{
-  background:var(--surface);border:1px solid var(--border);border-radius:12px;
-  padding:1.4rem;text-align:center;cursor:none;transition:all .3s;position:relative;overflow:hidden;
-}
+.stat-card{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:1.4rem;text-align:center;cursor:none;transition:all .3s;position:relative;overflow:hidden}
 .stat-card::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(255,107,53,.07),transparent);opacity:0;transition:opacity .3s}
 .stat-card:hover{transform:translateY(-4px);border-color:var(--primary)}
 .stat-card:hover::before{opacity:1}
 .stat-num{font-family:'Barlow Condensed',sans-serif;font-size:2.5rem;font-weight:900;color:var(--primary);line-height:1;margin-bottom:.35rem}
 .stat-label{font-size:.78rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--gray)}
-
-/* ── LEADERBOARD ── */
 .leaderboard{background:var(--surface);border:1px solid var(--border);border-radius:12px;overflow:hidden;margin-bottom:2rem}
 .lb-head{display:grid;grid-template-columns:56px 1fr 160px 120px 80px;gap:1rem;padding:.85rem 1.5rem;background:rgba(255,107,53,.07);border-bottom:1px solid var(--border);font-family:'Barlow Condensed',sans-serif;font-size:.78rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--gray)}
 .lb-row{display:grid;grid-template-columns:56px 1fr 160px 120px 80px;gap:1rem;padding:.95rem 1.5rem;border-bottom:1px solid rgba(255,107,53,.05);align-items:center;transition:background .2s;cursor:none}
@@ -333,21 +151,15 @@ nav a.live-nav::before{
 .lb-rating{font-family:'JetBrains Mono',monospace;font-size:.88rem;color:var(--gray)}
 .lb-score{font-family:'Barlow Condensed',sans-serif;font-size:1.2rem;font-weight:800;color:var(--primary);text-align:right}
 .fuha-tag{background:var(--primary);color:#fff;font-size:.62rem;font-weight:800;letter-spacing:.08em;padding:.08rem .4rem;border-radius:4px;margin-left:.35rem;vertical-align:middle}
-
-/* ── QUICK ACTIONS ── */
 .quick-actions{display:flex;gap:1rem;flex-wrap:wrap;margin-bottom:2rem}
 .quick-action{flex:1;min-width:140px;background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:1.15rem 1.25rem;cursor:none;transition:all .3s;text-align:center}
 .quick-action:hover{border-color:var(--primary);background:rgba(255,107,53,.05);transform:translateY(-2px)}
 .quick-action-icon{font-size:1.4rem;margin-bottom:.4rem}
 .quick-action-label{font-family:'Barlow Condensed',sans-serif;font-size:.9rem;font-weight:700;letter-spacing:.05em;color:var(--gray);text-transform:uppercase}
-
-/* ── ANN BAR ── */
 .announcement-bar{background:linear-gradient(90deg,rgba(255,107,53,.1),rgba(247,147,30,.05),rgba(255,107,53,.1));border:1px solid var(--border);border-radius:10px;padding:.8rem 1.4rem;margin-bottom:1.5rem;display:flex;align-items:center;gap:1rem;font-size:.93rem;overflow:hidden;position:relative}
 .ann-dot{width:8px;height:8px;border-radius:50%;background:var(--success);animation:blink 1.5s infinite;flex-shrink:0}
 .ann-ticker{display:flex;gap:3rem;animation:ticker 20s linear infinite;white-space:nowrap}
 @keyframes ticker{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
-
-/* ── PLAYERS ── */
 .players-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:1.5rem}
 .player-card{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:1.75rem;position:relative;transition:all .35s;overflow:hidden}
 .player-card::after{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(255,107,53,.06),transparent);opacity:0;transition:opacity .3s}
@@ -364,38 +176,16 @@ nav a.live-nav::before{
 .bar-track{height:5px;background:rgba(255,255,255,.06);border-radius:5px;overflow:hidden}
 .bar-fill{height:100%;background:linear-gradient(90deg,var(--primary),var(--secondary));border-radius:5px;width:0;transition:width .9s cubic-bezier(.25,.46,.45,.94)}
 .bar-fill.animated{width:var(--target-w)!important}
-
-/* ── SCHEDULE ── */
 .schedule-outer{position:relative}
 .schedule-nav{display:flex;gap:.5rem;margin-bottom:.75rem;justify-content:flex-end}
-.schedule-nav-btn{
-  width:34px;height:34px;border-radius:8px;
-  background:var(--surface);border:1px solid var(--border);
-  cursor:none;display:flex;align-items:center;justify-content:center;
-  font-size:1rem;color:var(--gray);transition:all .2s;flex-shrink:0;
-}
+.schedule-nav-btn{width:34px;height:34px;border-radius:8px;background:var(--surface);border:1px solid var(--border);cursor:none;display:flex;align-items:center;justify-content:center;font-size:1rem;color:var(--gray);transition:all .2s;flex-shrink:0}
 .schedule-nav-btn:hover{border-color:var(--primary);color:var(--primary);background:rgba(255,107,53,.08)}
 .schedule-nav-btn:disabled{opacity:.3;pointer-events:none}
-.schedule-scroll-wrap{
-  overflow-x:auto;overflow-y:visible;
-  scroll-behavior:smooth;
-  -webkit-overflow-scrolling:touch;
-  scrollbar-width:none;
-  padding-bottom:.5rem;
-  cursor:grab;
-}
+.schedule-scroll-wrap{overflow-x:auto;overflow-y:visible;scroll-behavior:smooth;-webkit-overflow-scrolling:touch;scrollbar-width:none;padding-bottom:.5rem;cursor:grab}
 .schedule-scroll-wrap:active{cursor:grabbing}
 .schedule-scroll-wrap::-webkit-scrollbar{display:none}
-.schedule-grid{
-  display:flex;gap:1rem;
-  width:max-content;
-  padding:.25rem .1rem .5rem;
-}
-.schedule-card{
-  background:var(--surface);border:1px solid var(--border);border-radius:12px;
-  padding:1.4rem;cursor:none;transition:all .3s;display:flex;flex-direction:column;gap:.65rem;
-  width:200px;flex-shrink:0;
-}
+.schedule-grid{display:flex;gap:1rem;width:max-content;padding:.25rem .1rem .5rem}
+.schedule-card{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:1.4rem;cursor:none;transition:all .3s;display:flex;flex-direction:column;gap:.65rem;width:200px;flex-shrink:0}
 .schedule-card:hover{transform:translateY(-4px);border-color:var(--primary);box-shadow:0 12px 28px rgba(255,107,53,.12)}
 .schedule-card.completed{border-color:var(--success);background:rgba(57,211,83,.04)}
 .schedule-card.today-card{border-color:var(--primary);box-shadow:0 0 0 1px var(--primary),0 8px 24px rgba(255,107,53,.2);animation:todayPulse 2s ease-in-out infinite}
@@ -409,17 +199,9 @@ nav a.live-nav::before{
 .schedule-status{font-size:.72rem;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--gray)}
 .schedule-card.completed .schedule-status{color:var(--success)}
 .schedule-card.today-card .schedule-status{color:var(--primary)}
-/* scroll dots indicator */
 .schedule-dots{display:flex;gap:.35rem;justify-content:center;margin-top:.65rem}
 .schedule-dot{width:6px;height:6px;border-radius:50%;background:var(--border);transition:all .3s;cursor:none}
 .schedule-dot.active{width:18px;border-radius:3px;background:var(--primary)}
-@media(max-width:768px){
-  .schedule-card{width:175px;padding:1.1rem;cursor:auto}
-  .schedule-nav{display:none}
-  .schedule-scroll-wrap{cursor:auto}
-}
-
-/* ── SKILLS ── */
 .skill-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:1rem;margin-bottom:2rem}
 .skill-item{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:1.15rem;cursor:none;transition:all .3s}
 .skill-item:hover{border-color:var(--primary);transform:translateY(-3px)}
@@ -428,8 +210,6 @@ nav a.live-nav::before{
 .skill-level{font-size:.78rem;color:var(--gray);margin-bottom:.45rem}
 .skill-bar{height:4px;background:rgba(255,255,255,.06);border-radius:4px;overflow:hidden}
 .skill-bar-fill{height:100%;background:linear-gradient(90deg,var(--primary),var(--secondary));border-radius:4px;transition:width .5s}
-
-/* ── SHOP ── */
 .shop-filters{display:flex;gap:.45rem;flex-wrap:wrap;margin-bottom:1.5rem}
 .filter-btn{padding:.38rem .9rem;border:1px solid var(--border);background:transparent;color:var(--gray);border-radius:20px;cursor:none;font-family:'Barlow Condensed',sans-serif;font-size:.88rem;font-weight:700;letter-spacing:.05em;transition:all .2s}
 .filter-btn.active,.filter-btn:hover{background:var(--primary);border-color:var(--primary);color:#fff}
@@ -462,7 +242,18 @@ nav a.live-nav::before{
 .sub-features li .check{color:var(--success);font-size:.78rem;font-weight:800}
 .sub-features li .cross{color:rgba(255,255,255,.18);font-size:.78rem}
 
-/* ── PAYMENT MODAL ── */
+/* Buy button pulse on sub cards */
+.buy-sub-btn{
+  position:relative;overflow:hidden;
+}
+.buy-sub-btn::after{
+  content:'';position:absolute;inset:0;
+  background:linear-gradient(90deg,transparent,rgba(255,255,255,.15),transparent);
+  transform:translateX(-100%);
+  transition:transform .5s;
+}
+.buy-sub-btn:hover::after{transform:translateX(100%)}
+
 .pay-tabs{display:flex;gap:.4rem;margin-bottom:1.5rem;background:var(--surface);border-radius:9px;padding:.25rem}
 .pay-tab{flex:1;padding:.45rem;border-radius:7px;border:none;background:transparent;color:var(--gray);cursor:none;font-family:'Barlow Condensed',sans-serif;font-size:.9rem;font-weight:700;letter-spacing:.07em;text-transform:uppercase;transition:all .2s}
 .pay-tab.active{background:var(--surface2);color:var(--light);box-shadow:0 1px 4px rgba(0,0,0,.3)}
@@ -484,8 +275,6 @@ nav a.live-nav::before{
 .crypto-opt .crypto-icon{font-size:1.5rem;margin-bottom:.25rem}
 .crypto-opt .crypto-name{font-family:'JetBrains Mono',monospace;font-size:.72rem;color:var(--gray)}
 .pay-secure{display:flex;align-items:center;gap:.5rem;font-size:.78rem;color:var(--gray);margin-top:1rem;justify-content:center}
-
-/* ── CART ── */
 .cart-layout{display:grid;grid-template-columns:1fr 320px;gap:2rem}
 @media(max-width:900px){.cart-layout{grid-template-columns:1fr}}
 .cart-panel,.summary-panel{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:1.75rem}
@@ -502,8 +291,6 @@ nav a.live-nav::before{
 .summary-row.total{font-family:'Barlow Condensed',sans-serif;font-size:1.4rem;font-weight:900;color:var(--primary);border-bottom:none;margin-top:.45rem}
 .empty-state{text-align:center;padding:4rem 2rem;color:var(--gray)}
 .empty-state-icon{font-size:3.5rem;margin-bottom:1rem;opacity:.35}
-
-/* ── REVIEWS ── */
 .reviews-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(270px,1fr));gap:1.15rem}
 .review-card{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:1.4rem;position:relative;transition:all .3s}
 .review-card:hover{border-color:rgba(255,107,53,.35);transform:translateY(-4px)}
@@ -512,8 +299,6 @@ nav a.live-nav::before{
 .review-stars{color:var(--accent);font-size:.88rem;margin-bottom:.65rem;letter-spacing:.1em}
 .review-author{font-weight:800;font-size:.93rem;color:var(--primary)}
 .review-tag{font-size:.78rem;color:var(--gray);margin-top:.15rem}
-
-/* ── FAQ ── */
 .faq-wrap{max-width:740px;margin:0 auto}
 .faq-item{background:var(--surface);border:1px solid var(--border);border-radius:12px;margin-bottom:.65rem;overflow:hidden;cursor:none;transition:border-color .2s}
 .faq-item:hover,.faq-item.open{border-color:rgba(255,107,53,.35)}
@@ -522,8 +307,6 @@ nav a.live-nav::before{
 .faq-item.open .faq-arrow{transform:rotate(180deg)}
 .faq-a{max-height:0;overflow:hidden;transition:max-height .35s ease,padding .3s;color:var(--gray);font-size:.93rem;line-height:1.7;padding:0 1.4rem}
 .faq-item.open .faq-a{max-height:220px;padding:0 1.4rem 1.15rem}
-
-/* ── TWITCH ── */
 #twitchBlock{display:none;margin-bottom:2rem;animation:fadeUp .5s ease}
 #twitchBlock.visible{display:block}
 .twitch-wrapper{border:2px solid var(--twitch);border-radius:16px;overflow:hidden;background:#0e0e10;box-shadow:0 0 40px rgba(145,70,255,.2),0 0 80px rgba(145,70,255,.08)}
@@ -547,8 +330,6 @@ nav a.live-nav::before{
 .twitch-offline-text strong{font-family:'Barlow Condensed',sans-serif;font-size:1.05rem;font-weight:800;color:var(--twitch);display:block;margin-bottom:.15rem}
 .twitch-offline-text span{font-size:.85rem;color:var(--gray)}
 .twitch-offline-block .twitch-offline-arrow{margin-left:auto;color:var(--twitch);font-size:1.05rem;flex-shrink:0}
-
-/* ── PROFILE PAGE ── */
 .profile-layout{display:grid;grid-template-columns:300px 1fr;gap:2rem}
 @media(max-width:900px){.profile-layout{grid-template-columns:1fr}}
 .profile-sidebar{display:flex;flex-direction:column;gap:1.25rem}
@@ -576,15 +357,11 @@ nav a.live-nav::before{
 .owned-course-icon{font-size:1.5rem;margin-bottom:.4rem}
 .owned-course-name{font-family:'Barlow Condensed',sans-serif;font-size:.9rem;font-weight:700}
 .owned-course-status{font-size:.72rem;color:var(--success);margin-top:.2rem;font-weight:700}
-
-/* ── STREAM PAGE ── */
 .stream-page-embed{border:2px solid var(--twitch);border-radius:16px;overflow:hidden;box-shadow:0 0 60px rgba(145,70,255,.18);margin-bottom:2rem}
 .stream-page-header{background:linear-gradient(90deg,rgba(145,70,255,.16),rgba(145,70,255,.04));border-bottom:1px solid rgba(145,70,255,.28);padding:.95rem 1.4rem;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:1rem}
 .stream-offline-page{text-align:center;padding:5rem 2rem;background:var(--surface);border:2px dashed rgba(145,70,255,.22);border-radius:16px;margin-bottom:2rem}
 .stream-offline-page h3{font-family:'Barlow Condensed',sans-serif;font-size:1.8rem;font-weight:900;color:var(--twitch);margin-bottom:.45rem}
 .stream-offline-page p{color:var(--gray);margin-bottom:1.5rem}
-
-/* ── EASTER EGG / FUN ── */
 .konami-flash{position:fixed;inset:0;z-index:99990;pointer-events:none;animation:konamiFlash .5s forwards}
 @keyframes konamiFlash{0%{background:rgba(255,107,53,0)}30%{background:rgba(255,107,53,.25)}100%{background:rgba(255,107,53,0)}}
 .confetti-piece{position:fixed;width:8px;height:8px;pointer-events:none;z-index:99991;animation:confettiFall 2.5s ease-in forwards}
@@ -596,34 +373,20 @@ nav a.live-nav::before{
 .crosshair::after{height:2px;width:100%;top:50%;transform:translateY(-50%)}
 .crosshair-ring{position:absolute;inset:-8px;border:1.5px solid rgba(255,107,53,.5);border-radius:50%;animation:crosshairSpin 1s linear infinite}
 @keyframes crosshairSpin{to{transform:rotate(360deg)}}
-
-/* ── GLITCH TEXT ── */
 .glitch{position:relative}
 .glitch::before,.glitch::after{content:attr(data-text);position:absolute;inset:0;font-family:inherit;font-size:inherit;font-weight:inherit}
 .glitch::before{color:#ff6b35;animation:glitchA .5s infinite;clip-path:polygon(0 0,100% 0,100% 33%,0 33%)}
 .glitch::after{color:#00f5ff;animation:glitchB .5s infinite;clip-path:polygon(0 66%,100% 66%,100% 100%,0 100%)}
 @keyframes glitchA{0%,100%{transform:translateX(0)}33%{transform:translateX(-3px)}66%{transform:translateX(3px)}}
 @keyframes glitchB{0%,100%{transform:translateX(0)}33%{transform:translateX(3px)}66%{transform:translateX(-3px)}}
-
-/* ── USER DROPDOWN ── */
 .user-dropdown{position:relative}
-.user-dropdown-menu{
-  display:none;position:absolute;top:calc(100% + 8px);right:0;
-  background:var(--surface2);border:1px solid var(--border);border-radius:12px;
-  padding:.5rem;min-width:200px;z-index:600;
-  box-shadow:0 16px 40px rgba(0,0,0,.4);
-  animation:fadeUp .2s ease;
-}
+.user-dropdown-menu{display:none;position:absolute;top:calc(100% + 8px);right:0;background:var(--surface2);border:1px solid var(--border);border-radius:12px;padding:.5rem;min-width:200px;z-index:600;box-shadow:0 16px 40px rgba(0,0,0,.4);animation:fadeUp .2s ease}
 .user-dropdown-menu.open{display:block}
 .user-dropdown-item{display:flex;align-items:center;gap:.7rem;padding:.65rem .85rem;border-radius:8px;cursor:none;transition:background .15s;font-size:.92rem;font-weight:600;color:var(--light);text-decoration:none}
 .user-dropdown-item:hover{background:rgba(255,107,53,.08);color:var(--primary)}
 .user-dropdown-divider{height:1px;background:var(--border);margin:.35rem 0}
 .user-dropdown-item.danger:hover{background:rgba(244,67,54,.08);color:#f44336}
-
-/* ── RESPONSIVE ── */
 .mobile-menu-btn{display:none;width:36px;height:36px;border-radius:8px;background:rgba(255,107,53,.08);border:1px solid var(--border);cursor:none;align-items:center;justify-content:center;font-size:1.2rem;color:var(--light);flex-shrink:0}
-
-/* Mobile bottom nav */
 .mobile-bottom-nav{display:none;position:fixed;bottom:0;left:0;right:0;z-index:490;background:rgba(7,8,15,.97);border-top:1px solid var(--border);backdrop-filter:blur(20px);padding:.5rem 0 calc(.5rem + env(safe-area-inset-bottom));flex-direction:row;justify-content:space-around;align-items:center}
 body.light .mobile-bottom-nav{background:rgba(255,255,255,.97)}
 .mob-nav-btn{display:flex;flex-direction:column;align-items:center;gap:.15rem;padding:.4rem .6rem;border-radius:8px;background:transparent;border:none;cursor:none;color:var(--gray);transition:all .2s;min-width:52px}
@@ -632,13 +395,10 @@ body.light .mobile-bottom-nav{background:rgba(255,255,255,.97)}
 .mob-nav-btn .mob-label{font-family:'Barlow Condensed',sans-serif;font-size:.6rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase}
 .mob-nav-live{position:relative}
 .mob-nav-live::after{content:'';position:absolute;top:4px;right:6px;width:6px;height:6px;background:#eb0400;border-radius:50%;border:1.5px solid var(--dark);animation:blink 1s infinite}
-
 @media(max-width:768px){
   body{cursor:auto;padding-bottom:70px}
   #cursor,#cursor-ring{display:none}
   header{padding:0 .9rem;height:56px}
-  .logo-text{font-size:1.35rem}
-  .logo-mark{width:30px;height:30px;font-size:.85rem}
   nav{display:none!important}
   .tg-btn{display:none}
   .lang-selector{display:none}
@@ -648,73 +408,23 @@ body.light .mobile-bottom-nav{background:rgba(255,255,255,.97)}
   .section-title{font-size:1.8rem}
   .hero-banner{padding:1.5rem}
   .hero-banner h2{font-size:1.9rem}
-  .hero-banner p{font-size:.9rem}
-  .hero-actions{gap:.6rem}
-  .hero-actions .btn{padding:.5rem 1rem;font-size:.88rem}
   .stats-grid{grid-template-columns:repeat(3,1fr);gap:.6rem}
   .stat-card{padding:.9rem .5rem}
   .stat-num{font-size:1.8rem}
-  .stat-label{font-size:.65rem}
-  .quick-actions{gap:.5rem}
-  .quick-action{min-width:calc(33% - .4rem);padding:.9rem .6rem}
-  .quick-action-icon{font-size:1.2rem}
-  .quick-action-label{font-size:.72rem}
   .lb-head,.lb-row{grid-template-columns:36px 1fr 60px}
-  .lb-head>*:nth-child(3),.lb-row>*:nth-child(3),
-  .lb-head>*:nth-child(4),.lb-row>*:nth-child(4){display:none}
-  .lb-row{padding:.75rem .9rem;gap:.6rem}
-  .lb-rank{font-size:1.1rem}
-  .players-grid{grid-template-columns:1fr}
+  .lb-head>*:nth-child(3),.lb-row>*:nth-child(3),.lb-head>*:nth-child(4),.lb-row>*:nth-child(4){display:none}
   .products-grid{grid-template-columns:repeat(2,1fr);gap:.75rem}
-  .product-card{padding:1rem}
-  .product-icon{font-size:1.6rem;margin-bottom:.6rem}
-  .product-name{font-size:1rem}
-  .product-price{font-size:1.3rem;margin-bottom:.6rem}
   .subs-grid{grid-template-columns:1fr}
-  .sub-card{padding:1.35rem}
   .reviews-grid{grid-template-columns:1fr}
   .profile-layout{grid-template-columns:1fr}
   .cart-layout{grid-template-columns:1fr}
-  .summary-panel{position:static}
-  .xp-bar-wrap{padding:.9rem 1rem;gap:.8rem}
-  .xp-level{font-size:1.5rem}
-  .announcement-bar{padding:.65rem .9rem;font-size:.82rem}
-  .ann-ticker{display:none}
-  .ann-bar-static{display:block!important}
   .modal-box{padding:1.35rem;border-radius:16px 16px 0 0;max-height:92vh;margin-top:auto}
   .modal-overlay{align-items:flex-end;padding:0}
   .skill-grid{grid-template-columns:repeat(2,1fr)}
-  .hero-banner::before{display:none}
   footer{padding:1.25rem;margin-top:2rem;padding-bottom:calc(1.25rem + 70px)}
-  .xpPlanBadge-el{display:none}
-  .twitch-header{padding:.6rem .9rem}
-  .twitch-header-right .viewer-count{display:none}
-  .profile-card{padding:1.25rem}
-  .profile-big-avatar{width:72px;height:72px;font-size:1.8rem}
-  .owned-courses{grid-template-columns:repeat(2,1fr)}
-  .faq-wrap{padding:0}
-  .form-row{grid-template-columns:1fr}
-  .card-visual{height:150px}
-  .stream-offline-page{padding:3rem 1.5rem}
-  #twitchBlock{margin-bottom:1.25rem}
-  .rank-badge-section{padding:1rem}
 }
-
-@media(max-width:400px){
-  .stats-grid{grid-template-columns:repeat(2,1fr)}
-  .products-grid{grid-template-columns:1fr}
-  .skill-grid{grid-template-columns:1fr}
-  .hero-banner h2{font-size:1.6rem}
-  .quick-action{min-width:calc(50% - .3rem)}
-}
-
-/* ── FOOTER ── */
 footer{background:var(--surface);border-top:1px solid var(--border);padding:2rem;text-align:center;color:var(--gray);font-size:.88rem;margin-top:4rem;position:relative;z-index:1}
 footer a{color:var(--primary);text-decoration:none}
-footer a:hover{text-decoration:underline}
-.ann-bar-static{display:none;font-size:.82rem;color:var(--gray)}
-
-/* ── XP BAR ── */
 .xp-bar-wrap{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:1.25rem 1.5rem;margin-bottom:1.5rem;display:flex;align-items:center;gap:1.25rem}
 .xp-level{font-family:'Barlow Condensed',sans-serif;font-size:2rem;font-weight:900;color:var(--primary);flex-shrink:0;line-height:1}
 .xp-level span{font-size:.75rem;display:block;color:var(--gray);font-weight:700;letter-spacing:.08em;text-transform:uppercase}
@@ -724,138 +434,34 @@ footer a:hover{text-decoration:underline}
 .xp-fill{height:100%;background:linear-gradient(90deg,var(--primary),var(--accent));border-radius:8px;transition:width 1s cubic-bezier(.25,.46,.45,.94);position:relative;overflow:hidden}
 .xp-fill::after{content:'';position:absolute;inset:0;background:linear-gradient(90deg,transparent,rgba(255,255,255,.25),transparent);animation:xpShimmer 2s infinite}
 @keyframes xpShimmer{0%{transform:translateX(-100%)}100%{transform:translateX(100%)}}
-
-/* ══ SPRING THEME ══ */
-:root{
-  --spring1:#4ade80; /* green */
-  --spring2:#86efac;
-  --spring3:#fde68a; /* warm yellow */
-  --spring4:#fbcfe8; /* blossom pink */
-  --spring5:#a78bfa; /* lavender */
-}
-
-/* Falling petals */
-.petal{
-  position:fixed;pointer-events:none;z-index:9996;
-  font-size:1.1rem;opacity:0;
-  animation:petalFall linear infinite;
-}
-@keyframes petalFall{
-  0%{opacity:0;transform:translateY(-20px) rotate(0deg) translateX(0)}
-  5%{opacity:.9}
-  95%{opacity:.6}
-  100%{opacity:0;transform:translateY(100vh) rotate(540deg) translateX(40px)}
-}
-
-/* Spring banner */
-.spring-banner{
-  background:linear-gradient(135deg,rgba(74,222,128,.12),rgba(253,230,138,.1),rgba(251,207,232,.12));
-  border:1px solid rgba(74,222,128,.3);
-  border-radius:16px;padding:1.75rem 2rem;margin-bottom:2rem;
-  position:relative;overflow:hidden;
-}
-.spring-banner::before{
-  content:'🌸🌿🌸🌿🌸🌿🌸🌿🌸🌿🌸';
-  position:absolute;top:-8px;left:0;right:0;
-  font-size:1.1rem;letter-spacing:.5rem;opacity:.18;
-  white-space:nowrap;overflow:hidden;
-  animation:springDeco 12s linear infinite;
-}
+:root{--spring1:#4ade80;--spring2:#86efac;--spring3:#fde68a;--spring4:#fbcfe8;--spring5:#a78bfa}
+.petal{position:fixed;pointer-events:none;z-index:9996;font-size:1.1rem;opacity:0;animation:petalFall linear infinite}
+@keyframes petalFall{0%{opacity:0;transform:translateY(-20px) rotate(0deg) translateX(0)}5%{opacity:.9}95%{opacity:.6}100%{opacity:0;transform:translateY(100vh) rotate(540deg) translateX(40px)}}
+.spring-banner{background:linear-gradient(135deg,rgba(74,222,128,.12),rgba(253,230,138,.1),rgba(251,207,232,.12));border:1px solid rgba(74,222,128,.3);border-radius:16px;padding:1.75rem 2rem;margin-bottom:2rem;position:relative;overflow:hidden}
+.spring-banner::before{content:'🌸🌿🌸🌿🌸🌿🌸🌿🌸🌿🌸';position:absolute;top:-8px;left:0;right:0;font-size:1.1rem;letter-spacing:.5rem;opacity:.18;white-space:nowrap;overflow:hidden;animation:springDeco 12s linear infinite}
 @keyframes springDeco{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
-.spring-banner::after{
-  content:'🌸🌿🌸🌿🌸🌿🌸🌿🌸🌿🌸';
-  position:absolute;bottom:-8px;left:0;right:0;
-  font-size:1.1rem;letter-spacing:.5rem;opacity:.18;
-  white-space:nowrap;overflow:hidden;
-  animation:springDeco 16s linear infinite reverse;
-}
-.spring-tag{
-  display:inline-flex;align-items:center;gap:.4rem;
-  background:rgba(74,222,128,.18);border:1px solid rgba(74,222,128,.4);
-  border-radius:20px;padding:.2rem .75rem;
-  font-family:'Barlow Condensed',sans-serif;font-size:.82rem;font-weight:800;
-  letter-spacing:.1em;text-transform:uppercase;color:var(--spring1);
-  margin-bottom:.6rem;
-}
-.spring-title{
-  font-family:'Barlow Condensed',sans-serif;font-size:2rem;font-weight:900;
-  color:var(--light);margin-bottom:.4rem;line-height:1.1;
-}
+.spring-tag{display:inline-flex;align-items:center;gap:.4rem;background:rgba(74,222,128,.18);border:1px solid rgba(74,222,128,.4);border-radius:20px;padding:.2rem .75rem;font-family:'Barlow Condensed',sans-serif;font-size:.82rem;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--spring1);margin-bottom:.6rem}
+.spring-title{font-family:'Barlow Condensed',sans-serif;font-size:2rem;font-weight:900;color:var(--light);margin-bottom:.4rem;line-height:1.1}
 .spring-sub{color:var(--gray);font-size:.95rem;margin-bottom:1.1rem;max-width:560px}
-.spring-countdown{
-  display:flex;gap:.75rem;flex-wrap:wrap;align-items:center;
-}
-.spring-count-block{
-  background:rgba(0,0,0,.25);border:1px solid rgba(74,222,128,.25);
-  border-radius:8px;padding:.35rem .7rem;text-align:center;min-width:52px;
-}
-.spring-count-num{
-  font-family:'Barlow Condensed',sans-serif;font-size:1.5rem;font-weight:900;
-  color:var(--spring1);line-height:1;display:block;
-}
+.spring-countdown{display:flex;gap:.75rem;flex-wrap:wrap;align-items:center}
+.spring-count-block{background:rgba(0,0,0,.25);border:1px solid rgba(74,222,128,.25);border-radius:8px;padding:.35rem .7rem;text-align:center;min-width:52px}
+.spring-count-num{font-family:'Barlow Condensed',sans-serif;font-size:1.5rem;font-weight:900;color:var(--spring1);line-height:1;display:block}
 .spring-count-label{font-size:.6rem;color:var(--gray);font-weight:700;letter-spacing:.08em;text-transform:uppercase}
 .spring-count-sep{font-family:'Barlow Condensed',sans-serif;font-size:1.5rem;color:var(--spring1);font-weight:900;opacity:.6;margin-top:-4px}
-
-/* Spring discount badge on sub cards */
-.spring-discount{
-  position:absolute;top:0;left:1.5rem;
-  background:linear-gradient(135deg,var(--spring1),#22c55e);
-  color:#fff;padding:.25rem .7rem;
-  font-size:.72rem;font-weight:900;letter-spacing:.1em;text-transform:uppercase;
-  border-radius:0 0 8px 8px;
-  box-shadow:0 4px 12px rgba(74,222,128,.35);
-}
-.sub-old-price{
-  font-size:1rem;color:var(--gray);text-decoration:line-through;
-  margin-left:.4rem;font-weight:400;
-}
-.sub-card.spring-deal{
-  border-color:rgba(74,222,128,.4)!important;
-}
-.sub-card.spring-deal:hover{
-  box-shadow:0 20px 40px rgba(74,222,128,.1)!important;
-}
-
-/* Floating flowers button */
-.spring-float-btn{
-  position:fixed;bottom:calc(80px + 1rem);right:1.5rem;z-index:797;
-  width:44px;height:44px;border-radius:50%;
-  background:linear-gradient(135deg,var(--spring1),#22c55e);
-  border:none;cursor:none;font-size:1.3rem;
-  box-shadow:0 4px 16px rgba(74,222,128,.4);
-  transition:all .2s;display:flex;align-items:center;justify-content:center;
-  animation:springBtnPulse 2.5s ease-in-out infinite;
-}
+.spring-discount{position:absolute;top:0;left:1.5rem;background:linear-gradient(135deg,var(--spring1),#22c55e);color:#fff;padding:.25rem .7rem;font-size:.72rem;font-weight:900;letter-spacing:.1em;text-transform:uppercase;border-radius:0 0 8px 8px;box-shadow:0 4px 12px rgba(74,222,128,.35)}
+.sub-old-price{font-size:1rem;color:var(--gray);text-decoration:line-through;margin-left:.4rem;font-weight:400}
+.sub-card.spring-deal{border-color:rgba(74,222,128,.4)!important}
+.sub-card.spring-deal:hover{box-shadow:0 20px 40px rgba(74,222,128,.1)!important}
+.spring-float-btn{position:fixed;bottom:calc(80px + 1rem);right:1.5rem;z-index:797;width:44px;height:44px;border-radius:50%;background:linear-gradient(135deg,var(--spring1),#22c55e);border:none;cursor:none;font-size:1.3rem;box-shadow:0 4px 16px rgba(74,222,128,.4);transition:all .2s;display:flex;align-items:center;justify-content:center;animation:springBtnPulse 2.5s ease-in-out infinite}
 .spring-float-btn:hover{transform:scale(1.1);box-shadow:0 6px 24px rgba(74,222,128,.6)}
-@keyframes springBtnPulse{
-  0%,100%{box-shadow:0 4px 16px rgba(74,222,128,.4),0 0 0 0 rgba(74,222,128,.2)}
-  50%{box-shadow:0 4px 16px rgba(74,222,128,.4),0 0 0 8px rgba(74,222,128,0)}
-}
-@media(max-width:768px){
-  .spring-float-btn{bottom:calc(70px + 3.5rem);right:.75rem;width:38px;height:38px;font-size:1.1rem}
-}
-
-/* Spring glow on ann bar */
-.ann-spring{
-  background:linear-gradient(90deg,rgba(74,222,128,.1),rgba(253,230,138,.07),rgba(251,207,232,.1),rgba(74,222,128,.1))!important;
-  border-color:rgba(74,222,128,.25)!important;
-}
+@keyframes springBtnPulse{0%,100%{box-shadow:0 4px 16px rgba(74,222,128,.4),0 0 0 0 rgba(74,222,128,.2)}50%{box-shadow:0 4px 16px rgba(74,222,128,.4),0 0 0 8px rgba(74,222,128,0)}}
+.ann-spring{background:linear-gradient(90deg,rgba(74,222,128,.1),rgba(253,230,138,.07),rgba(251,207,232,.1),rgba(74,222,128,.1))!important;border-color:rgba(74,222,128,.25)!important}
 .ann-dot-spring{background:var(--spring1)!important}
-
-/* Blossom cursor trail */
-.blossom-trail{
-  position:fixed;pointer-events:none;z-index:9995;
-  font-size:.85rem;animation:blossomFade .8s ease forwards;
-}
-@keyframes blossomFade{
-  0%{opacity:1;transform:translateY(0) scale(1)}
-  100%{opacity:0;transform:translateY(-30px) scale(.5)}
-}
+.blossom-trail{position:fixed;pointer-events:none;z-index:9995;font-size:.85rem;animation:blossomFade .8s ease forwards}
+@keyframes blossomFade{0%{opacity:1;transform:translateY(0) scale(1)}100%{opacity:0;transform:translateY(-30px) scale(.5)}}
 .modal-item-name{font-weight:700}
 .modal-item-price{font-family:'Barlow Condensed',sans-serif;font-size:1.2rem;font-weight:800;color:var(--primary)}
 .modal-total{font-family:'Barlow Condensed',sans-serif;font-size:1.6rem;font-weight:900;color:var(--primary);text-align:right;margin:1rem 0;padding-top:1rem;border-top:1px solid var(--border)}
-
-/* ── PROFILE EDITOR ── */
 .edit-avatar-wrap{position:relative;width:90px;margin:0 auto 1rem;cursor:none}
 .edit-avatar-overlay{position:absolute;inset:0;border-radius:50%;background:rgba(0,0,0,.55);display:flex;align-items:center;justify-content:center;opacity:0;transition:opacity .2s;font-size:.75rem;font-weight:700;color:#fff;text-align:center;line-height:1.3}
 .edit-avatar-wrap:hover .edit-avatar-overlay{opacity:1}
@@ -870,15 +476,11 @@ footer a:hover{text-decoration:underline}
 .edit-tabs{display:flex;gap:.35rem;margin-bottom:1.25rem;background:var(--surface);border-radius:9px;padding:.25rem}
 .edit-tab{flex:1;padding:.4rem;border-radius:7px;border:none;background:transparent;color:var(--gray);cursor:none;font-family:'Barlow Condensed',sans-serif;font-size:.85rem;font-weight:700;letter-spacing:.07em;text-transform:uppercase;transition:all .2s}
 .edit-tab.active{background:var(--surface2);color:var(--light)}
-
-/* ── CS2 RANK DISPLAY ── */
 .rank-badge-section{background:linear-gradient(135deg,rgba(255,107,53,.08),rgba(247,147,30,.04));border:1px solid var(--border);border-radius:12px;padding:1.25rem;margin-bottom:1.25rem;display:flex;align-items:center;gap:1rem}
 .rank-star{font-size:2.5rem;flex-shrink:0}
 .rank-info{flex:1}
 .rank-name{font-family:'Barlow Condensed',sans-serif;font-size:1.3rem;font-weight:900;color:var(--light)}
 .rank-rating{font-family:'JetBrains Mono',monospace;font-size:.85rem;color:var(--primary)}
-
-/* ── MUSIC PLAYER EASTER EGG ── */
 #musicPlayer{display:none;position:fixed;bottom:80px;right:1.5rem;z-index:800;background:var(--surface2);border:1px solid var(--border);border-radius:14px;padding:1rem 1.25rem;width:240px;box-shadow:0 12px 40px rgba(0,0,0,.4);animation:fadeUp .3s ease}
 #musicPlayer.visible{display:block}
 .music-title{font-family:'Barlow Condensed',sans-serif;font-size:1rem;font-weight:800;margin-bottom:.2rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
@@ -888,25 +490,26 @@ footer a:hover{text-decoration:underline}
 .music-btn:hover,.music-btn.play{color:var(--primary)}
 .music-progress{width:100%;height:3px;background:rgba(255,255,255,.08);border-radius:3px;margin:.75rem 0;cursor:none;overflow:hidden}
 .music-progress-fill{height:100%;background:linear-gradient(90deg,var(--primary),var(--accent));border-radius:3px;transition:width .5s linear}
-.music-toggle{position:fixed;bottom:calc(80px + 10px);right:1.5rem;z-index:799}
-@media(max-width:768px){
-  #musicPlayer{bottom:calc(70px + 1rem);right:.75rem;width:220px}
-  .music-toggle{bottom:calc(70px + .5rem);right:.75rem}
-}
-
-/* ── TYPING EFFECT ── */
-.typing-cursor{display:inline-block;width:2px;height:1em;background:var(--primary);margin-left:2px;animation:blink .8s step-end infinite;vertical-align:middle}
-
-/* ── SWIPE HINT (mobile) ── */
-.swipe-hint{display:none;text-align:center;font-size:.75rem;color:var(--gray);padding:.5rem;margin-top:-.5rem;margin-bottom:.5rem}
-@media(max-width:768px){.swipe-hint{display:block}}
-
-/* ── STREAK BADGE ── */
 .streak-badge{display:inline-flex;align-items:center;gap:.35rem;background:linear-gradient(135deg,rgba(255,204,0,.15),rgba(255,107,53,.1));border:1px solid rgba(255,204,0,.3);border-radius:20px;padding:.25rem .75rem;font-family:'Barlow Condensed',sans-serif;font-size:.85rem;font-weight:800;color:var(--accent);letter-spacing:.05em}
+.ann-bar-static{display:none;font-size:.82rem;color:var(--gray)}
+@media(max-width:768px){.ann-ticker{display:none}.ann-bar-static{display:block!important}}
 
-/* ── NOTIFICATION DOT ── */
-.notif-dot{display:none;position:absolute;top:-3px;right:-3px;width:8px;height:8px;background:#eb0400;border-radius:50%;border:1.5px solid var(--dark);animation:blink 1.2s infinite}
-.notif-dot.show{display:block}
+/* ── GOOGLE SIGN-IN CONFIG NOTICE ── */
+.oauth-config-notice{
+  background:rgba(255,107,53,.08);border:1px solid var(--border);
+  border-radius:8px;padding:.6rem .9rem;font-size:.78rem;color:var(--gray);
+  margin-top:.5rem;line-height:1.5;
+}
+.oauth-config-notice code{color:var(--primary);font-family:'JetBrains Mono',monospace;font-size:.75rem}
+
+/* ── BUY SUBSCRIPTION BUTTON SHIMMER ── */
+.buy-sub-btn{position:relative;overflow:hidden}
+.buy-sub-btn::after{content:'';position:absolute;inset:0;background:linear-gradient(90deg,transparent,rgba(255,255,255,.18),transparent);transform:translateX(-100%);transition:transform .5s}
+.buy-sub-btn:hover::after{transform:translateX(100%)}
+/* ── OAUTH BUTTON HOVER ACCENTS ── */
+.oauth-btn.google-btn:hover{border-color:#4285F4;background:rgba(66,133,244,.07)}
+.oauth-btn.steam-btn:hover{border-color:#1b9aef;background:rgba(27,154,239,.07)}
+
 </style>
 </head>
 <body>
@@ -1004,8 +607,8 @@ footer a:hover{text-decoration:underline}
   </div>
 </div>
 
-<!-- SPRING PETAL BUTTON -->
 <button class="spring-float-btn" onclick="springBurst()" title="Spring vibes!">🌸</button>
+
 <header>
   <div class="header-left">
     <a class="logo" onclick="showPage('dashboard')">
@@ -1013,42 +616,38 @@ footer a:hover{text-decoration:underline}
       <span class="logo-text">FUHA</span>
     </a>
     <nav id="mainNav">
-      <a onclick="showPage('dashboard')" class="active" data-page="dashboard" data-en="Dashboard" data-ru="Дэшборд" data-uk="Дашборд">Dashboard</a>
-      <a onclick="showPage('players')" data-page="players" data-en="Players" data-ru="Игроки" data-uk="Гравці">Players</a>
-      <a onclick="showPage('schedule')" data-page="schedule" data-en="Schedule" data-ru="Расписание" data-uk="Розклад">Schedule</a>
-      <a onclick="showPage('skills')" data-page="skills" data-en="Skills" data-ru="Навыки" data-uk="Навички">Skills</a>
-      <a onclick="showPage('shop')" data-page="shop" data-en="Shop" data-ru="Магазин" data-uk="Магазин">Shop</a>
-      <a onclick="showPage('subscriptions')" data-page="subscriptions" data-en="Plans" data-ru="Планы" data-uk="Плани">Plans</a>
-      <a onclick="showPage('testimonials')" data-page="testimonials" data-en="Reviews" data-ru="Отзывы" data-uk="Відгуки">Reviews</a>
-      <a onclick="showPage('faq')" data-page="faq" data-en="FAQ" data-ru="FAQ" data-uk="FAQ">FAQ</a>
-      <a onclick="showPage('stream')" data-page="stream" id="streamNavBtn" data-en="📺 Stream" data-ru="📺 Стрим" data-uk="📺 Стрім">📺 Stream</a>
+      <a onclick="showPage('dashboard')" class="active" data-page="dashboard">Dashboard</a>
+      <a onclick="showPage('players')" data-page="players">Players</a>
+      <a onclick="showPage('schedule')" data-page="schedule">Schedule</a>
+      <a onclick="showPage('skills')" data-page="skills">Skills</a>
+      <a onclick="showPage('shop')" data-page="shop">Shop</a>
+      <a onclick="showPage('subscriptions')" data-page="subscriptions">Plans</a>
+      <a onclick="showPage('testimonials')" data-page="testimonials">Reviews</a>
+      <a onclick="showPage('faq')" data-page="faq">FAQ</a>
+      <a onclick="showPage('stream')" data-page="stream" id="streamNavBtn">📺 Stream</a>
     </nav>
   </div>
   <div class="header-right">
     <a href="https://t.me/axo_fuha" target="_blank" class="tg-btn">📱 Telegram</a>
-    <div class="cart-icon icon-btn" onclick="showPage('cart')" title="Cart">
-      🛒
-      <span class="cart-badge hidden" id="cartBadge">0</span>
-    </div>
+    <div class="cart-icon icon-btn" onclick="showPage('cart')" title="Cart">🛒<span class="cart-badge hidden" id="cartBadge">0</span></div>
     <button class="icon-btn theme-btn" onclick="toggleTheme()">🌙</button>
     <div class="lang-selector">
       <button class="lang-btn active" onclick="setLang('en',this)">EN</button>
       <button class="lang-btn" onclick="setLang('ru',this)">РУ</button>
       <button class="lang-btn" onclick="setLang('uk',this)">УК</button>
     </div>
-    <!-- AUTH AREA -->
     <div id="authArea">
-      <button class="auth-btn" onclick="openModal('authModal')" id="loginBtn">🔐 <span data-i18n="login">Login</span></button>
+      <button class="auth-btn" onclick="openModal('authModal')">🔐 Login</button>
     </div>
     <div id="userArea" style="display:none">
       <div class="user-dropdown">
         <div class="user-avatar-btn" id="userAvatarBtn" onclick="toggleUserMenu()"></div>
         <div class="user-dropdown-menu" id="userDropdownMenu">
-          <a class="user-dropdown-item" onclick="showPage('profile');toggleUserMenu()">👤 <span data-i18n="myProfile">My Profile</span></a>
-          <a class="user-dropdown-item" onclick="showPage('cart');toggleUserMenu()">🛒 <span data-i18n="myCart">My Cart</span></a>
-          <a class="user-dropdown-item" onclick="showPage('subscriptions');toggleUserMenu()">⭐ <span data-i18n="upgradePlan">Upgrade Plan</span></a>
+          <a class="user-dropdown-item" onclick="showPage('profile');toggleUserMenu()">👤 My Profile</a>
+          <a class="user-dropdown-item" onclick="showPage('cart');toggleUserMenu()">🛒 My Cart</a>
+          <a class="user-dropdown-item" onclick="showPage('subscriptions');toggleUserMenu()">⭐ Upgrade Plan</a>
           <div class="user-dropdown-divider"></div>
-          <a class="user-dropdown-item danger" onclick="logout()">🚪 <span data-i18n="logout">Logout</span></a>
+          <a class="user-dropdown-item danger" onclick="logout()">🚪 Logout</a>
         </div>
       </div>
     </div>
@@ -1092,12 +691,21 @@ footer a:hover{text-decoration:underline}
       <button class="btn btn-full" onclick="doLogin()">Login to FUHA →</button>
       <div class="auth-divider" style="margin-top:1.25rem">or continue with</div>
       <div class="oauth-btns">
-        <button class="oauth-btn" onclick="oauthLogin('Google')">
-          <svg class="oauth-icon" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
+        <!-- REAL GOOGLE OAUTH -->
+        <button class="oauth-btn google-btn" onclick="oauthLoginGoogle()">
+          <svg class="oauth-icon" viewBox="0 0 24 24">
+            <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+            <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+            <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
+            <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
+          </svg>
           Continue with Google
         </button>
-        <button class="oauth-btn" onclick="oauthLogin('Steam')">
-          <svg class="oauth-icon" viewBox="0 0 24 24"><path fill="#1b2838" d="M11.979 0C5.678 0 .511 4.86.022 11.037l6.432 2.658c.545-.371 1.203-.59 1.912-.59.063 0 .125.004.188.006l2.861-4.142V8.91c0-2.495 2.028-4.524 4.524-4.524 2.494 0 4.524 2.031 4.524 4.527s-2.03 4.525-4.524 4.525h-.105l-4.076 2.911c0 .052.004.105.004.159 0 1.875-1.515 3.396-3.39 3.396-1.635 0-3.016-1.173-3.331-2.718L.436 15.27C1.862 20.307 6.486 24 11.979 24c6.624 0 11.992-5.368 11.992-12C23.971 5.37 18.603 0 11.979 0z" fill="#4299d9"/></svg>
+        <!-- REAL STEAM OPENID -->
+        <button class="oauth-btn steam-btn" onclick="oauthLoginSteam()">
+          <svg class="oauth-icon" viewBox="0 0 24 24" fill="#1b9aef">
+            <path d="M11.979 0C5.678 0 .511 4.86.022 11.037l6.432 2.658c.545-.371 1.203-.59 1.912-.59.063 0 .125.004.188.006l2.861-4.142V8.91c0-2.495 2.028-4.524 4.524-4.524 2.494 0 4.524 2.031 4.524 4.527s-2.03 4.525-4.524 4.525h-.105l-4.076 2.911c0 .052.004.105.004.159 0 1.875-1.515 3.396-3.39 3.396-1.635 0-3.016-1.173-3.331-2.718L.436 15.27C1.862 20.307 6.486 24 11.979 24c6.624 0 11.992-5.368 11.992-12C23.971 5.37 18.603 0 11.979 0z"/>
+          </svg>
           Continue with Steam
         </button>
       </div>
@@ -1147,11 +755,22 @@ footer a:hover{text-decoration:underline}
         <span>I agree to the <a href="#" onclick="toast('Terms page coming soon','info')">Terms of Service</a> and <a href="#">Privacy Policy</a></span>
       </label>
       <button class="btn btn-full" onclick="doRegister()">Create Account 🚀</button>
-      <div class="auth-divider" style="margin-top:1.25rem">or</div>
+      <div class="auth-divider" style="margin-top:1.25rem">or sign up with</div>
       <div class="oauth-btns">
-        <button class="oauth-btn" onclick="oauthLogin('Google')">
-          <svg class="oauth-icon" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
+        <button class="oauth-btn google-btn" onclick="oauthLoginGoogle()">
+          <svg class="oauth-icon" viewBox="0 0 24 24">
+            <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+            <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+            <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
+            <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
+          </svg>
           Sign up with Google
+        </button>
+        <button class="oauth-btn steam-btn" onclick="oauthLoginSteam()">
+          <svg class="oauth-icon" viewBox="0 0 24 24" fill="#1b9aef">
+            <path d="M11.979 0C5.678 0 .511 4.86.022 11.037l6.432 2.658c.545-.371 1.203-.59 1.912-.59.063 0 .125.004.188.006l2.861-4.142V8.91c0-2.495 2.028-4.524 4.524-4.524 2.494 0 4.524 2.031 4.524 4.527s-2.03 4.525-4.524 4.525h-.105l-4.076 2.911c0 .052.004.105.004.159 0 1.875-1.515 3.396-3.39 3.396-1.635 0-3.016-1.173-3.331-2.718L.436 15.27C1.862 20.307 6.486 24 11.979 24c6.624 0 11.992-5.368 11.992-12C23.971 5.37 18.603 0 11.979 0z"/>
+          </svg>
+          Sign up with Steam
         </button>
       </div>
     </div>
@@ -1171,13 +790,9 @@ footer a:hover{text-decoration:underline}
       <button class="pay-tab" onclick="switchPayTab('crypto',this)">₿ Crypto</button>
       <button class="pay-tab" onclick="switchPayTab('paypal',this)">🅿️ PayPal</button>
     </div>
-
-    <!-- CARD -->
     <div id="payCard">
-      <div class="card-visual" id="cardVisual">
-        <div class="card-brand" style="position:absolute;top:1.2rem;right:1.2rem">
-          <div class="card-brand-circles"><span></span><span></span></div>
-        </div>
+      <div class="card-visual">
+        <div class="card-brand" style="position:absolute;top:1.2rem;right:1.2rem"><div class="card-brand-circles"><span></span><span></span></div></div>
         <div class="card-chip"></div>
         <div class="card-number" id="cardNumDisplay">•••• •••• •••• ••••</div>
         <div class="card-meta">
@@ -1185,27 +800,13 @@ footer a:hover{text-decoration:underline}
           <div><div class="card-meta-label">Expires</div><div class="card-meta-val" id="cardExpDisplay">MM/YY</div></div>
         </div>
       </div>
-      <div class="form-group">
-        <label class="form-label">Card Number</label>
-        <input class="form-input" type="text" id="cardNum" placeholder="1234 5678 9012 3456" maxlength="19" oninput="formatCard(this)">
-      </div>
-      <div class="form-group">
-        <label class="form-label">Cardholder Name</label>
-        <input class="form-input" type="text" id="cardName" placeholder="AXO FUHA" oninput="document.getElementById('cardNameDisplay').textContent=this.value.toUpperCase()||'YOUR NAME'">
-      </div>
+      <div class="form-group"><label class="form-label">Card Number</label><input class="form-input" type="text" id="cardNum" placeholder="1234 5678 9012 3456" maxlength="19" oninput="formatCard(this)"></div>
+      <div class="form-group"><label class="form-label">Cardholder Name</label><input class="form-input" type="text" id="cardName" placeholder="AXO FUHA" oninput="document.getElementById('cardNameDisplay').textContent=this.value.toUpperCase()||'YOUR NAME'"></div>
       <div class="form-row">
-        <div class="form-group">
-          <label class="form-label">Expiry</label>
-          <input class="form-input" type="text" id="cardExp" placeholder="MM/YY" maxlength="5" oninput="formatExp(this)">
-        </div>
-        <div class="form-group">
-          <label class="form-label">CVV</label>
-          <input class="form-input" type="password" id="cardCvv" placeholder="•••" maxlength="4">
-        </div>
+        <div class="form-group"><label class="form-label">Expiry</label><input class="form-input" type="text" id="cardExp" placeholder="MM/YY" maxlength="5" oninput="formatExp(this)"></div>
+        <div class="form-group"><label class="form-label">CVV</label><input class="form-input" type="password" id="cardCvv" placeholder="•••" maxlength="4"></div>
       </div>
     </div>
-
-    <!-- CRYPTO -->
     <div id="payCrypto" style="display:none">
       <div class="crypto-grid">
         <div class="crypto-opt selected" onclick="selectCrypto(this,'BTC')"><div class="crypto-icon">₿</div><div class="crypto-name">Bitcoin</div></div>
@@ -1220,59 +821,18 @@ footer a:hover{text-decoration:underline}
         <div style="font-family:'JetBrains Mono',monospace;font-size:.75rem;color:var(--gray);word-break:break-all" id="cryptoAddress">bc1qxy2kgdygjrsqtzq2n0yrf2493p83kkfjhx0wlh</div>
         <button class="btn btn-ghost btn-sm" style="margin-top:.75rem" onclick="copyCryptoAddress()">📋 Copy Address</button>
       </div>
-      <div class="form-hint" style="text-align:center">Send exact amount to the address above. Payment confirmed automatically.</div>
     </div>
-
-    <!-- PAYPAL -->
     <div id="payPaypal" style="display:none">
-      <!-- PayPal branding -->
-      <div style="background:linear-gradient(135deg,#003087,#009cde);border-radius:14px;padding:1.5rem;text-align:center;margin-bottom:1.25rem;position:relative;overflow:hidden">
-        <div style="position:absolute;inset:0;background:url('data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%2240%22 height=%2240%22><circle cx=%2220%22 cy=%2220%22 r=%2218%22 fill=%22none%22 stroke=%22rgba(255,255,255,.06)%22 stroke-width=%221%22/></svg>') repeat;opacity:.5"></div>
-        <svg viewBox="0 0 124 33" style="height:28px;margin-bottom:.75rem" xmlns="http://www.w3.org/2000/svg">
-          <path d="M46.2 7.5h-7.4c-.5 0-.9.4-1 .9l-3 19c-.1.4.2.7.6.7h3.7c.5 0 .9-.4 1-.9l.8-5.2c.1-.5.5-.9 1-.9h2.3c4.8 0 7.6-2.3 8.3-6.9.3-2 0-3.6-.9-4.7-1-1.2-2.8-2-5.4-2zm.8 6.8c-.4 2.6-2.4 2.6-4.3 2.6h-1.1l.8-4.9c0-.3.3-.5.6-.5h.5c1.3 0 2.5 0 3.2.7.4.5.5 1.2.3 2.1zM68.7 14.2h-3.7c-.3 0-.6.2-.6.5l-.2.9-.3-.4c-.8-1.2-2.7-1.6-4.5-1.6-4.2 0-7.8 3.2-8.5 7.6-.4 2.2.1 4.3 1.4 5.8 1.1 1.3 2.8 1.9 4.7 1.9 3.4 0 5.3-2.2 5.3-2.2l-.2.9c-.1.4.2.7.6.7h3.3c.5 0 .9-.4 1-.9l2-12.5c.1-.4-.2-.7-.3-.7zm-5.1 7.4c-.4 2.1-2.1 3.5-4.3 3.5-1.1 0-2-.4-2.6-1-.6-.7-.8-1.6-.6-2.6.3-2.1 2.2-3.5 4.3-3.5 1.1 0 2 .4 2.6 1 .6.6.8 1.6.6 2.6zM88.2 14.2h-3.7c-.3 0-.7.2-.9.5l-5.1 7.5-2.2-7.2c-.1-.5-.6-.8-1-.8h-3.7c-.4 0-.7.4-.6.8l4.1 12-3.9 5.4c-.3.4 0 1 .5 1h3.7c.3 0 .7-.2.9-.4l12.4-18c.3-.3 0-.8-.5-.8z" fill="#fff"/>
-          <path d="M99.4 7.5H92c-.5 0-.9.4-1 .9l-3 19c-.1.4.2.7.6.7h4c.3 0 .7-.3.7-.6l.9-5.5c.1-.5.5-.9 1-.9h2.3c4.8 0 7.6-2.3 8.3-6.9.3-2 0-3.6-.9-4.7-1-1.2-2.7-2-5.5-2zm.8 6.8c-.4 2.6-2.4 2.6-4.3 2.6h-1l.7-4.9c.1-.3.3-.5.6-.5h.5c1.3 0 2.5 0 3.2.7.5.5.5 1.2.3 2.1zM122.1 14.2h-3.7c-.3 0-.6.2-.6.5l-.2.9-.3-.4c-.8-1.2-2.7-1.6-4.5-1.6-4.2 0-7.8 3.2-8.5 7.6-.4 2.2.1 4.3 1.4 5.8 1.1 1.3 2.8 1.9 4.7 1.9 3.4 0 5.3-2.2 5.3-2.2l-.2.9c-.1.4.2.7.6.7h3.3c.5 0 .9-.4 1-.9l2-12.5c0-.4-.2-.7-.3-.7zm-5.2 7.4c-.4 2.1-2.1 3.5-4.3 3.5-1.1 0-2-.4-2.6-1-.6-.7-.8-1.6-.6-2.6.3-2.1 2.2-3.5 4.3-3.5 1.1 0 2 .4 2.6 1 .6.6.9 1.6.6 2.6z" fill="#fff"/>
-          <path d="M7.3 2.5C5.5 2.5 4 3.8 3.8 5.6L.3 27.9c-.2 1.3.8 2.5 2.1 2.5h6.5l1.6-10.2-.1.4 2-12.9c.2-1.4 1.4-2.5 2.8-2.5H22c.8 0 1.6.1 2.3.3C23.7 3.3 21.5 2.5 19 2.5H7.3z" fill="#003087"/>
-          <path d="M24.3 5.5c-.7-.2-1.5-.3-2.3-.3h-6.9c-1.4 0-2.6 1.1-2.8 2.5L10.3 20.6l-.1.4L8.6 31h5.2c1.4 0 2.6-1.1 2.8-2.5l.1-.4 1.6-10.2.1-.4c.2-1.4 1.4-2.5 2.8-2.5h1.8c5.7 0 10.1-2.3 11.4-9-.6-.4-1.3-.7-2.1-.9-.7-.3-1.5-.5-2.3-.6-.6-.1-1.1-.1-1.7 0z" fill="#009cde"/>
-          <path d="M9.9 7.8C10.1 6.4 11.3 5.3 12.7 5.3h6.9c.8 0 1.6.1 2.3.3.7.2 1.4.5 2 .9.5.3.9.7 1.2 1.1 1.4-7.4-1.5-9.1-9-9.1H4.4C3 .5 1.8 1.6 1.6 3L-2 25c-.2 1.4.8 2.6 2.1 2.6h6.5L9.9 7.8z" fill="#012169"/>
-        </svg>
-        <div style="color:rgba(255,255,255,.9);font-size:.92rem;margin-bottom:.35rem">Secure checkout via PayPal</div>
+      <div style="background:linear-gradient(135deg,#003087,#009cde);border-radius:14px;padding:1.5rem;text-align:center;margin-bottom:1.25rem">
+        <div style="color:rgba(255,255,255,.9);font-size:.92rem;margin-bottom:.35rem;font-weight:700">Secure checkout via PayPal</div>
         <div style="color:rgba(255,255,255,.65);font-size:.78rem">You'll be redirected to PayPal to complete your payment</div>
       </div>
-
-      <!-- Order summary -->
       <div style="background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:1rem 1.15rem;margin-bottom:1rem">
-        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:.5rem">
-          <span style="font-size:.85rem;color:var(--gray)">Item</span>
-          <span style="font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:.95rem" id="ppItemName">—</span>
-        </div>
-        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:.5rem">
-          <span style="font-size:.85rem;color:var(--gray)">Currency</span>
-          <span style="font-size:.88rem;color:var(--light)">USD</span>
-        </div>
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:.5rem"><span style="font-size:.85rem;color:var(--gray)">Item</span><span style="font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:.95rem" id="ppItemName">—</span></div>
         <div style="height:1px;background:var(--border);margin:.5rem 0"></div>
-        <div style="display:flex;justify-content:space-between;align-items:center">
-          <span style="font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:1rem">Total</span>
-          <span style="font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:1.3rem;color:#009cde" id="ppTotal">$0.00</span>
-        </div>
-      </div>
-
-      <!-- What happens next -->
-      <div style="display:flex;flex-direction:column;gap:.5rem;margin-bottom:1rem">
-        <div style="display:flex;align-items:center;gap:.65rem;font-size:.83rem;color:var(--gray)">
-          <span style="width:20px;height:20px;border-radius:50%;background:rgba(0,156,222,.15);display:flex;align-items:center;justify-content:center;font-size:.7rem;flex-shrink:0;color:#009cde">1</span>
-          Click "Pay with PayPal" below
-        </div>
-        <div style="display:flex;align-items:center;gap:.65rem;font-size:.83rem;color:var(--gray)">
-          <span style="width:20px;height:20px;border-radius:50%;background:rgba(0,156,222,.15);display:flex;align-items:center;justify-content:center;font-size:.7rem;flex-shrink:0;color:#009cde">2</span>
-          Log in to PayPal or pay as guest with your card
-        </div>
-        <div style="display:flex;align-items:center;gap:.65rem;font-size:.83rem;color:var(--gray)">
-          <span style="width:20px;height:20px;border-radius:50%;background:rgba(0,156,222,.15);display:flex;align-items:center;justify-content:center;font-size:.7rem;flex-shrink:0;color:#009cde">3</span>
-          Confirm payment — access unlocked instantly ✓
-        </div>
+        <div style="display:flex;justify-content:space-between;align-items:center"><span style="font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:1rem">Total</span><span style="font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:1.3rem;color:#009cde" id="ppTotal">$0.00</span></div>
       </div>
     </div>
-
     <div class="pay-secure"><span>🔒</span> 256-bit SSL encrypted — your data is safe</div>
     <button class="btn btn-full" style="margin-top:1rem" id="payMainBtn" onclick="confirmPayment()">Pay <span id="payBtnAmount">$0.00</span> →</button>
   </div>
@@ -1301,12 +861,11 @@ footer a:hover{text-decoration:underline}
         <span>🌸 Spring Sale — до 30% скидки на подписки! Только до 30 апреля &nbsp;&nbsp;&nbsp;</span>
         <span>🌿 FUHA Season 2 is live — new maps, new coaches, bigger prizes &nbsp;&nbsp;&nbsp;</span>
         <span>🌷 Весенний буст: +50 XP за каждую покупку в апреле! &nbsp;&nbsp;&nbsp;</span>
-        <span>🏆 Tournament Qualifier starts in 2h 30m — <span style="color:var(--spring1);cursor:none" onclick="showPage('schedule')">View Schedule →</span> &nbsp;&nbsp;&nbsp;</span>
+        <span>🏆 Tournament Qualifier starts in 2h 30m &nbsp;&nbsp;&nbsp;</span>
         <span>⚡ H9ito just hit a 30-kill game — insane stats &nbsp;&nbsp;&nbsp;</span>
         <span>🌸 Spring Sale — до 30% скидки на подписки! Только до 30 апреля &nbsp;&nbsp;&nbsp;</span>
         <span>🌿 FUHA Season 2 is live &nbsp;&nbsp;&nbsp;</span>
         <span>🌷 Весенний буст: +50 XP за каждую покупку! &nbsp;&nbsp;&nbsp;</span>
-        <span>🏆 Tournament Qualifier starts in 2h 30m &nbsp;&nbsp;&nbsp;</span>
       </div>
       <span class="ann-bar-static">🌸 Spring Sale активен!</span>
     </div>
@@ -1332,27 +891,19 @@ footer a:hover{text-decoration:underline}
         <div class="twitch-header">
           <div class="twitch-header-left">
             <div class="live-badge">LIVE</div>
-            <div>
-              <div class="twitch-channel-name">🎮 AXO_HH</div>
-              <div class="twitch-game-info" id="twitchGameInfo">Counter-Strike 2</div>
-            </div>
+            <div><div class="twitch-channel-name">🎮 AXO_HH</div><div class="twitch-game-info" id="twitchGameInfo">Counter-Strike 2</div></div>
           </div>
           <div class="twitch-header-right">
             <div class="viewer-count"><span class="eye">👁</span> <span id="viewerCount">...</span> viewers</div>
             <a href="https://twitch.tv/AXO_HH" target="_blank" class="twitch-open-btn">Open Twitch ↗</a>
           </div>
         </div>
-        <div class="twitch-embed-wrap">
-          <iframe id="twitchIframe" src="" allowfullscreen></iframe>
-        </div>
+        <div class="twitch-embed-wrap"><iframe id="twitchIframe" src="" allowfullscreen></iframe></div>
       </div>
     </div>
-    <div class="twitch-offline-block" id="twitchOfflineBlock" onclick="showPage('stream')" style="display:none;">
+    <div class="twitch-offline-block" id="twitchOfflineBlock" onclick="showPage('stream')" style="display:none">
       <div class="twitch-offline-icon">📺</div>
-      <div class="twitch-offline-text">
-        <strong>AXO_HH on Twitch</strong>
-        <span>Stream is currently offline — follow to get notified</span>
-      </div>
+      <div class="twitch-offline-text"><strong>AXO_HH on Twitch</strong><span>Stream is currently offline — follow to get notified</span></div>
       <div class="twitch-offline-arrow">→</div>
     </div>
 
@@ -1368,49 +919,37 @@ footer a:hover{text-decoration:underline}
     </div>
 
     <div class="hero-banner">
-      <div class="hero-title" data-i18n="heroTag">CS2 Professional Training</div>
+      <div class="hero-title">CS2 Professional Training</div>
       <h2 class="glitch" data-text="Level Up Your Game,">Level Up Your Game,<br>Dominate the Lobby</h2>
-      <p data-i18n="heroDesc">Advanced training methods, personal coaching and analytics used by top-ranked players. Join FUHA and start climbing.</p>
+      <p>Advanced training methods, personal coaching and analytics used by top-ranked players. Join FUHA and start climbing.</p>
       <div class="hero-actions">
-        <button class="btn" onclick="showPage('shop')">🛒 <span data-i18n="browseCourses">Browse Courses</span></button>
-        <button class="btn btn-outline" onclick="showPage('subscriptions')" data-i18n="viewPlans">View Plans</button>
+        <button class="btn" onclick="showPage('shop')">🛒 Browse Courses</button>
+        <button class="btn btn-outline" onclick="showPage('subscriptions')">View Plans</button>
         <button class="btn btn-ghost" onclick="activateAimbot()">🎯 Aimbot Mode</button>
       </div>
     </div>
 
     <div class="stats-grid">
-      <div class="stat-card clickable" onclick="showPage('players')">
-        <div class="stat-num">3</div><div class="stat-label" data-i18n="proPlayers">Pro Players</div>
-      </div>
-      <div class="stat-card">
-        <div class="stat-num" id="sessionsCount">42</div><div class="stat-label" data-i18n="sessionsDone">Sessions Done</div>
-      </div>
-      <div class="stat-card">
-        <div class="stat-num">8.5</div><div class="stat-label" data-i18n="avgRating">Avg Rating</div>
-      </div>
-      <div class="stat-card">
-        <div class="stat-num">156h</div><div class="stat-label" data-i18n="trainingHours">Training Hours</div>
-      </div>
-      <div class="stat-card clickable" id="pointsCard">
-        <div class="stat-num" id="totalPoints">1,250</div><div class="stat-label" data-i18n="totalPoints">Total Points</div>
-      </div>
-      <div class="stat-card clickable" onclick="showPage('shop')">
-        <div class="stat-num">12</div><div class="stat-label" data-i18n="courses">Courses</div>
-      </div>
+      <div class="stat-card clickable" onclick="showPage('players')"><div class="stat-num">3</div><div class="stat-label">Pro Players</div></div>
+      <div class="stat-card"><div class="stat-num" id="sessionsCount">42</div><div class="stat-label">Sessions Done</div></div>
+      <div class="stat-card"><div class="stat-num">8.5</div><div class="stat-label">Avg Rating</div></div>
+      <div class="stat-card"><div class="stat-num">156h</div><div class="stat-label">Training Hours</div></div>
+      <div class="stat-card clickable"><div class="stat-num" id="totalPoints">1,250</div><div class="stat-label">Total Points</div></div>
+      <div class="stat-card clickable" onclick="showPage('shop')"><div class="stat-num">12</div><div class="stat-label">Courses</div></div>
     </div>
 
     <div class="quick-actions">
-      <div class="quick-action clickable" onclick="startSession()"><div class="quick-action-icon">▶️</div><div class="quick-action-label" data-i18n="startSession">Start Session</div></div>
-      <div class="quick-action clickable" onclick="showPage('schedule')"><div class="quick-action-icon">📅</div><div class="quick-action-label" data-i18n="schedule">Schedule</div></div>
-      <div class="quick-action clickable" onclick="showPage('players')"><div class="quick-action-icon">👥</div><div class="quick-action-label" data-i18n="team">Team</div></div>
-      <div class="quick-action clickable" onclick="showPage('skills')"><div class="quick-action-icon">📈</div><div class="quick-action-label" data-i18n="mySkills">My Skills</div></div>
-      <div class="quick-action clickable" onclick="showPage('stream')"><div class="quick-action-icon">📺</div><div class="quick-action-label" data-i18n="watchLive">Watch Live</div></div>
-      <div class="quick-action clickable" onclick="openSupport()"><div class="quick-action-icon">💬</div><div class="quick-action-label" data-i18n="support">Support</div></div>
+      <div class="quick-action clickable" onclick="startSession()"><div class="quick-action-icon">▶️</div><div class="quick-action-label">Start Session</div></div>
+      <div class="quick-action clickable" onclick="showPage('schedule')"><div class="quick-action-icon">📅</div><div class="quick-action-label">Schedule</div></div>
+      <div class="quick-action clickable" onclick="showPage('players')"><div class="quick-action-icon">👥</div><div class="quick-action-label">Team</div></div>
+      <div class="quick-action clickable" onclick="showPage('skills')"><div class="quick-action-icon">📈</div><div class="quick-action-label">My Skills</div></div>
+      <div class="quick-action clickable" onclick="showPage('stream')"><div class="quick-action-icon">📺</div><div class="quick-action-label">Watch Live</div></div>
+      <div class="quick-action clickable" onclick="openSupport()"><div class="quick-action-icon">💬</div><div class="quick-action-label">Support</div></div>
     </div>
 
-    <h3 style="font-family:'Barlow Condensed',sans-serif;font-size:1.4rem;font-weight:900;margin-bottom:1rem">🏆 <span data-i18n="globalLB">Global Leaderboard</span></h3>
+    <h3 style="font-family:'Barlow Condensed',sans-serif;font-size:1.4rem;font-weight:900;margin-bottom:1rem">🏆 Global Leaderboard</h3>
     <div class="leaderboard">
-      <div class="lb-head"><div>#</div><div data-i18n="nickname">Nickname</div><div data-i18n="roleTeam">Role / Team</div><div data-i18n="rating">Rating</div><div data-i18n="score">Score</div></div>
+      <div class="lb-head"><div>#</div><div>Nickname</div><div>Role / Team</div><div>Rating</div><div>Score</div></div>
       <div class="lb-row fuha clickable" onclick="showPage('players')"><div class="lb-rank gold">1</div><div class="lb-name">👑 AXO <span class="fuha-tag">FUHA</span></div><div class="lb-team">Leader / IGL</div><div class="lb-rating">Premier 2945</div><div class="lb-score">2945</div></div>
       <div class="lb-row fuha clickable" onclick="showPage('players')"><div class="lb-rank silver">2</div><div class="lb-name">⚡ H9ito <span class="fuha-tag">FUHA</span></div><div class="lb-team">Entry Fragger</div><div class="lb-rating">Premier 2856</div><div class="lb-score">2856</div></div>
       <div class="lb-row fuha clickable" onclick="showPage('players')"><div class="lb-rank bronze">3</div><div class="lb-name">🛡️ Danixx <span class="fuha-tag">FUHA</span></div><div class="lb-team">Support</div><div class="lb-rating">Premier 2734</div><div class="lb-score">2734</div></div>
@@ -1428,8 +967,8 @@ footer a:hover{text-decoration:underline}
 <!-- ══════════ PLAYERS ══════════ -->
 <section id="players" class="page">
   <div class="container">
-    <div class="section-title" data-i18n="teamFuha">Team FUHA</div>
-    <div class="section-sub" data-i18n="teamSub">Our roster of professional CS2 athletes</div>
+    <div class="section-title">Team FUHA</div>
+    <div class="section-sub">Our roster of professional CS2 athletes</div>
     <div class="accent-line"></div>
     <div class="players-grid">
       <div class="player-card fuha">
@@ -1475,8 +1014,8 @@ footer a:hover{text-decoration:underline}
 <!-- ══════════ SCHEDULE ══════════ -->
 <section id="schedule" class="page">
   <div class="container">
-    <div class="section-title" data-i18n="weeklySchedule">Weekly Schedule</div>
-    <div class="section-sub" data-i18n="scheduleSub">Your training plan for the week</div>
+    <div class="section-title">Weekly Schedule</div>
+    <div class="section-sub">Your training plan for the week</div>
     <div class="accent-line"></div>
     <div class="schedule-outer">
       <div class="schedule-nav">
@@ -1494,22 +1033,22 @@ footer a:hover{text-decoration:underline}
 <!-- ══════════ SKILLS ══════════ -->
 <section id="skills" class="page">
   <div class="container">
-    <div class="section-title" data-i18n="mySkillsTitle">My Skills</div>
-    <div class="section-sub" data-i18n="skillsSub">Track your progress across all CS2 mechanics</div>
+    <div class="section-title">My Skills</div>
+    <div class="section-sub">Track your progress across all CS2 mechanics</div>
     <div class="accent-line"></div>
     <div class="skill-grid" id="skillGrid"></div>
-    <button class="btn" onclick="trainRandomSkill()">⚡ <span data-i18n="trainRandom">Train Random Skill</span></button>
+    <button class="btn" onclick="trainRandomSkill()">⚡ Train Random Skill</button>
   </div>
 </section>
 
 <!-- ══════════ SHOP ══════════ -->
 <section id="shop" class="page">
   <div class="container">
-    <div class="section-title" data-i18n="courseShop">Course Shop</div>
-    <div class="section-sub" data-i18n="shopSub">Invest in your game — one-time purchases</div>
+    <div class="section-title">Course Shop</div>
+    <div class="section-sub">Invest in your game — one-time purchases</div>
     <div class="accent-line"></div>
     <div class="shop-filters">
-      <button class="filter-btn active" onclick="filterShop(this,'all')" data-i18n="all">All</button>
+      <button class="filter-btn active" onclick="filterShop(this,'all')">All</button>
       <button class="filter-btn" onclick="filterShop(this,'aim')">🎯 Aim</button>
       <button class="filter-btn" onclick="filterShop(this,'tactics')">🗺️ Tactics</button>
       <button class="filter-btn" onclick="filterShop(this,'coaching')">👥 Coaching</button>
@@ -1522,11 +1061,10 @@ footer a:hover{text-decoration:underline}
 <!-- ══════════ SUBSCRIPTIONS ══════════ -->
 <section id="subscriptions" class="page">
   <div class="container">
-    <div class="section-title" data-i18n="trainingPlans">Training Plans</div>
-    <div class="section-sub" data-i18n="plansSub">Choose the plan that matches your ambition</div>
+    <div class="section-title">Training Plans</div>
+    <div class="section-sub">Choose the plan that matches your ambition</div>
     <div class="accent-line"></div>
 
-    <!-- Spring promo strip -->
     <div style="background:linear-gradient(135deg,rgba(74,222,128,.12),rgba(253,230,138,.1),rgba(251,207,232,.1));border:1px solid rgba(74,222,128,.3);border-radius:12px;padding:1rem 1.4rem;margin-bottom:1.75rem;display:flex;align-items:center;gap:1rem;flex-wrap:wrap">
       <div style="font-size:1.8rem">🌸</div>
       <div style="flex:1">
@@ -1555,7 +1093,8 @@ footer a:hover{text-decoration:underline}
           <li><span class="cross">✗</span> <span style="opacity:.4">1v1 coaching</span></li>
           <li><span class="cross">✗</span> <span style="opacity:.4">Analytics dashboard</span></li>
         </ul>
-        <button class="btn btn-full" style="background:linear-gradient(135deg,var(--spring1),#22c55e)" onclick="openPayModal('Starter Plan','3.99')">🌸 Start Free Trial</button>
+        <!-- ✅ REAL BUY BUTTON — goes directly to PayPal -->
+        <button class="btn btn-full buy-sub-btn" style="background:linear-gradient(135deg,var(--spring1),#22c55e)" onclick="buySubscription('Starter',3.99)">🛒 Купить — $3.99/мес</button>
       </div>
 
       <!-- PRO (featured) -->
@@ -1577,7 +1116,8 @@ footer a:hover{text-decoration:underline}
           <li><span class="check">✓</span> Early access content</li>
           <li><span class="cross">✗</span> <span style="opacity:.4">Personal analyst</span></li>
         </ul>
-        <button class="btn btn-full" style="background:linear-gradient(135deg,var(--spring1),#22c55e)" onclick="openPayModal('Pro Plan','6.99')">🌸 Start Free Trial</button>
+        <!-- ✅ REAL BUY BUTTON -->
+        <button class="btn btn-full buy-sub-btn" style="background:linear-gradient(135deg,var(--spring1),#22c55e)" onclick="buySubscription('Pro',6.99)">🛒 Купить — $6.99/мес</button>
       </div>
 
       <!-- ELITE -->
@@ -1598,12 +1138,13 @@ footer a:hover{text-decoration:underline}
           <li><span class="check">✓</span> Team scrimmage access</li>
           <li><span class="check">✓</span> VIP Discord role</li>
         </ul>
-        <button class="btn btn-full" style="background:linear-gradient(135deg,var(--spring1),#22c55e)" onclick="openPayModal('Elite Plan','14.99')">🌸 Start Free Trial</button>
+        <!-- ✅ REAL BUY BUTTON -->
+        <button class="btn btn-full buy-sub-btn" style="background:linear-gradient(135deg,var(--spring1),#22c55e)" onclick="buySubscription('Elite',14.99)">🛒 Купить — $14.99/мес</button>
       </div>
     </div>
 
     <div style="text-align:center;font-size:.82rem;color:var(--gray);margin-top:-.5rem">
-      🌿 Spring prices apply for first 3 months. Regular price resumes after promo period.
+      🌿 Оплата через PayPal (карта, банк, крипто). Отмена в любой момент без штрафов.
     </div>
   </div>
 </section>
@@ -1611,15 +1152,15 @@ footer a:hover{text-decoration:underline}
 <!-- ══════════ CART ══════════ -->
 <section id="cart" class="page">
   <div class="container">
-    <div class="section-title" data-i18n="shoppingCart">Shopping Cart</div>
+    <div class="section-title">Shopping Cart</div>
     <div class="accent-line"></div>
     <div class="cart-layout">
       <div class="cart-panel" id="cartItems"></div>
       <div class="summary-panel">
-        <h3 style="font-family:'Barlow Condensed',sans-serif;font-size:1.3rem;font-weight:900;margin-bottom:1.15rem" data-i18n="orderSummary">Order Summary</h3>
-        <div class="summary-row"><span data-i18n="subtotal">Subtotal</span><span id="subtotal">$0.00</span></div>
-        <div class="summary-row"><span data-i18n="tax">Tax (10%)</span><span id="tax">$0.00</span></div>
-        <div class="summary-row total"><span data-i18n="total">Total</span><span id="total">$0.00</span></div>
+        <h3 style="font-family:'Barlow Condensed',sans-serif;font-size:1.3rem;font-weight:900;margin-bottom:1.15rem">Order Summary</h3>
+        <div class="summary-row"><span>Subtotal</span><span id="subtotal">$0.00</span></div>
+        <div class="summary-row"><span>Tax (10%)</span><span id="tax">$0.00</span></div>
+        <div class="summary-row total"><span>Total</span><span id="total">$0.00</span></div>
         <button class="btn btn-full" style="margin-top:1.15rem" onclick="openCheckout()">Checkout →</button>
         <button class="btn btn-outline btn-full" style="margin-top:.45rem" onclick="clearCart()">Clear Cart</button>
       </div>
@@ -1631,7 +1172,7 @@ footer a:hover{text-decoration:underline}
 <section id="profile" class="page">
   <div class="container">
     <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1.5rem;flex-wrap:wrap;gap:1rem">
-      <div><div class="section-title" data-i18n="myProfile">My Profile</div><div class="accent-line" style="margin-bottom:0"></div></div>
+      <div><div class="section-title">My Profile</div><div class="accent-line" style="margin-bottom:0"></div></div>
       <button class="btn btn-ghost btn-sm" onclick="openProfileEditor()">✏️ Edit Profile</button>
     </div>
     <div class="profile-layout">
@@ -1642,14 +1183,11 @@ footer a:hover{text-decoration:underline}
           <div style="font-size:.82rem;color:var(--gray);margin:.15rem 0" id="profileCountry"></div>
           <div class="profile-email" id="profileEmail">—</div>
           <div class="profile-plan" id="profilePlan">⭐ Free</div>
-          <div id="profileBioWrap" style="margin-top:.75rem;font-size:.88rem;color:var(--gray);display:none;line-height:1.5;font-style:italic" id="profileBio"></div>
+          <div id="profileBioWrap" style="margin-top:.75rem;font-size:.88rem;color:var(--gray);display:none;line-height:1.5;font-style:italic"></div>
           <div id="profileCs2Info" style="display:none;margin-top:.9rem;text-align:left">
             <div class="rank-badge-section" style="margin-bottom:.75rem">
               <div class="rank-star" id="profileRoleIcon">🎮</div>
-              <div class="rank-info">
-                <div class="rank-name" id="profileRole">—</div>
-                <div class="rank-rating" id="profileRatingDisplay">Premier —</div>
-              </div>
+              <div class="rank-info"><div class="rank-name" id="profileRole">—</div><div class="rank-rating" id="profileRatingDisplay">Premier —</div></div>
             </div>
             <div style="display:flex;gap:.5rem;flex-wrap:wrap;font-size:.8rem">
               <span style="background:var(--surface2);border:1px solid var(--border);border-radius:6px;padding:.2rem .6rem;color:var(--gray)" id="profileMap">🗺️ —</span>
@@ -1670,9 +1208,7 @@ footer a:hover{text-decoration:underline}
             <div class="profile-stat"><div class="profile-stat-num" id="profileLevel">1</div><div class="profile-stat-label">Level</div></div>
             <div class="profile-stat"><div class="profile-stat-num" id="profileCourses">0</div><div class="profile-stat-label">Courses</div></div>
           </div>
-          <div style="margin-top:.9rem" id="profileStreakWrap" style="display:none">
-            <div class="streak-badge" id="profileStreakBadge">🔥 0 day streak</div>
-          </div>
+          <div style="margin-top:.9rem"><div class="streak-badge" id="profileStreakBadge">🔥 0 day streak</div></div>
           <div id="profileDiscordWrap" style="display:none;margin-top:.75rem">
             <div style="font-size:.75rem;color:var(--gray);margin-bottom:.2rem">Discord</div>
             <div style="font-family:'JetBrains Mono',monospace;font-size:.82rem;color:var(--primary)" id="profileDiscord"></div>
@@ -1680,20 +1216,9 @@ footer a:hover{text-decoration:underline}
         </div>
       </div>
       <div class="profile-main">
-        <div class="profile-section">
-          <h4>🏆 Achievements</h4>
-          <div class="achievement-list" id="achievementList"></div>
-        </div>
-        <div class="profile-section">
-          <h4>📚 My Courses</h4>
-          <div class="owned-courses" id="ownedCourses">
-            <div style="color:var(--gray);font-size:.9rem;grid-column:1/-1">No courses yet — <span style="color:var(--primary);cursor:none" onclick="showPage('shop')">browse shop →</span></div>
-          </div>
-        </div>
-        <div class="profile-section">
-          <h4>📈 Skill Snapshot</h4>
-          <div id="profileSkillSnapshot"></div>
-        </div>
+        <div class="profile-section"><h4>🏆 Achievements</h4><div class="achievement-list" id="achievementList"></div></div>
+        <div class="profile-section"><h4>📚 My Courses</h4><div class="owned-courses" id="ownedCourses"><div style="color:var(--gray);font-size:.9rem;grid-column:1/-1">No courses yet — <span style="color:var(--primary);cursor:none" onclick="showPage('shop')">browse shop →</span></div></div></div>
+        <div class="profile-section"><h4>📈 Skill Snapshot</h4><div id="profileSkillSnapshot"></div></div>
       </div>
     </div>
   </div>
@@ -1702,8 +1227,8 @@ footer a:hover{text-decoration:underline}
 <!-- ══════════ TESTIMONIALS ══════════ -->
 <section id="testimonials" class="page">
   <div class="container">
-    <div class="section-title" data-i18n="playerReviews">Player Reviews</div>
-    <div class="section-sub" data-i18n="reviewsSub">What the community says about FUHA</div>
+    <div class="section-title">Player Reviews</div>
+    <div class="section-sub">What the community says about FUHA</div>
     <div class="accent-line"></div>
     <div class="reviews-grid" id="reviewsGrid"></div>
   </div>
@@ -1713,7 +1238,7 @@ footer a:hover{text-decoration:underline}
 <section id="faq" class="page">
   <div class="container">
     <div class="section-title">FAQ</div>
-    <div class="section-sub" data-i18n="faqSub">Got questions? We've got answers.</div>
+    <div class="section-sub">Got questions? We've got answers.</div>
     <div class="accent-line"></div>
     <div class="faq-wrap" id="faqList"></div>
   </div>
@@ -1722,7 +1247,7 @@ footer a:hover{text-decoration:underline}
 <!-- ══════════ STREAM ══════════ -->
 <section id="stream" class="page">
   <div class="container">
-    <div class="section-title" data-i18n="liveStream">Live Stream</div>
+    <div class="section-title">Live Stream</div>
     <div class="section-sub">Watch AXO_HH live on Twitch</div>
     <div class="accent-line"></div>
     <div id="streamLiveBlock" style="display:none">
@@ -1737,9 +1262,7 @@ footer a:hover{text-decoration:underline}
             <a href="https://twitch.tv/AXO_HH" target="_blank" class="twitch-open-btn">Open Twitch ↗</a>
           </div>
         </div>
-        <div class="twitch-embed-wrap" style="padding-top:56.25%">
-          <iframe id="twitchIframePage" src="" allowfullscreen></iframe>
-        </div>
+        <div class="twitch-embed-wrap" style="padding-top:56.25%"><iframe id="twitchIframePage" src="" allowfullscreen></iframe></div>
       </div>
       <div style="margin-top:1rem;border:1px solid rgba(145,70,255,.28);border-radius:12px;overflow:hidden;height:480px">
         <iframe id="twitchChatFrame" src="" style="width:100%;height:100%;border:none"></iframe>
@@ -1760,15 +1283,6 @@ footer a:hover{text-decoration:underline}
         <p>Checking stream status...</p>
       </div>
     </div>
-    <div style="margin-top:2rem">
-      <h3 style="font-family:'Barlow Condensed',sans-serif;font-size:1.4rem;font-weight:900;margin-bottom:1rem" data-i18n="recentStreams">Recent Streams</h3>
-      <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:1rem">
-        <div class="schedule-card clickable" onclick="window.open('https://twitch.tv/AXO_HH/videos','_blank')"><div style="font-size:1.7rem">🎬</div><div class="schedule-day">CS2 Ranked Grind</div><div style="font-size:.83rem;color:var(--gray)">Premier ladder — Full session</div><div class="schedule-status">Past broadcast</div></div>
-        <div class="schedule-card clickable" onclick="window.open('https://twitch.tv/AXO_HH/videos','_blank')"><div style="font-size:1.7rem">🎯</div><div class="schedule-day">Aim Training VOD</div><div style="font-size:.83rem;color:var(--gray)">Workshop warm-up & DM</div><div class="schedule-status">Past broadcast</div></div>
-        <div class="schedule-card clickable" onclick="window.open('https://twitch.tv/AXO_HH/videos','_blank')"><div style="font-size:1.7rem">🏆</div><div class="schedule-day">Tournament Qualifier</div><div style="font-size:.83rem;color:var(--gray)">FUHA team competitive match</div><div class="schedule-status">Past broadcast</div></div>
-        <div class="schedule-card clickable" onclick="window.open('https://twitch.tv/AXO_HH/videos','_blank')"><div style="font-size:1.7rem">📹</div><div class="schedule-day">All Past Streams</div><div style="font-size:.83rem;color:var(--gray)">Browse full VOD library</div><div class="schedule-status" style="color:var(--twitch)">→ View on Twitch</div></div>
-      </div>
-    </div>
   </div>
 </section>
 
@@ -1780,49 +1294,34 @@ footer a:hover{text-decoration:underline}
 
 <script>
 // ═══════════════════════════════════════════
+// CONFIG — замени на свои данные!
+// ═══════════════════════════════════════════
+const PAYPAL_EMAIL     = 'sansusa623@gmail.com';
+// ⚠️ Для Google OAuth: создай проект на console.cloud.google.com
+// и замени строку ниже на свой реальный Client ID
+const GOOGLE_CLIENT_ID = 'YOUR_GOOGLE_CLIENT_ID';
+const TWITCH_CH        = 'AXO_HH';
+
+// ═══════════════════════════════════════════
 // STATE
 // ═══════════════════════════════════════════
 let cart=[], currentUser=null, currentLang='en', isStreamLive=false;
 let currentPayItem={name:'',price:0}, selectedCrypto='BTC';
-const TWITCH_CH='AXO_HH';
 let userXP=0, userLevel=1, userSessions=0, userPlan='Free', ownedCourseIds=[];
-
-// ═══════════════════════════════════════════
-// TRANSLATIONS
-// ═══════════════════════════════════════════
-const I18N={
-  en:{login:'Login',myProfile:'My Profile',myCart:'My Cart',upgradePlan:'Upgrade Plan',logout:'Logout',heroTag:'CS2 Professional Training',heroDesc:'Advanced training methods, personal coaching and analytics used by top-ranked players.',browseCourses:'Browse Courses',viewPlans:'View Plans',proPlayers:'Pro Players',sessionsDone:'Sessions Done',avgRating:'Avg Rating',trainingHours:'Training Hours',totalPoints:'Total Points',courses:'Courses',startSession:'Start Session',schedule:'Schedule',team:'Team',mySkills:'My Skills',watchLive:'Watch Live',support:'Support',globalLB:'Global Leaderboard',nickname:'Nickname',roleTeam:'Role / Team',rating:'Rating',score:'Score',teamFuha:'Team FUHA',teamSub:'Our roster of professional CS2 athletes',weeklySchedule:'Weekly Schedule',scheduleSub:'Your training plan for the week',mySkillsTitle:'My Skills',skillsSub:'Track your progress across all CS2 mechanics',trainRandom:'Train Random Skill',courseShop:'Course Shop',shopSub:'Invest in your game — one-time purchases',all:'All',trainingPlans:'Training Plans',plansSub:'Choose the plan that matches your ambition',shoppingCart:'Shopping Cart',orderSummary:'Order Summary',subtotal:'Subtotal',tax:'Tax (10%)',total:'Total',playerReviews:'Player Reviews',reviewsSub:'What the community says about FUHA',faqSub:"Got questions? We've got answers.",liveStream:'Live Stream',recentStreams:'Recent Streams'},
-  ru:{login:'Войти',myProfile:'Мой профиль',myCart:'Корзина',upgradePlan:'Повысить план',logout:'Выйти',heroTag:'CS2 Профессиональный Тренинг',heroDesc:'Продвинутые методы тренировок, персональный коучинг и аналитика от топ-игроков.',browseCourses:'Курсы',viewPlans:'Планы',proPlayers:'Про игроки',sessionsDone:'Сессий',avgRating:'Рейтинг',trainingHours:'Часов тренировок',totalPoints:'Очки',courses:'Курсы',startSession:'Начать',schedule:'Расписание',team:'Команда',mySkills:'Навыки',watchLive:'Смотреть стрим',support:'Поддержка',globalLB:'Таблица лидеров',nickname:'Никнейм',roleTeam:'Роль / Команда',rating:'Рейтинг',score:'Счёт',teamFuha:'Команда FUHA',teamSub:'Наш ростер профессиональных CS2 игроков',weeklySchedule:'Расписание недели',scheduleSub:'Твой план тренировок на неделю',mySkillsTitle:'Мои навыки',skillsSub:'Отслеживай прогресс по всем механикам CS2',trainRandom:'Тренировать случайный навык',courseShop:'Магазин курсов',shopSub:'Инвестируй в свою игру',all:'Все',trainingPlans:'Планы обучения',plansSub:'Выбери план под свои амбиции',shoppingCart:'Корзина',orderSummary:'Итого',subtotal:'Сумма',tax:'Налог (10%)',total:'Итого',playerReviews:'Отзывы игроков',reviewsSub:'Что сообщество говорит о FUHA',faqSub:'Есть вопросы? У нас есть ответы.',liveStream:'Прямой эфир',recentStreams:'Последние стримы'},
-  uk:{login:'Увійти',myProfile:'Мій профіль',myCart:'Кошик',upgradePlan:'Підвищити план',logout:'Вийти',heroTag:'CS2 Професійний Тренінг',heroDesc:'Просунуті методи тренувань, персональний коучинг та аналітика від топ-гравців.',browseCourses:'Курси',viewPlans:'Плани',proPlayers:'Про гравці',sessionsDone:'Сесій',avgRating:'Рейтинг',trainingHours:'Годин тренувань',totalPoints:'Очки',courses:'Курси',startSession:'Почати',schedule:'Розклад',team:'Команда',mySkills:'Навички',watchLive:'Дивитись стрім',support:'Підтримка',globalLB:'Таблиця лідерів',nickname:'Нікнейм',roleTeam:'Роль / Команда',rating:'Рейтинг',score:'Рахунок',teamFuha:'Команда FUHA',teamSub:'Наш ростер професійних CS2 гравців',weeklySchedule:'Розклад тижня',scheduleSub:'Твій план тренувань на тиждень',mySkillsTitle:'Мої навички',skillsSub:'Відстежуй прогрес по всіх механіках CS2',trainRandom:'Тренувати випадковий навик',courseShop:'Магазин курсів',shopSub:'Інвестуй у свою гру',all:'Все',trainingPlans:'Плани навчання',plansSub:"Обери план під свої амбіції",shoppingCart:'Кошик',orderSummary:'Підсумок',subtotal:'Сума',tax:'Податок (10%)',total:'Разом',playerReviews:'Відгуки гравців',reviewsSub:'Що спільнота каже про FUHA',faqSub:'Є питання? Маємо відповіді.',liveStream:'Пряма трансляція',recentStreams:'Останні стріми'},
-};
-
-function setLang(lang,btn){
-  currentLang=lang;
-  document.querySelectorAll('.lang-btn').forEach(b=>b.classList.remove('active'));
-  btn.classList.add('active');
-  document.querySelectorAll('[data-i18n]').forEach(el=>{
-    const key=el.dataset.i18n;
-    if(I18N[lang][key]) el.textContent=I18N[lang][key];
-  });
-  document.querySelectorAll('nav a[data-'+lang+']').forEach(a=>{
-    a.textContent=a.dataset[lang];
-  });
-  toast({en:'Language: English 🇬🇧',ru:'Язык: Русский 🇷🇺',uk:'Мова: Українська 🇺🇦'}[lang],'info');
-}
 
 // ═══════════════════════════════════════════
 // CURSOR
 // ═══════════════════════════════════════════
 const cur=document.getElementById('cursor'),curRing=document.getElementById('cursor-ring');
 document.addEventListener('mousemove',e=>{
-  cur.style.left=e.clientX+'px'; cur.style.top=e.clientY+'px';
+  cur.style.left=e.clientX+'px';cur.style.top=e.clientY+'px';
   setTimeout(()=>{curRing.style.left=e.clientX+'px';curRing.style.top=e.clientY+'px'},60);
 });
 
 // ═══════════════════════════════════════════
 // PARTICLES
 // ═══════════════════════════════════════════
-(function spawnParticles(){
+(function(){
   const c=document.getElementById('particles');
   for(let i=0;i<18;i++){
     const p=document.createElement('div');p.className='particle';
@@ -1830,7 +1329,6 @@ document.addEventListener('mousemove',e=>{
     p.style.animationDuration=(8+Math.random()*14)+'s';
     p.style.animationDelay=(-Math.random()*14)+'s';
     p.style.width=p.style.height=(1+Math.random()*2)+'px';
-    p.style.opacity=Math.random()*.5;
     c.appendChild(p);
   }
 })();
@@ -1840,18 +1338,14 @@ document.addEventListener('mousemove',e=>{
 // ═══════════════════════════════════════════
 function showPage(id){
   if((id==='profile'||id==='cart')&&!currentUser){
-    toast('Please login first!','error'); openModal('authModal'); return;
+    toast('Please login first!','error');openModal('authModal');return;
   }
   document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
   document.getElementById(id).classList.add('active');
-  document.querySelectorAll('nav a').forEach(a=>{
-    a.classList.toggle('active',a.dataset.page===id);
-    if(a.dataset.page==='stream'&&isStreamLive) a.classList.add('live-nav');
-  });
-  // Update mobile bottom nav
+  document.querySelectorAll('nav a').forEach(a=>a.classList.toggle('active',a.dataset.page===id));
   document.querySelectorAll('.mob-nav-btn').forEach(b=>b.classList.toggle('active',b.dataset.mob===id));
-  if(id==='players') setTimeout(animateBars,100);
-  if(id==='profile') updateProfilePage();
+  if(id==='players')setTimeout(animateBars,100);
+  if(id==='profile')updateProfilePage();
   window.scrollTo({top:0,behavior:'smooth'});
 }
 
@@ -1885,10 +1379,83 @@ document.querySelectorAll('.modal-overlay').forEach(m=>{
 });
 
 // ═══════════════════════════════════════════
+// ── GOOGLE OAUTH (REAL) ──────────────────────
+// ═══════════════════════════════════════════
+function oauthLoginGoogle(){
+  if(GOOGLE_CLIENT_ID==='YOUR_GOOGLE_CLIENT_ID'){
+    toast('⚙️ Google OAuth: замените GOOGLE_CLIENT_ID в коде','error');
+    return;
+  }
+  const params=new URLSearchParams({
+    client_id:    GOOGLE_CLIENT_ID,
+    redirect_uri: window.location.origin+window.location.pathname,
+    response_type:'token',
+    scope:        'openid email profile',
+    state:        'google_login',
+  });
+  window.location.href='https://accounts.google.com/o/oauth2/v2/auth?'+params;
+}
+
+// ═══════════════════════════════════════════
+// ── STEAM OPENID (REAL) ─────────────────────
+// ═══════════════════════════════════════════
+function oauthLoginSteam(){
+  const returnUrl=encodeURIComponent(window.location.href.split('?')[0]+'?steam_return=1');
+  const realm=encodeURIComponent(window.location.origin);
+  const steamUrl=
+    'https://steamcommunity.com/openid/login'
+    +'?openid.ns='+encodeURIComponent('http://specs.openid.net/auth/2.0')
+    +'&openid.mode=checkid_setup'
+    +'&openid.return_to='+returnUrl
+    +'&openid.realm='+realm
+    +'&openid.identity='+encodeURIComponent('http://specs.openid.net/auth/2.0/identifier_select')
+    +'&openid.claimed_id='+encodeURIComponent('http://specs.openid.net/auth/2.0/identifier_select');
+  window.location.href=steamUrl;
+}
+
+// Handle OAuth return redirects on page load
+(function handleOAuthReturn(){
+  const params=new URLSearchParams(window.location.search);
+  const hash=new URLSearchParams(window.location.hash.slice(1));
+
+  // Google returns access_token in URL hash
+  if(hash.get('access_token')&&(params.get('state')==='google_login'||hash.get('state')==='google_login')){
+    const token=hash.get('access_token');
+    history.replaceState({},'',window.location.pathname);
+    fetch('https://www.googleapis.com/oauth2/v3/userinfo',{headers:{Authorization:'Bearer '+token}})
+      .then(r=>r.json())
+      .then(info=>{
+        const users=JSON.parse(localStorage.getItem('fuhaUsers')||'{}');
+        const key='google_'+info.sub;
+        if(!users[key]){
+          users[key]={username:info.name||info.email.split('@')[0],email:info.email,avatarEmoji:'🔵',avatarColor:2,plan:'Free',xp:0,level:1,sessions:0,ownedCourses:[],googleId:info.sub};
+          localStorage.setItem('fuhaUsers',JSON.stringify(users));
+        }
+        setTimeout(()=>loginSuccess(users[key]),400);
+        toast('✅ Вход через Google выполнен!','success');
+      })
+      .catch(()=>toast('Ошибка Google авторизации','error'));
+    return;
+  }
+
+  // Steam returns claimed_id in query params
+  if(params.get('steam_return')==='1'&&params.get('openid.claimed_id')){
+    const steamId=params.get('openid.claimed_id').split('/').pop();
+    history.replaceState({},'',window.location.pathname);
+    const users=JSON.parse(localStorage.getItem('fuhaUsers')||'{}');
+    const key='steam_'+steamId;
+    if(!users[key]){
+      users[key]={username:'Steam_'+steamId.slice(-6),email:'steam_'+steamId+'@steam.local',avatarEmoji:'🎮',avatarColor:3,plan:'Free',xp:0,level:1,sessions:0,ownedCourses:[],steamId:steamId};
+      localStorage.setItem('fuhaUsers',JSON.stringify(users));
+    }
+    setTimeout(()=>loginSuccess(users[key]),400);
+    toast('✅ Вход через Steam! 🎮','success');
+  }
+})();
+
+// ═══════════════════════════════════════════
 // AUTH
 // ═══════════════════════════════════════════
-const DEMO_USERS=JSON.parse(localStorage.getItem('fuhaUsers')||'{}');
-
 function switchAuthTab(tab,btn){
   document.querySelectorAll('.auth-tab').forEach(b=>b.classList.remove('active'));
   btn.classList.add('active');
@@ -1932,8 +1499,8 @@ function doRegister(){
 
 function loginSuccess(user){
   currentUser=user;
-  userXP=user.xp||0; userLevel=user.level||1;
-  userSessions=user.sessions||0; userPlan=user.plan||'Free';
+  userXP=user.xp||0;userLevel=user.level||1;
+  userSessions=user.sessions||0;userPlan=user.plan||'Free';
   ownedCourseIds=user.ownedCourses||[];
   closeModal('authModal');
   document.getElementById('authArea').style.display='none';
@@ -1942,41 +1509,29 @@ function loginSuccess(user){
   const avatarBtn=document.getElementById('userAvatarBtn');
   avatarBtn.textContent=emoji;
   if(user.avatarColor!=null)avatarBtn.style.background=AVATAR_COLORS[user.avatarColor];
-  sessionStorage.setItem('fuhaCurrentUser',user.email);
+  sessionStorage.setItem('fuhaCurrentUser',user.email||'steam_'+user.steamId||'google_'+user.googleId);
   showXPBar();
   toast(`Welcome back, ${user.username}! 👑`,'success');
-  if(!sessionStorage.getItem('liveNotified')&&isStreamLive){
-    setTimeout(()=>{toast('🔴 AXO_HH is LIVE on Twitch right now!','twitch');sessionStorage.setItem('liveNotified','1')},1500);
-  }
   renderCartPage();renderProducts('all');
 }
 
 function logout(){
-  currentUser=null; cart=[];
+  currentUser=null;cart=[];
   document.getElementById('authArea').style.display='block';
   document.getElementById('userArea').style.display='none';
   document.getElementById('xpBarBlock').style.display='none';
   document.getElementById('userDropdownMenu').classList.remove('open');
-  updateCartUI();
-  toast('Logged out — see you next time!','info');
-  showPage('dashboard');
+  updateCartUI();toast('Logged out — see you next time!','info');showPage('dashboard');
 }
 
-function toggleUserMenu(){
-  document.getElementById('userDropdownMenu').classList.toggle('open');
-}
+function toggleUserMenu(){document.getElementById('userDropdownMenu').classList.toggle('open')}
 document.addEventListener('click',e=>{
   const menu=document.getElementById('userDropdownMenu');
-  if(menu&&!menu.contains(e.target)&&!document.getElementById('userAvatarBtn').contains(e.target)){
+  if(menu&&!menu.contains(e.target)&&!document.getElementById('userAvatarBtn').contains(e.target))
     menu.classList.remove('open');
-  }
 });
 
-function oauthLogin(provider){
-  closeModal('authModal');
-  toast(`${provider} login coming soon!`,'info');
-}
-function forgotPassword(){toast('Password reset link sent to your email (demo)','info')}
+function forgotPassword(){toast('Password reset link sent (demo)','info')}
 function togglePwd(id,btn){
   const inp=document.getElementById(id);
   inp.type=inp.type==='password'?'text':'password';
@@ -1989,16 +1544,14 @@ function checkStrength(val){
   if(/[A-Z]/.test(val))score++;if(/[0-9]/.test(val))score++;if(/[^a-zA-Z0-9]/.test(val))score++;
   const pct=[0,20,40,60,85,100][score];
   const colors=['','#f44336','#ff9800','#ffcc00','#8bc34a','#4caf50'][score];
-  const labels=['Enter a password','Very weak','Weak','Fair','Strong','Very strong'][score];
-  fill.style.width=pct+'%'; fill.style.background=colors||'transparent';
-  lbl.textContent=labels;
+  fill.style.width=pct+'%';fill.style.background=colors||'transparent';
+  lbl.textContent=['Enter a password','Very weak','Weak','Fair','Strong','Very strong'][score];
 }
 
 // XP SYSTEM
 function showXPBar(){
   document.getElementById('xpBarBlock').style.display='block';
-  const nextLevelXP=userLevel*100;
-  const pct=Math.min(100,(userXP/nextLevelXP)*100);
+  const nextLevelXP=userLevel*100,pct=Math.min(100,(userXP/nextLevelXP)*100);
   document.getElementById('userLevel').textContent=userLevel;
   document.getElementById('xpLabel').textContent=userXP+' XP';
   document.getElementById('xpNextLabel').textContent=(nextLevelXP-userXP)+' XP to next level';
@@ -2011,110 +1564,105 @@ function gainXP(amount){
   const nextLevelXP=userLevel*100;
   if(userXP>=nextLevelXP){userXP-=nextLevelXP;userLevel++;toast(`🎉 Level Up! You're now Level ${userLevel}!`,'success');spawnConfetti();}
   showXPBar();
-  if(currentUser){currentUser.xp=userXP;currentUser.level=userLevel;saveUser()}
+  if(currentUser){currentUser.xp=userXP;currentUser.level=userLevel;saveUser();}
 }
 function saveUser(){
-  if(!currentUser)return;
+  if(!currentUser||!currentUser.email)return;
   const users=JSON.parse(localStorage.getItem('fuhaUsers')||'{}');
-  if(users[currentUser.email]){users[currentUser.email]=Object.assign(users[currentUser.email],{xp:userXP,level:userLevel,sessions:userSessions,ownedCourses:ownedCourseIds});localStorage.setItem('fuhaUsers',JSON.stringify(users));}
-}
-
-// PROFILE PAGE
-function updateProfilePage(){
-  if(!currentUser)return;
-  document.getElementById('profileAvatar').textContent=currentUser.username.substring(0,2).toUpperCase();
-  document.getElementById('profileUsername').textContent=currentUser.username;
-  document.getElementById('profileEmail').textContent=currentUser.email;
-  document.getElementById('profilePlan').textContent='⭐ '+userPlan+' Plan';
-  document.getElementById('profileSessions').textContent=userSessions;
-  document.getElementById('profileXp').textContent=userXP;
-  document.getElementById('profileLevel').textContent=userLevel;
-  document.getElementById('profileCourses').textContent=ownedCourseIds.length;
-  renderAchievements();
-  renderOwnedCourses();
-}
-function renderAchievements(){
-  const list=document.getElementById('achievementList');
-  const achs=[
-    {icon:'🎯',name:'First Blood',desc:'Complete your first training session',earned:userSessions>=1,badge:'Bronze'},
-    {icon:'🔥',name:'On Fire',desc:'Complete 10 sessions',earned:userSessions>=10,badge:'Silver'},
-    {icon:'👑',name:'FUHA Legend',desc:'Reach Level 5',earned:userLevel>=5,badge:'Gold'},
-    {icon:'📚',name:'Knowledge Seeker',desc:'Purchase 3 courses',earned:ownedCourseIds.length>=3,badge:'Silver'},
-    {icon:'💪',name:'Grinder',desc:'50 training sessions',earned:userSessions>=50,badge:'Gold'},
-    {icon:'🏆',name:'Pro Member',desc:'Subscribe to Pro or Elite plan',earned:userPlan!=='Free',badge:'Platinum'},
-  ];
-  list.innerHTML=achs.map(a=>`
-    <div class="achievement-item" style="${!a.earned?'opacity:.4;filter:grayscale(1)':''}">
-      <div class="achievement-icon">${a.icon}</div>
-      <div><div class="achievement-name">${a.name}</div><div class="achievement-desc">${a.desc}</div></div>
-      ${a.earned?`<div class="achievement-badge">${a.badge}</div>`:''}
-    </div>
-  `).join('');
-}
-function renderOwnedCourses(){
-  const el=document.getElementById('ownedCourses');
-  if(!ownedCourseIds.length){el.innerHTML='<div style="color:var(--gray);font-size:.9rem;grid-column:1/-1">No courses yet — <span style="color:var(--primary);cursor:none" onclick="showPage(\'shop\')">browse shop →</span></div>';return}
-  el.innerHTML=ownedCourseIds.map(id=>{
-    const p=PRODUCTS.find(x=>x.id===id);
-    if(!p)return '';
-    return `<div class="owned-course-card clickable"><div class="owned-course-icon">${p.icon}</div><div class="owned-course-name">${p.name}</div><div class="owned-course-status">✓ Owned</div></div>`;
-  }).join('');
+  const key=currentUser.email;
+  if(users[key])users[key]=Object.assign(users[key],{xp:userXP,level:userLevel,sessions:userSessions,ownedCourses:ownedCourseIds});
+  localStorage.setItem('fuhaUsers',JSON.stringify(users));
 }
 
 // ═══════════════════════════════════════════
-// PAYMENT
+// ── buySubscription — REAL PayPal redirect ──
 // ═══════════════════════════════════════════
-// ── PayPal config ──────────────────────────
-// Replace with your actual PayPal email or PayPal.me link
-const PAYPAL_EMAIL = 'sansusa623@gmail.com'; // PayPal account
-// ────────────────────────────────────────────
+function buySubscription(planName,price){
+  if(!currentUser){
+    toast('Войдите, чтобы купить подписку','error');
+    openModal('authModal');return;
+  }
+  currentPayItem={name:planName+' Plan',price:parseFloat(price)};
+  const amount=parseFloat(price).toFixed(2);
+  const itemName=encodeURIComponent('FUHA Training — '+planName+' Plan (monthly)');
+  const custom=encodeURIComponent((currentUser.email||'guest')+'|'+planName+' Plan');
+  const returnUrl=encodeURIComponent(window.location.href.split('?')[0]+'?paid=1&plan='+encodeURIComponent(planName));
+  const cancelUrl=encodeURIComponent(window.location.href.split('?')[0]);
 
+  const paypalUrl=
+    'https://www.paypal.com/cgi-bin/webscr'
+    +'?cmd=_xclick'
+    +'&business='+encodeURIComponent(PAYPAL_EMAIL)
+    +'&item_name='+itemName
+    +'&amount='+amount
+    +'&currency_code=USD'
+    +'&no_shipping=1'
+    +'&return='+returnUrl
+    +'&cancel_return='+cancelUrl
+    +'&custom='+custom;
+
+  toast('🔄 Перенаправление на PayPal...','info');
+  setTimeout(()=>window.open(paypalUrl,'_blank'),600);
+}
+
+// Handle return from PayPal
+(function handlePaidReturn(){
+  const params=new URLSearchParams(window.location.search);
+  if(params.get('paid')==='1'&&params.get('plan')){
+    const plan=params.get('plan');
+    history.replaceState({},'',window.location.pathname);
+    // Restore session first then apply plan
+    const savedEmail=sessionStorage.getItem('fuhaCurrentUser');
+    const applyPlan=()=>{
+      userPlan=plan;
+      if(currentUser){currentUser.plan=plan;saveUser();}
+      const badge=document.getElementById('xpPlanBadge');
+      if(badge)badge.textContent='⭐ '+plan;
+      toast('🎉 Подписка '+plan+' активирована!','success');
+      spawnConfetti();gainXP(50);
+    };
+    if(currentUser){applyPlan();}
+    else setTimeout(applyPlan,1500);
+  }
+})();
+
+// ═══════════════════════════════════════════
+// PAYMENT MODAL (for shop items)
+// ═══════════════════════════════════════════
 function openPayModal(name,price){
   if(!currentUser){toast('Login to purchase','error');openModal('authModal');return}
   currentPayItem={name,price:parseFloat(price)};
   document.getElementById('payModalTitle').textContent='💳 '+name;
-  document.getElementById('payItemPreview').innerHTML=`<div class="modal-item"><div class="modal-item-name">${name}</div><div class="modal-item-price">$${parseFloat(price).toFixed(2)}</div></div>`;
+  document.getElementById('payItemPreview').innerHTML=`<div style="margin-bottom:1rem;padding:.75rem;background:var(--surface);border-radius:8px;display:flex;justify-content:space-between"><span style="font-weight:700">${name}</span><span style="font-family:'Barlow Condensed',sans-serif;font-size:1.2rem;font-weight:800;color:var(--primary)">$${parseFloat(price).toFixed(2)}</span></div>`;
   document.getElementById('payBtnAmount').textContent='$'+parseFloat(price).toFixed(2);
-  // Sync PayPal summary fields
-  const ppName=document.getElementById('ppItemName');
-  const ppTotal=document.getElementById('ppTotal');
-  if(ppName) ppName.textContent=name;
-  if(ppTotal) ppTotal.textContent='$'+parseFloat(price).toFixed(2);
-  // Reset to card tab
+  const ppName=document.getElementById('ppItemName'),ppTotal=document.getElementById('ppTotal');
+  if(ppName)ppName.textContent=name;if(ppTotal)ppTotal.textContent='$'+parseFloat(price).toFixed(2);
   const firstTab=document.querySelector('.pay-tab');
-  if(firstTab) switchPayTab('card',firstTab);
+  if(firstTab)switchPayTab('card',firstTab);
   openModal('payModal');
 }
+
 function switchPayTab(tab,btn){
   document.querySelectorAll('.pay-tab').forEach(b=>b.classList.remove('active'));
   btn.classList.add('active');
   ['payCard','payCrypto','payPaypal'].forEach(id=>document.getElementById(id).style.display='none');
   const map={card:'payCard',crypto:'payCrypto',paypal:'payPaypal'};
   document.getElementById(map[tab]).style.display='block';
-  // Change main button style for PayPal tab
   const mainBtn=document.getElementById('payMainBtn');
-  if(!mainBtn) return;
-  if(tab==='paypal'){
-    mainBtn.style.background='linear-gradient(135deg,#003087,#009cde)';
-    mainBtn.innerHTML='<svg viewBox="0 0 24 24" style="height:16px;fill:white;margin-right:4px"><path d="M20.067 8.478c.492.315.844.825.983 1.39.671-4.336-2.974-6.15-6.7-6.15H7.927c-.538 0-1.003.377-1.093.906L4.44 18.626h3.807l.956-6.033.84-5.315h4.13c3.012 0 5.5 1.012 5.894 4.2z"/><path d="M8.995 13.817l-.913 5.77H4.275l.193-1.217H8.23l.765-4.553zM20.067 8.478c-.394-3.188-2.882-4.2-5.894-4.2h-4.13l-.84 5.315h3.807c3.726 0 7.371 1.814 6.7 6.15.474-1.908-.152-4.45-1.643-7.265z" opacity=".6"/></svg>Pay with PayPal $<span id="payBtnAmount2">'+(currentPayItem.price||0).toFixed(2)+'</span>';
-    // Sync amount
-    const amt=document.getElementById('payBtnAmount');
-    if(amt) mainBtn.querySelector('#payBtnAmount2') && (mainBtn.querySelector('#payBtnAmount2').textContent=(currentPayItem.price||0).toFixed(2));
-  } else {
-    mainBtn.style.background='';
-    mainBtn.innerHTML='Pay <span id="payBtnAmount">$'+(currentPayItem.price||0).toFixed(2)+'</span> →';
-  }
+  if(!mainBtn)return;
+  mainBtn.style.background='';
+  mainBtn.innerHTML='Pay <span id="payBtnAmount">$'+(currentPayItem.price||0).toFixed(2)+'</span> →';
 }
+
 function formatCard(inp){
   let v=inp.value.replace(/\D/g,'').substring(0,16);
-  v=v.replace(/(.{4})/g,'$1 ').trim();
-  inp.value=v;
+  v=v.replace(/(.{4})/g,'$1 ').trim();inp.value=v;
   const masked=v.padEnd(19,'•').replace(/[0-9]/g,(c,i)=>i<12?'•':c);
   document.getElementById('cardNumDisplay').textContent=masked||'•••• •••• •••• ••••';
 }
 function formatExp(inp){
   let v=inp.value.replace(/\D/g,'');
-  if(v.length>=2) v=v.substring(0,2)+'/'+v.substring(2,4);
+  if(v.length>=2)v=v.substring(0,2)+'/'+v.substring(2,4);
   inp.value=v;
   document.getElementById('cardExpDisplay').textContent=v||'MM/YY';
 }
@@ -2125,85 +1673,46 @@ function selectCrypto(el,coin){
   document.getElementById('cryptoAddress').textContent=addrs[coin]||addrs.BTC;
 }
 function copyCryptoAddress(){
-  const addr=document.getElementById('cryptoAddress').textContent;
-  navigator.clipboard.writeText(addr).then(()=>toast('Address copied!','success'));
+  navigator.clipboard.writeText(document.getElementById('cryptoAddress').textContent)
+    .then(()=>toast('Address copied!','success'));
 }
 function confirmPayment(){
-  const tabs=[...document.querySelectorAll('.pay-tab')];
-  const activeTab=tabs.find(b=>b.classList.contains('active'));
+  const activeTab=document.querySelector('.pay-tab.active');
   const method=activeTab?.textContent.trim()||'Card';
-
-  // ── PayPal: redirect to real PayPal payment ──
   if(method.includes('PayPal')){
-    const amount=currentPayItem.price.toFixed(2);
-    const itemName=encodeURIComponent('FUHA — '+currentPayItem.name);
-    const note=encodeURIComponent('FUHA CS2 Training: '+currentPayItem.name);
-    // Build PayPal.me link (simplest, no API key needed)
-    // Format: https://www.paypal.com/paypalme/USERNAME/AMOUNT
-    // OR direct invoice: https://www.paypal.com/cgi-bin/webscr
-    const paypalUrl=`https://www.paypal.com/cgi-bin/webscr?cmd=_xclick`
-      +`&business=${encodeURIComponent(PAYPAL_EMAIL)}`
-      +`&item_name=${itemName}`
-      +`&amount=${amount}`
-      +`&currency_code=USD`
-      +`&no_shipping=1`
-      +`&return=${encodeURIComponent(window.location.href+'?paid=1')}`
-      +`&cancel_return=${encodeURIComponent(window.location.href)}`
-      +`&custom=${encodeURIComponent((currentUser?.email||'guest')+'|'+currentPayItem.name)}`
-      +`&notify_url=`; // add your IPN url here if you have a backend
     closeModal('payModal');
-    toast('🔄 Redirecting to PayPal...','info');
-    setTimeout(()=>{
-      window.open(paypalUrl,'_blank');
-      // Optimistically mark as paid after redirect (in production verify via IPN/webhook)
-      toast('✅ Complete the payment in the PayPal window!','success');
-      handlePurchaseSuccess();
-    },800);
+    buySubscription(currentPayItem.name.replace(' Plan',''),currentPayItem.price);
     return;
   }
-
-  // ── Card: validate fields ──
-  if(method.includes('Card')){
-    const num=document.getElementById('cardNum').value.replace(/\s/g,'');
-    if(num.length<16){toast('Enter valid card number','error');return}
-    if(!document.getElementById('cardName').value.trim()){toast('Enter cardholder name','error');return}
-    if(!document.getElementById('cardExp').value){toast('Enter expiry date','error');return}
-    if(!document.getElementById('cardCvv').value){toast('Enter CVV','error');return}
-  }
-
-  // ── Crypto: already has address shown, just confirm ──
   if(method.includes('Crypto')){
     closeModal('payModal');
-    toast(`📋 Send $${currentPayItem.price.toFixed(2)} worth of ${selectedCrypto} to the shown address`,'info');
-    setTimeout(()=>{toast('⏳ Payment will be confirmed after 1 blockchain confirmation','info')},2000);
+    toast(`📋 Send $${currentPayItem.price.toFixed(2)} of ${selectedCrypto} to the address shown`,'info');
     return;
   }
-
-  // ── Card: simulate processing ──
+  const num=document.getElementById('cardNum').value.replace(/\s/g,'');
+  if(num.length<16){toast('Enter valid card number','error');return}
+  if(!document.getElementById('cardName').value.trim()){toast('Enter cardholder name','error');return}
+  if(!document.getElementById('cardExp').value){toast('Enter expiry date','error');return}
+  if(!document.getElementById('cardCvv').value){toast('Enter CVV','error');return}
   closeModal('payModal');
-  toast('🔄 Processing payment...','info');
+  toast('🔄 Processing...','info');
   setTimeout(()=>{
     toast(`✅ Payment of $${currentPayItem.price.toFixed(2)} confirmed!`,'success');
     handlePurchaseSuccess();
   },2000);
 }
-
 function handlePurchaseSuccess(){
   spawnConfetti();
-  // Unlock the purchased item
   if(currentPayItem.name.includes('Plan')){
     userPlan=currentPayItem.name.replace(' Plan','');
-    if(currentUser){currentUser.plan=userPlan;saveUser()}
-    const xpBadge=document.getElementById('xpPlanBadge');
-    if(xpBadge) xpBadge.textContent='⭐ '+userPlan;
+    if(currentUser){currentUser.plan=userPlan;saveUser();}
+    document.getElementById('xpPlanBadge').textContent='⭐ '+userPlan;
     setTimeout(()=>toast(`🚀 Welcome to ${userPlan} Plan!`,'success'),600);
   } else {
-    // Find product by name and add to owned
     const product=PRODUCTS.find(p=>p.name===currentPayItem.name);
     if(product&&!ownedCourseIds.includes(product.id)){
       ownedCourseIds.push(product.id);
-      if(currentUser){currentUser.ownedCourses=ownedCourseIds;saveUser()}
-      // Remove from cart if present
+      if(currentUser){currentUser.ownedCourses=ownedCourseIds;saveUser();}
       const idx=cart.findIndex(i=>i.id===product.id);
       if(idx>=0){cart.splice(idx,1);updateCartUI();}
       renderProducts('all');
@@ -2212,45 +1721,23 @@ function handlePurchaseSuccess(){
   }
   gainXP(50);
 }
-
 function openPayFromCheckout(){
   const sub=cart.reduce((s,i)=>s+i.price,0);
   closeModal('checkoutModal');
   currentPayItem={name:'FUHA Cart Order',price:sub*1.1};
-  document.getElementById('payModalTitle').textContent='💳 Cart Checkout';
-  document.getElementById('payItemPreview').innerHTML=`<div class="modal-item"><div class="modal-item-name">FUHA Cart (${cart.length} items)</div><div class="modal-item-price">$${(sub*1.1).toFixed(2)}</div></div>`;
-  const ppName=document.getElementById('ppItemName');
-  const ppTotal=document.getElementById('ppTotal');
-  if(ppName) ppName.textContent=`Cart (${cart.length} items)`;
-  if(ppTotal) ppTotal.textContent='$'+(sub*1.1).toFixed(2);
-  document.getElementById('payBtnAmount').textContent='$'+(sub*1.1).toFixed(2);
-  const firstTab=document.querySelector('.pay-tab');
-  if(firstTab) switchPayTab('card',firstTab);
-  openModal('payModal');
+  openPayModal('FUHA Cart ('+(sub*1.1).toFixed(2)+')',(sub*1.1).toFixed(2));
 }
-
-// Check if returning from PayPal redirect
-(function checkPaypalReturn(){
-  if(window.location.search.includes('paid=1')){
-    setTimeout(()=>{
-      toast('🎉 PayPal payment received! Thank you!','success');
-      spawnConfetti();
-      // Clean URL
-      history.replaceState({},'',window.location.pathname);
-    },500);
-  }
-})();
 
 // ═══════════════════════════════════════════
 // CART
 // ═══════════════════════════════════════════
 function addToCart(id,name,price){
   if(!currentUser){toast('Login to add to cart','error');openModal('authModal');return}
-  if(ownedCourseIds.includes(id)){toast('You already own this course!','info');return}
+  if(ownedCourseIds.includes(id)){toast('You already own this!','info');return}
   if(cart.find(i=>i.id===id)){toast('Already in cart','info');return}
-  cart.push({id,name,price});updateCartUI();toast(`${name} added to cart! 🛒`);
+  cart.push({id,name,price});updateCartUI();toast(`${name} added! 🛒`);
 }
-function removeFromCart(idx){cart.splice(idx,1);updateCartUI();renderCartPage();toast('Item removed','info')}
+function removeFromCart(idx){cart.splice(idx,1);updateCartUI();renderCartPage();toast('Removed','info')}
 function clearCart(){if(!cart.length){toast('Cart is empty','error');return}cart=[];updateCartUI();renderCartPage();toast('Cart cleared','info')}
 function updateCartUI(){
   const badge=document.getElementById('cartBadge');
@@ -2277,7 +1764,7 @@ function updateSummary(){
 function openCheckout(){
   if(!cart.length){toast('Cart is empty!','error');return}
   const sub=cart.reduce((s,i)=>s+i.price,0);
-  document.getElementById('modalItems').innerHTML=cart.map(i=>`<div class="modal-item"><div class="modal-item-name">${i.name}</div><div class="modal-item-price">$${i.price.toFixed(2)}</div></div>`).join('');
+  document.getElementById('modalItems').innerHTML=cart.map(i=>`<div style="display:flex;justify-content:space-between;margin-bottom:.5rem"><span style="font-weight:700">${i.name}</span><span style="color:var(--primary);font-weight:800">$${i.price.toFixed(2)}</span></div>`).join('');
   document.getElementById('modalTotal').textContent='$'+(sub*1.1).toFixed(2);
   openModal('checkoutModal');
 }
@@ -2318,14 +1805,14 @@ const REVIEWS=[
 ];
 const FAQS=[
   {q:'What is FUHA?',a:'FUHA is a professional CS2 training system created by competitive players to help you improve through structured courses, coaching, and analytics.'},
-  {q:'Is there a free trial?',a:'Yes! Every subscription plan includes a 7-day free trial. No credit card required.'},
+  {q:'How do I pay for a subscription?',a:'Click "Купить" on any plan. You\'ll be redirected to PayPal where you can pay by card, bank transfer, or PayPal balance. Secure, instant.'},
   {q:'Can I cancel anytime?',a:'Absolutely — cancel at any time with zero penalties or hidden fees.'},
   {q:'What payment methods are accepted?',a:'We accept Visa, Mastercard, PayPal, and major cryptocurrencies (BTC, ETH, USDT, SOL, TON).'},
   {q:'Do you offer refunds?',a:'Yes. We offer a full 30-day money-back guarantee on all subscriptions.'},
+  {q:'How does Google / Steam login work?',a:'Click the Google or Steam button in the login screen. You\'ll be redirected to the official auth page, then returned automatically. No password needed.'},
   {q:'How long are coaching sessions?',a:'Standard sessions are 60 minutes. Custom durations can be arranged.'},
   {q:'Is there a leaderboard?',a:'Yes! We track Premier rating, session scores, and training progress across all members.'},
   {q:'What rank do I need to join?',a:'FUHA welcomes all ranks — from Silver to Global Elite. Training is tailored to your level.'},
-  {q:'Is there a team discount?',a:'Yes! Teams of 5+ get 20% off Elite plans. Message us on Telegram.'},
   {q:'How does the XP system work?',a:'Earn XP by completing sessions, purchasing courses, and training skills. Level up to unlock achievements!'},
 ];
 const SKILLS=[
@@ -2351,68 +1838,45 @@ function renderSchedule(){
       <ul class="schedule-tasks">${d.tasks.map(t=>`<li>${t}</li>`).join('')}</ul>
       <div class="schedule-status">${{completed:'✓ Completed',today:'▶ Today',upcoming:'⌛ Upcoming'}[d.status]}</div>
     </div>`).join('');
-
-  // render dots
   const dotsEl=document.getElementById('scheduleDots');
-  if(dotsEl){
-    dotsEl.innerHTML=SCHEDULE.map((_,i)=>
-      `<div class="schedule-dot ${i===0?'active':''}" id="sdot${i}" onclick="scheduleScrollTo(${i})"></div>`
-    ).join('');
-  }
-
-  // scroll listener → update active dot + nav buttons
+  if(dotsEl)dotsEl.innerHTML=SCHEDULE.map((_,i)=>`<div class="schedule-dot ${i===0?'active':''}" id="sdot${i}" onclick="scheduleScrollTo(${i})"></div>`).join('');
   const wrap=document.getElementById('scheduleWrap');
   if(wrap){
     wrap.addEventListener('scroll',()=>updateScheduleState(),{passive:true});
-
-    // touch/mouse drag swipe
     let startX=0,scrollStart=0,isDragging=false;
     wrap.addEventListener('mousedown',e=>{isDragging=true;startX=e.pageX;scrollStart=wrap.scrollLeft;wrap.style.userSelect='none'});
     wrap.addEventListener('mousemove',e=>{if(!isDragging)return;wrap.scrollLeft=scrollStart-(e.pageX-startX)});
     wrap.addEventListener('mouseup',()=>{isDragging=false;wrap.style.userSelect=''});
     wrap.addEventListener('mouseleave',()=>{isDragging=false;wrap.style.userSelect=''});
   }
-
-  // auto-scroll to today card
   setTimeout(()=>{
     const todayIdx=SCHEDULE.findIndex(d=>d.status==='today');
-    if(todayIdx>0) scheduleScrollTo(todayIdx);
+    if(todayIdx>0)scheduleScrollTo(todayIdx);
     updateScheduleState();
   },150);
 }
-
 function updateScheduleState(){
-  const wrap=document.getElementById('scheduleWrap');
-  if(!wrap) return;
+  const wrap=document.getElementById('scheduleWrap');if(!wrap)return;
   const cardW=wrap.querySelector('.schedule-card')?.offsetWidth||200;
-  const gap=16;
-  const idx=Math.round(wrap.scrollLeft/(cardW+gap));
-  // update dots
+  const idx=Math.round(wrap.scrollLeft/(cardW+16));
   document.querySelectorAll('.schedule-dot').forEach((d,i)=>d.classList.toggle('active',i===idx));
-  // update nav buttons
-  const prev=document.getElementById('schedPrev');
-  const next=document.getElementById('schedNext');
-  if(prev) prev.disabled=wrap.scrollLeft<10;
-  if(next) next.disabled=wrap.scrollLeft>=(wrap.scrollWidth-wrap.clientWidth-10);
+  const prev=document.getElementById('schedPrev'),next=document.getElementById('schedNext');
+  if(prev)prev.disabled=wrap.scrollLeft<10;
+  if(next)next.disabled=wrap.scrollLeft>=(wrap.scrollWidth-wrap.clientWidth-10);
 }
-
 function scheduleScrollTo(idx){
-  const wrap=document.getElementById('scheduleWrap');
-  if(!wrap) return;
+  const wrap=document.getElementById('scheduleWrap');if(!wrap)return;
   const cardW=wrap.querySelector('.schedule-card')?.offsetWidth||200;
   wrap.scrollTo({left:idx*(cardW+16),behavior:'smooth'});
 }
-
 function scheduleScroll(dir){
-  const wrap=document.getElementById('scheduleWrap');
-  if(!wrap) return;
+  const wrap=document.getElementById('scheduleWrap');if(!wrap)return;
   const cardW=wrap.querySelector('.schedule-card')?.offsetWidth||200;
   wrap.scrollBy({left:dir*(cardW+16),behavior:'smooth'});
 }
-
 function scheduleAction(i){
   const d=SCHEDULE[i];
-  if(d.status==='upcoming'){toast(`${d.day} session added to calendar!`)}
+  if(d.status==='upcoming')toast(`${d.day} session added to calendar!`);
   else if(d.status==='today'){toast(`Starting today's training! 🎮`);gainXP(10)}
   else{toast(`${d.day} complete! 💪 +5 XP`,'info');gainXP(5)}
 }
@@ -2465,19 +1929,13 @@ function renderSkills(){
 }
 function practiceSkill(i){
   const s=SKILLS[i];
-  if(s.pct<100){
-    s.pct=Math.min(100,s.pct+Math.floor(Math.random()*5)+1);
-    if(s.pct>=80&&s.level==='Beginner')s.level='Intermediate';
-    if(s.pct>=90&&s.level==='Intermediate')s.level='Advanced';
-    renderSkills();toast(`${s.name} improved to ${s.pct}%! 💪`);gainXP(5);
-  } else toast(`${s.name} maxed! Legendary 🏆`,'info');
+  if(s.pct<100){s.pct=Math.min(100,s.pct+Math.floor(Math.random()*5)+1);renderSkills();toast(`${s.name} improved to ${s.pct}%! 💪`);gainXP(5);}
+  else toast(`${s.name} maxed! 🏆`,'info');
 }
 function trainRandomSkill(){practiceSkill(Math.floor(Math.random()*SKILLS.length))}
 function animateBars(){document.querySelectorAll('.bar-fill').forEach(el=>el.classList.add('animated'))}
 
-// ═══════════════════════════════════════════
 // DASHBOARD ACTIONS
-// ═══════════════════════════════════════════
 function startSession(){
   const n=parseInt(document.getElementById('sessionsCount').textContent.replace(/,/g,''));
   document.getElementById('sessionsCount').textContent=n+1;
@@ -2486,14 +1944,11 @@ function startSession(){
 }
 function bookSession(player){
   if(!currentUser){toast('Login to book a session','error');openModal('authModal');return}
-  toast(`Session booked with ${player}! Check your email 📧`,'success');
-  gainXP(10);
+  toast(`Session booked with ${player}! Check your email 📧`,'success');gainXP(10);
 }
 function openSupport(){window.open('https://t.me/axo_fuha','_blank')}
 
-// ═══════════════════════════════════════════
 // TWITCH
-// ═══════════════════════════════════════════
 function fixTwitchParent(){
   const host=window.location.hostname||'localhost';
   ['twitchIframe','twitchIframePage'].forEach(id=>{
@@ -2504,37 +1959,15 @@ function fixTwitchParent(){
   if(chat)chat.src=`https://www.twitch.tv/embed/${TWITCH_CH}/chat?parent=${host}&darkpopout`;
 }
 async function checkTwitchStatus(){
-  try{
-    const res=await fetch(`https://api.twitch.tv/helix/streams?user_login=${TWITCH_CH}`,{headers:{'Client-ID':'PLACEHOLDER','Authorization':'Bearer PLACEHOLDER'}});
-    const data=await res.json();
-    handleLiveStatus(data.data&&data.data.length>0,data.data?.[0]?.viewer_count,data.data?.[0]?.game_name);
-  }catch(e){handleLiveStatus(null)}
-}
-function handleLiveStatus(live,viewers,game){
   const block=document.getElementById('twitchBlock'),off=document.getElementById('twitchOfflineBlock');
   const sLive=document.getElementById('streamLiveBlock'),sOff=document.getElementById('streamOfflinePage'),sLoad=document.getElementById('streamLoadingBlock');
-  const navBtn=document.getElementById('streamNavBtn');
   if(sLoad)sLoad.style.display='none';
-  if(live===true){
-    isStreamLive=true;block.classList.add('visible');off.style.display='none';
-    if(sLive)sLive.style.display='block';if(sOff)sOff.style.display='none';
-    if(navBtn)navBtn.classList.add('live-nav');
-    if(viewers){document.getElementById('viewerCount').textContent=viewers.toLocaleString();const spv=document.getElementById('streamPageViewers');if(spv)spv.textContent=viewers.toLocaleString()}
-    if(game){document.getElementById('twitchGameInfo').textContent='🎮 '+game;const spg=document.getElementById('streamPageGameInfo');if(spg)spg.textContent='🎮 '+game}
-  } else if(live===false){
-    isStreamLive=false;block.classList.remove('visible');off.style.display='flex';
-    if(sLive)sLive.style.display='none';if(sOff)sOff.style.display='block';
-    if(navBtn)navBtn.classList.remove('live-nav');
-  } else {
-    isStreamLive=false;block.classList.add('visible');off.style.display='none';
-    if(sLive)sLive.style.display='block';if(sOff)sOff.style.display='none';
-    document.getElementById('viewerCount').textContent='—';
-  }
+  // Show embed by default (no valid client ID for status check in frontend)
+  isStreamLive=false;block.classList.remove('visible');off.style.display='flex';
+  if(sLive)sLive.style.display='none';if(sOff)sOff.style.display='block';
 }
 
-// ═══════════════════════════════════════════
 // MOBILE MENU
-// ═══════════════════════════════════════════
 function toggleMobileMenu(){
   const nav=document.getElementById('mainNav');
   const vis=nav.style.display==='flex';
@@ -2542,10 +1975,6 @@ function toggleMobileMenu(){
   if(!vis){Object.assign(nav.style,{flexDirection:'column',position:'absolute',top:'56px',left:'0',right:'0',background:'var(--surface)',padding:'1rem',borderBottom:'1px solid var(--border)',gap:'.5rem',zIndex:'400'})}
 }
 function mobileMoreMenu(){openModal('mobileMoreModal')}
-
-// ═══════════════════════════════════════════
-// FUN & EASTER EGGS
-// ═══════════════════════════════════════════
 
 // CONFETTI
 function spawnConfetti(){
@@ -2558,42 +1987,33 @@ function spawnConfetti(){
     c.style.borderRadius=Math.random()>.5?'50%':'2px';
     c.style.animationDuration=(1.5+Math.random()*2)+'s';
     c.style.animationDelay=(Math.random()*.5)+'s';
-    document.body.appendChild(c);
-    setTimeout(()=>c.remove(),3000);
+    document.body.appendChild(c);setTimeout(()=>c.remove(),3000);
   }
 }
 
-// AIMBOT MODE 🎯
+// AIMBOT MODE
 let aimbotActive=false;
 function activateAimbot(){
   aimbotActive=!aimbotActive;
-  const overlay=document.getElementById('aimbot-overlay');
-  if(!overlay){const o=document.createElement('div');o.id='aimbot-overlay';o.style.cssText='display:none;position:fixed;inset:0;z-index:99992;pointer-events:none';document.body.appendChild(o)}
-  const el=document.getElementById('aimbot-overlay');
+  const el=document.getElementById('aimbot-overlay')||Object.assign(document.createElement('div'),{id:'aimbot-overlay'});
+  if(!el.parentNode)document.body.appendChild(el);
   if(aimbotActive){
     el.style.display='block';
     el.innerHTML='<div class="crosshair" id="aimbotCrosshair"><div class="crosshair-ring"></div></div>';
-    toast('🎯 Aimbot Mode ACTIVATED! (click again to disable)','info');
-    let targets=[];
-    const moveCrosshair=()=>{
+    toast('🎯 Aimbot Mode ACTIVATED!','info');
+    const move=()=>{
       if(!aimbotActive)return;
-      const allBtns=[...document.querySelectorAll('.btn,.quick-action,.stat-card,.player-card,.product-card')];
-      if(!allBtns.length){setTimeout(moveCrosshair,500);return}
-      const tgt=allBtns[Math.floor(Math.random()*allBtns.length)];
-      const r=tgt.getBoundingClientRect();
-      const cx=r.left+r.width/2,cy=r.top+r.height/2;
+      const all=[...document.querySelectorAll('.btn,.quick-action,.stat-card')];
+      if(!all.length){setTimeout(move,500);return}
+      const t=all[Math.floor(Math.random()*all.length)].getBoundingClientRect();
       const ch=document.getElementById('aimbotCrosshair');
-      if(ch){ch.style.left=(cx-20)+'px';ch.style.top=(cy-20)+'px'}
-      setTimeout(moveCrosshair,600+Math.random()*400);
-    };
-    moveCrosshair();
-  } else {
-    el.style.display='none';el.innerHTML='';
-    toast('Aimbot Mode disabled','info');
-  }
+      if(ch){ch.style.left=(t.left+t.width/2-20)+'px';ch.style.top=(t.top+t.height/2-20)+'px'}
+      setTimeout(move,600+Math.random()*400);
+    };move();
+  } else {el.style.display='none';el.innerHTML='';toast('Aimbot disabled','info')}
 }
 
-// KONAMI CODE 🎮
+// KONAMI CODE
 let konamiSeq=[],konamiCode=['ArrowUp','ArrowUp','ArrowDown','ArrowDown','ArrowLeft','ArrowRight','ArrowLeft','ArrowRight','b','a'];
 document.addEventListener('keydown',e=>{
   konamiSeq.push(e.key);if(konamiSeq.length>10)konamiSeq.shift();
@@ -2601,56 +2021,26 @@ document.addEventListener('keydown',e=>{
     konamiSeq=[];
     const flash=document.createElement('div');flash.className='konami-flash';document.body.appendChild(flash);
     setTimeout(()=>flash.remove(),600);
-    spawnConfetti();
-    toast('🎮 KONAMI CODE ACTIVATED! +100 XP 🎉','success');
-    gainXP(100);
-    // Matrix-style rain effect for 3 seconds
-    const canvas=document.createElement('canvas');canvas.style.cssText='position:fixed;inset:0;z-index:99993;pointer-events:none;opacity:.4';document.body.appendChild(canvas);
-    canvas.width=window.innerWidth;canvas.height=window.innerHeight;
-    const ctx=canvas.getContext('2d');ctx.font='14px JetBrains Mono';
-    const cols=Math.floor(canvas.width/14),drops=Array(cols).fill(0);
-    const matrix=()=>{ctx.fillStyle='rgba(7,8,15,.05)';ctx.fillRect(0,0,canvas.width,canvas.height);ctx.fillStyle='#ff6b35';drops.forEach((y,i)=>{ctx.fillText(String.fromCharCode(0x30A0+Math.random()*96),i*14,y*14);if(y*14>canvas.height&&Math.random()>.975)drops[i]=0;drops[i]++});};
-    const matrixInterval=setInterval(matrix,33);
-    setTimeout(()=>{clearInterval(matrixInterval);canvas.remove()},3000);
+    spawnConfetti();toast('🎮 KONAMI CODE! +100 XP 🎉','success');gainXP(100);
   }
+  if((e.key==='m'||e.key==='M')&&!e.target.matches('input,textarea,select'))
+    document.getElementById('musicPlayer').classList.add('visible');
 });
 
-// SECRET CLICK COUNTER on logo
-let logoClicks=0,logoTimer=null;
-document.querySelector('.logo').addEventListener('click',()=>{
-  logoClicks++;clearTimeout(logoTimer);
-  logoTimer=setTimeout(()=>logoClicks=0,2000);
-  if(logoClicks>=7){logoClicks=0;toast('🤫 You found the secret! AXO says hi 👑','info');spawnConfetti();gainXP(25)}
-});
-
-// RANDOM KILL FEED (fun popup)
-const killMessages=['⚡ H9ito just got an ACE on Dust2!','👑 AXO clutched a 1v4 on Nuke!','🛡️ Danixx dropped a 40-bomb!','🔥 FUHA is on a 12-match win streak!','🎯 AXO hit a no-scope from CT spawn!','💣 H9ito force-bought and won the round!'];
-let killFeedInterval=setInterval(()=>{
-  if(document.getElementById('dashboard').classList.contains('active')){
-    const msg=killMessages[Math.floor(Math.random()*killMessages.length)];
-    toast(msg,'info');
-  }
+// RANDOM KILL FEED
+const killMessages=['⚡ H9ito just got an ACE on Dust2!','👑 AXO clutched a 1v4 on Nuke!','🛡️ Danixx dropped a 40-bomb!','🔥 FUHA is on a 12-match win streak!'];
+setInterval(()=>{
+  if(document.getElementById('dashboard').classList.contains('active'))
+    toast(killMessages[Math.floor(Math.random()*killMessages.length)],'info');
 },18000);
 
-// IDLE animation on stats
-document.querySelectorAll('.stat-num').forEach(el=>{
-  el.addEventListener('click',()=>{
-    el.style.animation='none';
-    setTimeout(()=>{el.style.animation='hexPulse .5s ease';},10);
-  });
-});
-
-// ═══════════════════════════════════════════
 // PROFILE EDITOR
-// ═══════════════════════════════════════════
 const AVATAR_EMOJIS=['👑','⚡','🛡️','🎯','🔥','💀','🤖','🐉','🦊','🎮','💎','🏆','🦅','🐺','⚔️','🌪️'];
 const AVATAR_COLORS=['linear-gradient(135deg,#ff6b35,#f7931e)','linear-gradient(135deg,#9146ff,#7b3fe4)','linear-gradient(135deg,#00c6ff,#0072ff)','linear-gradient(135deg,#39d353,#2ea043)','linear-gradient(135deg,#ff006e,#8338ec)','linear-gradient(135deg,#ffcc00,#ff6b35)','linear-gradient(135deg,#00f5ff,#0088cc)','linear-gradient(135deg,#f44336,#b71c1c)'];
 const RAW_COLORS=['#ff6b35','#9146ff','#00c6ff','#39d353','#ff006e','#ffcc00','#00f5ff','#f44336'];
-let editAvatarEmoji=0, editAvatarColor=0;
-
+let editAvatarEmoji=0,editAvatarColor=0;
 function openProfileEditor(){
   if(!currentUser){toast('Login first','error');openModal('authModal');return}
-  // Pre-fill
   const u=currentUser;
   document.getElementById('editUsername').value=u.username||'';
   document.getElementById('editCountry').value=u.country||'';
@@ -2661,83 +2051,63 @@ function openProfileEditor(){
   document.getElementById('editRating').value=u.rating||'';
   document.getElementById('editHours').value=u.hours||'';
   document.getElementById('editWeapon').value=u.weapon||'AK-47';
-  editAvatarEmoji=AVATAR_EMOJIS.indexOf(u.avatarEmoji||'👑');
-  if(editAvatarEmoji<0)editAvatarEmoji=0;
+  editAvatarEmoji=Math.max(0,AVATAR_EMOJIS.indexOf(u.avatarEmoji||'👑'));
   editAvatarColor=u.avatarColor||0;
   renderEmojiPicker();renderColorPicker();updateEditPreview();
   openModal('profileEditModal');
 }
-
-function renderEmojiPicker(){
-  document.getElementById('emojiRow').innerHTML=AVATAR_EMOJIS.map((e,i)=>
-    `<div class="avatar-emoji-btn ${i===editAvatarEmoji?'selected':''}" onclick="selectEmoji(${i})">${e}</div>`
-  ).join('');
-}
-function renderColorPicker(){
-  document.getElementById('colorRow').innerHTML=RAW_COLORS.map((c,i)=>
-    `<div class="avatar-color-btn ${i===editAvatarColor?'selected':''}" style="background:${c}" onclick="selectColor(${i})"></div>`
-  ).join('');
-}
+function renderEmojiPicker(){document.getElementById('emojiRow').innerHTML=AVATAR_EMOJIS.map((e,i)=>`<div class="avatar-emoji-btn ${i===editAvatarEmoji?'selected':''}" onclick="selectEmoji(${i})">${e}</div>`).join('')}
+function renderColorPicker(){document.getElementById('colorRow').innerHTML=RAW_COLORS.map((c,i)=>`<div class="avatar-color-btn ${i===editAvatarColor?'selected':''}" style="background:${c}" onclick="selectColor(${i})"></div>`).join('')}
 function selectEmoji(i){editAvatarEmoji=i;renderEmojiPicker();updateEditPreview()}
 function selectColor(i){editAvatarColor=i;renderColorPicker();updateEditPreview()}
 function cycleAvatarEmoji(){editAvatarEmoji=(editAvatarEmoji+1)%AVATAR_EMOJIS.length;renderEmojiPicker();updateEditPreview()}
 function updateEditPreview(){
   const el=document.getElementById('editAvatarPreview');
   el.textContent=AVATAR_EMOJIS[editAvatarEmoji];
-  el.style.background=AVATAR_COLORS[editAvatarColor];
-  el.style.fontSize='2rem';
+  el.style.background=AVATAR_COLORS[editAvatarColor];el.style.fontSize='2rem';
 }
-
 function switchEditTab(tab,btn){
-  document.querySelectorAll('.edit-tab').forEach(b=>b.classList.remove('active'));
-  btn.classList.add('active');
+  document.querySelectorAll('.edit-tab').forEach(b=>b.classList.remove('active'));btn.classList.add('active');
   ['editTabAvatar','editTabInfo','editTabCs2'].forEach(id=>document.getElementById(id).style.display='none');
-  const map={avatar:'editTabAvatar',info:'editTabInfo',cs2:'editTabCs2'};
-  document.getElementById(map[tab]).style.display='block';
+  document.getElementById({avatar:'editTabAvatar',info:'editTabInfo',cs2:'editTabCs2'}[tab]).style.display='block';
 }
-
 function saveProfileEdit(){
   if(!currentUser)return;
-  currentUser.username=document.getElementById('editUsername').value.trim()||currentUser.username;
-  currentUser.country=document.getElementById('editCountry').value.trim();
-  currentUser.bio=document.getElementById('editBio').value.trim();
-  currentUser.discord=document.getElementById('editDiscord').value.trim();
-  currentUser.mainMap=document.getElementById('editMap').value;
-  currentUser.role=document.getElementById('editRole').value;
-  currentUser.rating=document.getElementById('editRating').value;
-  currentUser.hours=document.getElementById('editHours').value;
-  currentUser.weapon=document.getElementById('editWeapon').value;
-  currentUser.avatarEmoji=AVATAR_EMOJIS[editAvatarEmoji];
-  currentUser.avatarColor=editAvatarColor;
-  // Update header avatar
-  const initials=currentUser.avatarEmoji||currentUser.username.substring(0,2).toUpperCase();
+  Object.assign(currentUser,{
+    username:document.getElementById('editUsername').value.trim()||currentUser.username,
+    country:document.getElementById('editCountry').value.trim(),
+    bio:document.getElementById('editBio').value.trim(),
+    discord:document.getElementById('editDiscord').value.trim(),
+    mainMap:document.getElementById('editMap').value,
+    role:document.getElementById('editRole').value,
+    rating:document.getElementById('editRating').value,
+    hours:document.getElementById('editHours').value,
+    weapon:document.getElementById('editWeapon').value,
+    avatarEmoji:AVATAR_EMOJIS[editAvatarEmoji],
+    avatarColor:editAvatarColor,
+  });
   document.getElementById('userAvatarBtn').textContent=currentUser.avatarEmoji||currentUser.username.substring(0,2).toUpperCase();
   document.getElementById('userAvatarBtn').style.background=AVATAR_COLORS[editAvatarColor];
-  saveUser();
-  closeModal('profileEditModal');
-  updateProfilePage();
+  saveUser();closeModal('profileEditModal');updateProfilePage();
   toast('Profile updated! 🎉','success');gainXP(10);
 }
-
 function updateProfilePage(){
   if(!currentUser)return;
   const u=currentUser;
   const emoji=u.avatarEmoji||u.username.substring(0,2).toUpperCase();
   const avatarEl=document.getElementById('profileAvatar');
-  avatarEl.textContent=emoji;
-  avatarEl.style.background=AVATAR_COLORS[u.avatarColor||0];
+  avatarEl.textContent=emoji;avatarEl.style.background=AVATAR_COLORS[u.avatarColor||0];
   avatarEl.style.fontSize=u.avatarEmoji?'2rem':'2.2rem';
   document.getElementById('profileUsername').textContent=u.username;
   document.getElementById('profileEmail').textContent=u.email;
-  const countryEl=document.getElementById('profileCountry');
-  if(u.country){countryEl.textContent=u.country;countryEl.style.display='block'}else{countryEl.style.display='none'}
+  const cEl=document.getElementById('profileCountry');
+  if(u.country){cEl.textContent=u.country;cEl.style.display='block'}else cEl.style.display='none';
   document.getElementById('profilePlan').textContent='⭐ '+userPlan+' Plan';
   const bioEl=document.getElementById('profileBioWrap');
-  if(u.bio){bioEl.textContent='"'+u.bio+'"';bioEl.style.display='block'}else{bioEl.style.display='none'}
-  // CS2 info
-  const cs2Wrap=document.getElementById('profileCs2Info');
+  if(u.bio){bioEl.textContent='"'+u.bio+'"';bioEl.style.display='block'}else bioEl.style.display='none';
+  const cs2=document.getElementById('profileCs2Info');
   if(u.role||u.rating){
-    cs2Wrap.style.display='block';
+    cs2.style.display='block';
     const roleIcons={IGL:'👑','Entry Fragger':'⚡',Support:'🛡️',AWPer:'🎯',Lurker:'👤',Rifler:'🔫'};
     document.getElementById('profileRoleIcon').textContent=roleIcons[u.role]||'🎮';
     document.getElementById('profileRole').textContent=u.role||'Player';
@@ -2745,25 +2115,44 @@ function updateProfilePage(){
     document.getElementById('profileMap').textContent='🗺️ '+(u.mainMap||'—');
     document.getElementById('profileWeapon').textContent='🔫 '+(u.weapon||'—');
     document.getElementById('profileHours').textContent='⏱ '+(u.hours||'—')+'h';
-  } else cs2Wrap.style.display='none';
-  // Discord
+  } else cs2.style.display='none';
   const discEl=document.getElementById('profileDiscordWrap');
-  if(u.discord){document.getElementById('profileDiscord').textContent=u.discord;discEl.style.display='block'}else{discEl.style.display='none'}
-  // Stats
+  if(u.discord){document.getElementById('profileDiscord').textContent=u.discord;discEl.style.display='block'}else discEl.style.display='none';
   document.getElementById('profileSessions').textContent=userSessions;
   document.getElementById('profileXp').textContent=userXP;
   document.getElementById('profileLevel').textContent=userLevel;
   document.getElementById('profileCourses').textContent=ownedCourseIds.length;
-  // Streak
   const streak=parseInt(localStorage.getItem('fuhaStreak')||'0');
   document.getElementById('profileStreakBadge').textContent=`🔥 ${streak} day streak`;
-  document.getElementById('profileStreakWrap').style.display='block';
   renderAchievements();renderOwnedCourses();renderSkillSnapshot();
 }
-
+function renderAchievements(){
+  const achs=[
+    {icon:'🎯',name:'First Blood',desc:'Complete your first training session',earned:userSessions>=1,badge:'Bronze'},
+    {icon:'🔥',name:'On Fire',desc:'Complete 10 sessions',earned:userSessions>=10,badge:'Silver'},
+    {icon:'👑',name:'FUHA Legend',desc:'Reach Level 5',earned:userLevel>=5,badge:'Gold'},
+    {icon:'📚',name:'Knowledge Seeker',desc:'Purchase 3 courses',earned:ownedCourseIds.length>=3,badge:'Silver'},
+    {icon:'💪',name:'Grinder',desc:'50 training sessions',earned:userSessions>=50,badge:'Gold'},
+    {icon:'🏆',name:'Pro Member',desc:'Subscribe to Pro or Elite plan',earned:userPlan!=='Free',badge:'Platinum'},
+  ];
+  document.getElementById('achievementList').innerHTML=achs.map(a=>`
+    <div class="achievement-item" style="${!a.earned?'opacity:.4;filter:grayscale(1)':''}">
+      <div class="achievement-icon">${a.icon}</div>
+      <div><div class="achievement-name">${a.name}</div><div class="achievement-desc">${a.desc}</div></div>
+      ${a.earned?`<div class="achievement-badge">${a.badge}</div>`:''}
+    </div>`).join('');
+}
+function renderOwnedCourses(){
+  const el=document.getElementById('ownedCourses');
+  if(!ownedCourseIds.length){el.innerHTML='<div style="color:var(--gray);font-size:.9rem;grid-column:1/-1">No courses yet — <span style="color:var(--primary);cursor:none" onclick="showPage(\'shop\')">browse shop →</span></div>';return}
+  el.innerHTML=ownedCourseIds.map(id=>{
+    const p=PRODUCTS.find(x=>x.id===id);
+    if(!p)return '';
+    return `<div class="owned-course-card clickable"><div class="owned-course-icon">${p.icon}</div><div class="owned-course-name">${p.name}</div><div style="font-size:.72rem;color:var(--success);margin-top:.2rem;font-weight:700">✓ Owned</div></div>`;
+  }).join('');
+}
 function renderSkillSnapshot(){
-  const el=document.getElementById('profileSkillSnapshot');
-  if(!el)return;
+  const el=document.getElementById('profileSkillSnapshot');if(!el)return;
   el.innerHTML=SKILLS.map(s=>`
     <div class="stat-bar" style="margin-bottom:.7rem">
       <div class="stat-bar-header"><span class="stat-bar-label">${s.icon} ${s.name}</span><span class="stat-bar-val">${s.pct}%</span></div>
@@ -2771,24 +2160,14 @@ function renderSkillSnapshot(){
     </div>`).join('');
 }
 
-// ═══════════════════════════════════════════
-// MUSIC PLAYER (virtual / fake but fun)
-// ═══════════════════════════════════════════
-const TRACKS=[
-  {title:'CSGO Frag Mix Vol.1',dur:'3:24',durSec:204},
-  {title:'Clutch Round Anthem',dur:'4:12',durSec:252},
-  {title:'Headshot Compilation',dur:'2:58',durSec:178},
-  {title:'FUHA Training BGM',dur:'5:01',durSec:301},
-  {title:'Lofi CS2 Study Beat',dur:'3:45',durSec:225},
-];
+// MUSIC PLAYER
+const TRACKS=[{title:'CSGO Frag Mix Vol.1',dur:'3:24',durSec:204},{title:'Clutch Round Anthem',dur:'4:12',durSec:252},{title:'Headshot Compilation',dur:'2:58',durSec:178},{title:'FUHA Training BGM',dur:'5:01',durSec:301}];
 let musicTrack=0,musicPlaying=false,musicMuted=false,musicProgress=0,musicTimer=null;
-
 function togglePlay(){
   musicPlaying=!musicPlaying;
   document.getElementById('playBtn').textContent=musicPlaying?'⏸️':'▶️';
   if(musicPlaying){
     musicTimer=setInterval(()=>{
-      if(!musicPlaying)return;
       musicProgress+=100/TRACKS[musicTrack].durSec;
       if(musicProgress>=100){musicProgress=0;nextTrack();return}
       document.getElementById('musicFill').style.width=musicProgress+'%';
@@ -2807,145 +2186,218 @@ function loadTrack(){
   if(musicPlaying){clearInterval(musicTimer);musicPlaying=false;togglePlay()}
 }
 function toggleMute(){musicMuted=!musicMuted;document.getElementById('muteBtn').textContent=musicMuted?'🔇':'🔊'}
-function seekMusic(e){const w=e.currentTarget.offsetWidth;musicProgress=(e.offsetX/w)*100;document.getElementById('musicFill').style.width=musicProgress+'%'}
-function openMusicPlayer(){document.getElementById('musicPlayer').classList.add('visible')}
+function seekMusic(e){musicProgress=(e.offsetX/e.currentTarget.offsetWidth)*100;document.getElementById('musicFill').style.width=musicProgress+'%'}
 
-// ═══════════════════════════════════════════
 // DAILY STREAK
-// ═══════════════════════════════════════════
 function checkStreak(){
-  const today=new Date().toDateString();
-  const last=localStorage.getItem('fuhaLastVisit');
+  const today=new Date().toDateString(),last=localStorage.getItem('fuhaLastVisit');
   let streak=parseInt(localStorage.getItem('fuhaStreak')||'0');
-  if(last===today){return}
-  const yesterday=new Date(Date.now()-86400000).toDateString();
-  if(last===yesterday){streak++}else{streak=1}
-  localStorage.setItem('fuhaStreak',streak);
-  localStorage.setItem('fuhaLastVisit',today);
+  if(last===today)return;
+  streak=last===new Date(Date.now()-86400000).toDateString()?streak+1:1;
+  localStorage.setItem('fuhaStreak',streak);localStorage.setItem('fuhaLastVisit',today);
   if(streak>1)setTimeout(()=>toast(`🔥 Day ${streak} streak! +${streak*5} XP`,'info'),2000);
 }
 
-// ═══════════════════════════════════════════
-// INIT
-// ═══════════════════════════════════════════
-document.addEventListener('DOMContentLoaded',()=>{
-  fixTwitchParent();checkTwitchStatus();
-  setInterval(checkTwitchStatus,3*60*1000);
-  renderSchedule();renderProducts('all');renderReviews();renderFaq();renderSkills();renderCartPage();
-  checkStreak();
-  // Restore session
-  const savedEmail=sessionStorage.getItem('fuhaCurrentUser');
-  if(savedEmail){
-    const users=JSON.parse(localStorage.getItem('fuhaUsers')||'{}');
-    if(users[savedEmail])loginSuccess(users[savedEmail]);
-  }
-  // Tip
-  setTimeout(()=>toast('🎵 Press M to open music player!','info'),5000);
-  // Typing effect on hero
-  const h2=document.querySelector('.hero-banner h2');
-  if(h2){h2.dataset.text='Level Up Your Game,'}
-});
-
-// ═══════════════════════════════════════════
-// 🌸 SPRING FEATURES
-// ═══════════════════════════════════════════
-
-// Falling petals background
-const PETALS = ['🌸','🌺','🌼','🍃','🌿','🌷','✿','❀'];
-function spawnPetals() {
-  for (let i = 0; i < 12; i++) {
-    const p = document.createElement('div');
-    p.className = 'petal';
-    p.textContent = PETALS[Math.floor(Math.random() * PETALS.length)];
-    p.style.left = Math.random() * 100 + 'vw';
-    p.style.animationDuration = (10 + Math.random() * 18) + 's';
-    p.style.animationDelay = (-Math.random() * 18) + 's';
-    p.style.fontSize = (.7 + Math.random() * .8) + 'rem';
+// 🌸 SPRING
+const PETALS=['🌸','🌺','🌼','🍃','🌿','🌷','✿','❀'];
+(function spawnPetals(){
+  for(let i=0;i<12;i++){
+    const p=document.createElement('div');p.className='petal';
+    p.textContent=PETALS[Math.floor(Math.random()*PETALS.length)];
+    p.style.left=Math.random()*100+'vw';
+    p.style.animationDuration=(10+Math.random()*18)+'s';
+    p.style.animationDelay=(-Math.random()*18)+'s';
+    p.style.fontSize=(.7+Math.random()*.8)+'rem';
     document.body.appendChild(p);
   }
-}
-spawnPetals();
-
-// Spring burst on button click
-function springBurst() {
-  const emojis = ['🌸','🌺','🌼','🍀','🌷','🌻','🦋','🐝','🌿'];
-  for (let i = 0; i < 35; i++) {
-    const el = document.createElement('div');
-    el.className = 'confetti-piece';
-    el.textContent = emojis[Math.floor(Math.random() * emojis.length)];
-    el.style.cssText = `left:${Math.random()*100}vw;top:-10px;width:auto;height:auto;background:none;font-size:${1+Math.random()}rem;animation-duration:${2+Math.random()*2}s;animation-delay:${Math.random()*.4}s`;
-    document.body.appendChild(el);
-    setTimeout(() => el.remove(), 4000);
+})();
+function springBurst(){
+  const emojis=['🌸','🌺','🌼','🍀','🌷','🌻','🦋','🐝','🌿'];
+  for(let i=0;i<35;i++){
+    const el=document.createElement('div');el.className='confetti-piece';
+    el.textContent=emojis[Math.floor(Math.random()*emojis.length)];
+    el.style.cssText=`left:${Math.random()*100}vw;top:-10px;width:auto;height:auto;background:none;font-size:${1+Math.random()}rem;animation-duration:${2+Math.random()*2}s;animation-delay:${Math.random()*.4}s`;
+    document.body.appendChild(el);setTimeout(()=>el.remove(),4000);
   }
-  toast('🌸 Happy Spring from FUHA! +10 XP', 'success');
-  gainXP(10);
+  toast('🌸 Happy Spring! +10 XP','success');gainXP(10);
 }
+let lastTrail=0;
+document.addEventListener('mousemove',e=>{
+  if(window.innerWidth<768)return;
+  const now=Date.now();if(now-lastTrail<120)return;lastTrail=now;
+  if(Math.random()>.4)return;
+  const el=document.createElement('div');el.className='blossom-trail';
+  el.textContent=PETALS[Math.floor(Math.random()*PETALS.length)];
+  el.style.left=e.clientX+'px';el.style.top=e.clientY+'px';
+  document.body.appendChild(el);setTimeout(()=>el.remove(),900);
+});
+function updateSpringCountdown(){
+  const end=new Date('2026-04-30T23:59:59'),diff=end-new Date();
+  const pad=n=>String(Math.max(0,n)).padStart(2,'0');
+  if(diff<=0){['cdDays','cdHours','cdMins','cdSecs'].forEach(id=>{const e=document.getElementById(id);if(e)e.textContent='00'});return}
+  const days=Math.floor(diff/86400000),hours=Math.floor((diff%86400000)/3600000),mins=Math.floor((diff%3600000)/60000),secs=Math.floor((diff%60000)/1000);
+  const set=(id,v)=>{const e=document.getElementById(id);if(e)e.textContent=pad(v)};
+  set('cdDays',days);set('cdHours',hours);set('cdMins',mins);set('cdSecs',secs);
+  const sc=document.getElementById('subCountdown');if(sc)sc.textContent=`${pad(days)}d ${pad(hours)}:${pad(mins)}:${pad(secs)}`;
+}
+updateSpringCountdown();setInterval(updateSpringCountdown,1000);
 
-// Blossom cursor trail (desktop only)
-let lastTrail = 0;
-document.addEventListener('mousemove', e => {
-  if (window.innerWidth < 768) return;
-  const now = Date.now();
-  if (now - lastTrail < 120) return;
-  lastTrail = now;
-  if (Math.random() > 0.4) return; // only sometimes
-  const el = document.createElement('div');
-  el.className = 'blossom-trail';
-  el.textContent = PETALS[Math.floor(Math.random() * PETALS.length)];
-  el.style.left = e.clientX + 'px';
-  el.style.top = e.clientY + 'px';
-  document.body.appendChild(el);
-  setTimeout(() => el.remove(), 900);
+// INIT
+document.addEventListener('DOMContentLoaded',()=>{
+  fixTwitchParent();checkTwitchStatus();
+  renderSchedule();renderProducts('all');renderReviews();renderFaq();renderSkills();renderCartPage();
+  checkStreak();
+  const savedEmail=sessionStorage.getItem('fuhaCurrentUser');
+  if(savedEmail){const users=JSON.parse(localStorage.getItem('fuhaUsers')||'{}');if(users[savedEmail])loginSuccess(users[savedEmail]);}
+  setTimeout(()=>toast('🎵 Press M for music player • demo@fuha.gg / demo123','info'),4000);
 });
 
-// Spring sale countdown to April 30
-function updateSpringCountdown() {
-  const end = new Date('2026-04-30T23:59:59');
-  const now = new Date();
-  const diff = end - now;
-  if (diff <= 0) {
-    ['cdDays','cdHours','cdMins','cdSecs'].forEach(id => {
-      const el = document.getElementById(id);
-      if (el) el.textContent = '00';
-    });
-    const sc = document.getElementById('subCountdown');
-    if (sc) sc.textContent = 'ENDED';
+// ═══════════════════════════════════════════════════════
+// REAL GOOGLE OAUTH + REAL STEAM OPENID + buySubscription
+// ═══════════════════════════════════════════════════════
+
+// ⚠️ Замените YOUR_GOOGLE_CLIENT_ID на ваш Client ID из console.cloud.google.com
+const GOOGLE_CLIENT_ID = 'YOUR_GOOGLE_CLIENT_ID';
+
+// ── Google OAuth 2.0 (Implicit Flow) ──────────────────
+function oauthLoginGoogle() {
+  if (GOOGLE_CLIENT_ID === 'YOUR_GOOGLE_CLIENT_ID') {
+    toast('⚙️ Настройте Google OAuth: замените GOOGLE_CLIENT_ID в коде', 'error');
     return;
   }
-  const days  = Math.floor(diff / 86400000);
-  const hours = Math.floor((diff % 86400000) / 3600000);
-  const mins  = Math.floor((diff % 3600000) / 60000);
-  const secs  = Math.floor((diff % 60000) / 1000);
-  const pad = n => String(n).padStart(2,'0');
-
-  const cdDays = document.getElementById('cdDays');
-  const cdHours = document.getElementById('cdHours');
-  const cdMins = document.getElementById('cdMins');
-  const cdSecs = document.getElementById('cdSecs');
-  const subCd = document.getElementById('subCountdown');
-
-  if (cdDays)  cdDays.textContent  = pad(days);
-  if (cdHours) cdHours.textContent = pad(hours);
-  if (cdMins)  cdMins.textContent  = pad(mins);
-  if (cdSecs)  cdSecs.textContent  = pad(secs);
-  if (subCd)   subCd.textContent   = `${pad(days)}d ${pad(hours)}:${pad(mins)}:${pad(secs)}`;
+  const params = new URLSearchParams({
+    client_id:     GOOGLE_CLIENT_ID,
+    redirect_uri:  window.location.origin + window.location.pathname,
+    response_type: 'token',
+    scope:         'openid email profile',
+    state:         'google_login',
+  });
+  window.location.href = 'https://accounts.google.com/o/oauth2/v2/auth?' + params;
 }
-updateSpringCountdown();
-setInterval(updateSpringCountdown, 1000);
 
-// M key opens music
-document.addEventListener('keydown',e=>{
-  if(e.key==='m'||e.key==='M'){
-    if(!e.target.matches('input,textarea,select')){
-      openMusicPlayer();
-    }
+// ── Steam OpenID 2.0 ──────────────────────────────────
+function oauthLoginSteam() {
+  const base   = window.location.href.split('?')[0];
+  const realm  = encodeURIComponent(window.location.origin);
+  const ret    = encodeURIComponent(base + '?steam_return=1');
+  const ns     = encodeURIComponent('http://specs.openid.net/auth/2.0');
+  const ident  = encodeURIComponent('http://specs.openid.net/auth/2.0/identifier_select');
+  window.location.href =
+    'https://steamcommunity.com/openid/login'
+    + '?openid.ns='         + ns
+    + '&openid.mode=checkid_setup'
+    + '&openid.return_to='  + ret
+    + '&openid.realm='      + realm
+    + '&openid.identity='   + ident
+    + '&openid.claimed_id=' + ident;
+}
+
+// ── Обработка возврата OAuth на странице ─────────────
+(function handleOAuthReturn() {
+  const params = new URLSearchParams(window.location.search);
+  const hash   = new URLSearchParams(window.location.hash.slice(1));
+
+  // Google возвращает access_token в хэше
+  if (hash.get('access_token') && (params.get('state') === 'google_login' || hash.get('state') === 'google_login')) {
+    const token = hash.get('access_token');
+    history.replaceState({}, '', window.location.pathname);
+    fetch('https://www.googleapis.com/oauth2/v3/userinfo', {
+      headers: { Authorization: 'Bearer ' + token }
+    })
+    .then(r => r.json())
+    .then(info => {
+      const users = JSON.parse(localStorage.getItem('fuhaUsers') || '{}');
+      const key   = 'google_' + info.sub;
+      if (!users[key]) {
+        users[key] = {
+          username:     info.name || info.email.split('@')[0],
+          email:        info.email,
+          avatarEmoji:  '🔵',
+          avatarColor:  2,
+          plan:         'Free',
+          xp:           0, level: 1, sessions: 0, ownedCourses: [],
+          googleId:     info.sub,
+        };
+        localStorage.setItem('fuhaUsers', JSON.stringify(users));
+      }
+      setTimeout(() => loginSuccess(users[key]), 400);
+      toast('✅ Вход через Google выполнен!', 'success');
+    })
+    .catch(() => toast('Ошибка Google авторизации', 'error'));
+    return;
   }
-});
 
-// Spring toast on first visit
-setTimeout(() => {
-  toast('🌸 Spring Sale активен! До 30% скидки на подписки!', 'success');
-}, 2500);
+  // Steam возвращает openid.claimed_id в query string
+  if (params.get('steam_return') === '1' && params.get('openid.claimed_id')) {
+    const steamId = params.get('openid.claimed_id').split('/').pop();
+    history.replaceState({}, '', window.location.pathname);
+    const users = JSON.parse(localStorage.getItem('fuhaUsers') || '{}');
+    const key   = 'steam_' + steamId;
+    if (!users[key]) {
+      users[key] = {
+        username:     'Steam_' + steamId.slice(-6),
+        email:        'steam_' + steamId + '@steam.local',
+        avatarEmoji:  '🎮',
+        avatarColor:  3,
+        plan:         'Free',
+        xp:           0, level: 1, sessions: 0, ownedCourses: [],
+        steamId:      steamId,
+      };
+      localStorage.setItem('fuhaUsers', JSON.stringify(users));
+    }
+    setTimeout(() => loginSuccess(users[key]), 400);
+    toast('✅ Вход через Steam выполнен! 🎮', 'success');
+  }
+})();
+
+// ── buySubscription — прямой редирект на PayPal ───────
+function buySubscription(planName, price) {
+  if (!currentUser) {
+    toast('Войдите, чтобы купить подписку', 'error');
+    openModal('authModal');
+    return;
+  }
+  const amount   = parseFloat(price).toFixed(2);
+  const itemName = encodeURIComponent('FUHA Training — ' + planName + ' Plan (ежемесячно)');
+  const custom   = encodeURIComponent((currentUser.email || 'guest') + '|' + planName + ' Plan');
+  const base     = window.location.href.split('?')[0];
+  const returnUrl = encodeURIComponent(base + '?paid=1&plan=' + encodeURIComponent(planName + ' Plan'));
+  const cancelUrl = encodeURIComponent(base);
+
+  const paypalUrl =
+    'https://www.paypal.com/cgi-bin/webscr'
+    + '?cmd=_xclick'
+    + '&business='      + encodeURIComponent(PAYPAL_EMAIL)
+    + '&item_name='     + itemName
+    + '&amount='        + amount
+    + '&currency_code=USD'
+    + '&no_shipping=1'
+    + '&return='        + returnUrl
+    + '&cancel_return=' + cancelUrl
+    + '&custom='        + custom;
+
+  toast('🔄 Перенаправление на PayPal...', 'info');
+  setTimeout(() => window.open(paypalUrl, '_blank'), 600);
+}
+
+// ── Обработка возврата с PayPal после покупки подписки ─
+(function handleSubPaidReturn() {
+  const params = new URLSearchParams(window.location.search);
+  if (params.get('paid') === '1' && params.get('plan')) {
+    const plan = params.get('plan');
+    history.replaceState({}, '', window.location.pathname);
+    setTimeout(() => {
+      userPlan = plan;
+      if (currentUser) { currentUser.plan = plan; saveUser(); }
+      const badge = document.getElementById('xpPlanBadge');
+      if (badge) badge.textContent = '⭐ ' + plan;
+      toast('🎉 Подписка ' + plan + ' активирована! Добро пожаловать!', 'success');
+      spawnConfetti();
+      gainXP(50);
+    }, 900);
+  }
+})();
+
 </script>
 </body>
 </html>
