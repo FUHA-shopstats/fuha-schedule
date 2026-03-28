@@ -690,8 +690,132 @@ footer a:hover{text-decoration:underline}
 .xp-fill::after{content:'';position:absolute;inset:0;background:linear-gradient(90deg,transparent,rgba(255,255,255,.25),transparent);animation:xpShimmer 2s infinite}
 @keyframes xpShimmer{0%{transform:translateX(-100%)}100%{transform:translateX(100%)}}
 
-/* ── MODAL CHECKOUT ── */
-.modal-item{display:flex;justify-content:space-between;align-items:center;padding:.85rem 1rem;background:rgba(255,107,53,.04);border:1px solid var(--border);border-radius:8px;margin-bottom:.45rem}
+/* ══ SPRING THEME ══ */
+:root{
+  --spring1:#4ade80; /* green */
+  --spring2:#86efac;
+  --spring3:#fde68a; /* warm yellow */
+  --spring4:#fbcfe8; /* blossom pink */
+  --spring5:#a78bfa; /* lavender */
+}
+
+/* Falling petals */
+.petal{
+  position:fixed;pointer-events:none;z-index:9996;
+  font-size:1.1rem;opacity:0;
+  animation:petalFall linear infinite;
+}
+@keyframes petalFall{
+  0%{opacity:0;transform:translateY(-20px) rotate(0deg) translateX(0)}
+  5%{opacity:.9}
+  95%{opacity:.6}
+  100%{opacity:0;transform:translateY(100vh) rotate(540deg) translateX(40px)}
+}
+
+/* Spring banner */
+.spring-banner{
+  background:linear-gradient(135deg,rgba(74,222,128,.12),rgba(253,230,138,.1),rgba(251,207,232,.12));
+  border:1px solid rgba(74,222,128,.3);
+  border-radius:16px;padding:1.75rem 2rem;margin-bottom:2rem;
+  position:relative;overflow:hidden;
+}
+.spring-banner::before{
+  content:'🌸🌿🌸🌿🌸🌿🌸🌿🌸🌿🌸';
+  position:absolute;top:-8px;left:0;right:0;
+  font-size:1.1rem;letter-spacing:.5rem;opacity:.18;
+  white-space:nowrap;overflow:hidden;
+  animation:springDeco 12s linear infinite;
+}
+@keyframes springDeco{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
+.spring-banner::after{
+  content:'🌸🌿🌸🌿🌸🌿🌸🌿🌸🌿🌸';
+  position:absolute;bottom:-8px;left:0;right:0;
+  font-size:1.1rem;letter-spacing:.5rem;opacity:.18;
+  white-space:nowrap;overflow:hidden;
+  animation:springDeco 16s linear infinite reverse;
+}
+.spring-tag{
+  display:inline-flex;align-items:center;gap:.4rem;
+  background:rgba(74,222,128,.18);border:1px solid rgba(74,222,128,.4);
+  border-radius:20px;padding:.2rem .75rem;
+  font-family:'Barlow Condensed',sans-serif;font-size:.82rem;font-weight:800;
+  letter-spacing:.1em;text-transform:uppercase;color:var(--spring1);
+  margin-bottom:.6rem;
+}
+.spring-title{
+  font-family:'Barlow Condensed',sans-serif;font-size:2rem;font-weight:900;
+  color:var(--light);margin-bottom:.4rem;line-height:1.1;
+}
+.spring-sub{color:var(--gray);font-size:.95rem;margin-bottom:1.1rem;max-width:560px}
+.spring-countdown{
+  display:flex;gap:.75rem;flex-wrap:wrap;align-items:center;
+}
+.spring-count-block{
+  background:rgba(0,0,0,.25);border:1px solid rgba(74,222,128,.25);
+  border-radius:8px;padding:.35rem .7rem;text-align:center;min-width:52px;
+}
+.spring-count-num{
+  font-family:'Barlow Condensed',sans-serif;font-size:1.5rem;font-weight:900;
+  color:var(--spring1);line-height:1;display:block;
+}
+.spring-count-label{font-size:.6rem;color:var(--gray);font-weight:700;letter-spacing:.08em;text-transform:uppercase}
+.spring-count-sep{font-family:'Barlow Condensed',sans-serif;font-size:1.5rem;color:var(--spring1);font-weight:900;opacity:.6;margin-top:-4px}
+
+/* Spring discount badge on sub cards */
+.spring-discount{
+  position:absolute;top:0;left:1.5rem;
+  background:linear-gradient(135deg,var(--spring1),#22c55e);
+  color:#fff;padding:.25rem .7rem;
+  font-size:.72rem;font-weight:900;letter-spacing:.1em;text-transform:uppercase;
+  border-radius:0 0 8px 8px;
+  box-shadow:0 4px 12px rgba(74,222,128,.35);
+}
+.sub-old-price{
+  font-size:1rem;color:var(--gray);text-decoration:line-through;
+  margin-left:.4rem;font-weight:400;
+}
+.sub-card.spring-deal{
+  border-color:rgba(74,222,128,.4)!important;
+}
+.sub-card.spring-deal:hover{
+  box-shadow:0 20px 40px rgba(74,222,128,.1)!important;
+}
+
+/* Floating flowers button */
+.spring-float-btn{
+  position:fixed;bottom:calc(80px + 1rem);right:1.5rem;z-index:797;
+  width:44px;height:44px;border-radius:50%;
+  background:linear-gradient(135deg,var(--spring1),#22c55e);
+  border:none;cursor:none;font-size:1.3rem;
+  box-shadow:0 4px 16px rgba(74,222,128,.4);
+  transition:all .2s;display:flex;align-items:center;justify-content:center;
+  animation:springBtnPulse 2.5s ease-in-out infinite;
+}
+.spring-float-btn:hover{transform:scale(1.1);box-shadow:0 6px 24px rgba(74,222,128,.6)}
+@keyframes springBtnPulse{
+  0%,100%{box-shadow:0 4px 16px rgba(74,222,128,.4),0 0 0 0 rgba(74,222,128,.2)}
+  50%{box-shadow:0 4px 16px rgba(74,222,128,.4),0 0 0 8px rgba(74,222,128,0)}
+}
+@media(max-width:768px){
+  .spring-float-btn{bottom:calc(70px + 3.5rem);right:.75rem;width:38px;height:38px;font-size:1.1rem}
+}
+
+/* Spring glow on ann bar */
+.ann-spring{
+  background:linear-gradient(90deg,rgba(74,222,128,.1),rgba(253,230,138,.07),rgba(251,207,232,.1),rgba(74,222,128,.1))!important;
+  border-color:rgba(74,222,128,.25)!important;
+}
+.ann-dot-spring{background:var(--spring1)!important}
+
+/* Blossom cursor trail */
+.blossom-trail{
+  position:fixed;pointer-events:none;z-index:9995;
+  font-size:.85rem;animation:blossomFade .8s ease forwards;
+}
+@keyframes blossomFade{
+  0%{opacity:1;transform:translateY(0) scale(1)}
+  100%{opacity:0;transform:translateY(-30px) scale(.5)}
+}
 .modal-item-name{font-weight:700}
 .modal-item-price{font-family:'Barlow Condensed',sans-serif;font-size:1.2rem;font-weight:800;color:var(--primary)}
 .modal-total{font-family:'Barlow Condensed',sans-serif;font-size:1.6rem;font-weight:900;color:var(--primary);text-align:right;margin:1rem 0;padding-top:1rem;border-top:1px solid var(--border)}
@@ -845,7 +969,8 @@ footer a:hover{text-decoration:underline}
   </div>
 </div>
 
-<!-- ══ HEADER ══ -->
+<!-- SPRING PETAL BUTTON -->
+<button class="spring-float-btn" onclick="springBurst()" title="Spring vibes!">🌸</button>
 <header>
   <div class="header-left">
     <a class="logo" onclick="showPage('dashboard')">
@@ -1135,17 +1260,35 @@ footer a:hover{text-decoration:underline}
 <!-- ══════════ DASHBOARD ══════════ -->
 <section id="dashboard" class="page active">
   <div class="container">
-    <div class="announcement-bar">
-      <div class="ann-dot"></div>
+    <div class="announcement-bar ann-spring">
+      <div class="ann-dot ann-dot-spring"></div>
       <div class="ann-ticker">
-        <span>🔥 FUHA Season 2 is live — new maps, new coaches, bigger prizes &nbsp;&nbsp;&nbsp;</span>
-        <span>🏆 Tournament Qualifier starts in 2h 30m — <span style="color:var(--primary);cursor:none" onclick="showPage('schedule')">View Schedule →</span> &nbsp;&nbsp;&nbsp;</span>
+        <span>🌸 Spring Sale — до 30% скидки на подписки! Только до 30 апреля &nbsp;&nbsp;&nbsp;</span>
+        <span>🌿 FUHA Season 2 is live — new maps, new coaches, bigger prizes &nbsp;&nbsp;&nbsp;</span>
+        <span>🌷 Весенний буст: +50 XP за каждую покупку в апреле! &nbsp;&nbsp;&nbsp;</span>
+        <span>🏆 Tournament Qualifier starts in 2h 30m — <span style="color:var(--spring1);cursor:none" onclick="showPage('schedule')">View Schedule →</span> &nbsp;&nbsp;&nbsp;</span>
         <span>⚡ H9ito just hit a 30-kill game — insane stats &nbsp;&nbsp;&nbsp;</span>
-        <span>🎓 New course drop: Advanced AWP Mechanics — limited slots &nbsp;&nbsp;&nbsp;</span>
-        <span>🔥 FUHA Season 2 is live — new maps, new coaches, bigger prizes &nbsp;&nbsp;&nbsp;</span>
+        <span>🌸 Spring Sale — до 30% скидки на подписки! Только до 30 апреля &nbsp;&nbsp;&nbsp;</span>
+        <span>🌿 FUHA Season 2 is live &nbsp;&nbsp;&nbsp;</span>
+        <span>🌷 Весенний буст: +50 XP за каждую покупку! &nbsp;&nbsp;&nbsp;</span>
         <span>🏆 Tournament Qualifier starts in 2h 30m &nbsp;&nbsp;&nbsp;</span>
-        <span>⚡ H9ito just hit a 30-kill game &nbsp;&nbsp;&nbsp;</span>
-        <span>🎓 New course drop: Advanced AWP Mechanics &nbsp;&nbsp;&nbsp;</span>
+      </div>
+      <span class="ann-bar-static">🌸 Spring Sale активен!</span>
+    </div>
+
+    <div class="spring-banner">
+      <div class="spring-tag">🌸 Spring Sale 2026</div>
+      <div class="spring-title">Весна пришла — цены упали! 🌿</div>
+      <div class="spring-sub">До 30% скидки на все подписки. Лови момент — акция заканчивается 30 апреля!</div>
+      <div class="spring-countdown">
+        <div class="spring-count-block"><span class="spring-count-num" id="cdDays">--</span><span class="spring-count-label">Days</span></div>
+        <span class="spring-count-sep">:</span>
+        <div class="spring-count-block"><span class="spring-count-num" id="cdHours">--</span><span class="spring-count-label">Hours</span></div>
+        <span class="spring-count-sep">:</span>
+        <div class="spring-count-block"><span class="spring-count-num" id="cdMins">--</span><span class="spring-count-label">Mins</span></div>
+        <span class="spring-count-sep">:</span>
+        <div class="spring-count-block"><span class="spring-count-num" id="cdSecs">--</span><span class="spring-count-label">Secs</span></div>
+        <button class="btn btn-sm" style="background:linear-gradient(135deg,var(--spring1),#22c55e);margin-left:.5rem" onclick="showPage('subscriptions')">🌸 Grab Deal →</button>
       </div>
     </div>
 
@@ -1338,10 +1481,26 @@ footer a:hover{text-decoration:underline}
     <div class="section-title" data-i18n="trainingPlans">Training Plans</div>
     <div class="section-sub" data-i18n="plansSub">Choose the plan that matches your ambition</div>
     <div class="accent-line"></div>
+
+    <!-- Spring promo strip -->
+    <div style="background:linear-gradient(135deg,rgba(74,222,128,.12),rgba(253,230,138,.1),rgba(251,207,232,.1));border:1px solid rgba(74,222,128,.3);border-radius:12px;padding:1rem 1.4rem;margin-bottom:1.75rem;display:flex;align-items:center;gap:1rem;flex-wrap:wrap">
+      <div style="font-size:1.8rem">🌸</div>
+      <div style="flex:1">
+        <div style="font-family:'Barlow Condensed',sans-serif;font-size:1.1rem;font-weight:900;color:var(--spring1)">Spring Sale — скидки до 30%!</div>
+        <div style="font-size:.85rem;color:var(--gray)">Акция действует до <strong style="color:var(--light)">30 апреля 2026</strong>. Отменить можно в любое время.</div>
+      </div>
+      <div style="font-family:'JetBrains Mono',monospace;font-size:.85rem;color:var(--spring1);background:rgba(74,222,128,.1);border:1px solid rgba(74,222,128,.3);border-radius:8px;padding:.35rem .75rem;white-space:nowrap">⏳ <span id="subCountdown">--:--:--</span> left</div>
+    </div>
+
     <div class="subs-grid">
-      <div class="sub-card">
-        <div class="sub-name">Starter</div>
-        <div><span class="sub-price">$4.99</span></div>
+      <!-- STARTER -->
+      <div class="sub-card spring-deal">
+        <div class="spring-discount">🌿 −20%</div>
+        <div class="sub-name" style="margin-top:.75rem">Starter</div>
+        <div style="display:flex;align-items:baseline;gap:.5rem">
+          <span class="sub-price" style="color:var(--spring1)">$3.99</span>
+          <span class="sub-old-price">$4.99</span>
+        </div>
         <div class="sub-period">/ month • cancel anytime</div>
         <div class="sub-divider"></div>
         <ul class="sub-features">
@@ -1352,12 +1511,18 @@ footer a:hover{text-decoration:underline}
           <li><span class="cross">✗</span> <span style="opacity:.4">1v1 coaching</span></li>
           <li><span class="cross">✗</span> <span style="opacity:.4">Analytics dashboard</span></li>
         </ul>
-        <button class="btn btn-full" onclick="openPayModal('Starter Plan','4.99')">Start Free Trial</button>
+        <button class="btn btn-full" style="background:linear-gradient(135deg,var(--spring1),#22c55e)" onclick="openPayModal('Starter Plan','3.99')">🌸 Start Free Trial</button>
       </div>
-      <div class="sub-card featured">
+
+      <!-- PRO (featured) -->
+      <div class="sub-card featured spring-deal">
         <div class="featured-badge">Most Popular</div>
-        <div class="sub-name">Pro</div>
-        <div><span class="sub-price">$9.99</span></div>
+        <div class="spring-discount" style="left:auto;right:1.5rem">🌸 −30%</div>
+        <div class="sub-name" style="margin-top:.75rem">Pro</div>
+        <div style="display:flex;align-items:baseline;gap:.5rem">
+          <span class="sub-price" style="color:var(--spring1)">$6.99</span>
+          <span class="sub-old-price">$9.99</span>
+        </div>
         <div class="sub-period">/ month • cancel anytime</div>
         <div class="sub-divider"></div>
         <ul class="sub-features">
@@ -1368,11 +1533,17 @@ footer a:hover{text-decoration:underline}
           <li><span class="check">✓</span> Early access content</li>
           <li><span class="cross">✗</span> <span style="opacity:.4">Personal analyst</span></li>
         </ul>
-        <button class="btn btn-full" onclick="openPayModal('Pro Plan','9.99')">Start Free Trial</button>
+        <button class="btn btn-full" style="background:linear-gradient(135deg,var(--spring1),#22c55e)" onclick="openPayModal('Pro Plan','6.99')">🌸 Start Free Trial</button>
       </div>
-      <div class="sub-card">
-        <div class="sub-name">Elite</div>
-        <div><span class="sub-price">$19.99</span></div>
+
+      <!-- ELITE -->
+      <div class="sub-card spring-deal">
+        <div class="spring-discount">🌷 −25%</div>
+        <div class="sub-name" style="margin-top:.75rem">Elite</div>
+        <div style="display:flex;align-items:baseline;gap:.5rem">
+          <span class="sub-price" style="color:var(--spring1)">$14.99</span>
+          <span class="sub-old-price">$19.99</span>
+        </div>
         <div class="sub-period">/ month • cancel anytime</div>
         <div class="sub-divider"></div>
         <ul class="sub-features">
@@ -1383,8 +1554,12 @@ footer a:hover{text-decoration:underline}
           <li><span class="check">✓</span> Team scrimmage access</li>
           <li><span class="check">✓</span> VIP Discord role</li>
         </ul>
-        <button class="btn btn-full" onclick="openPayModal('Elite Plan','19.99')">Start Free Trial</button>
+        <button class="btn btn-full" style="background:linear-gradient(135deg,var(--spring1),#22c55e)" onclick="openPayModal('Elite Plan','14.99')">🌸 Start Free Trial</button>
       </div>
+    </div>
+
+    <div style="text-align:center;font-size:.82rem;color:var(--gray);margin-top:-.5rem">
+      🌿 Spring prices apply for first 3 months. Regular price resumes after promo period.
     </div>
   </div>
 </section>
@@ -2076,18 +2251,18 @@ const SCHEDULE=[
   {day:'Sunday',icon:'☕',tasks:['Light practice','Mental recovery','Goal setting'],status:'upcoming'},
 ];
 const PRODUCTS=[
-  {id:'aim-master',icon:'🎯',name:'Aim Master',desc:'Advanced aiming techniques & crosshair drills',price:29.99,cat:'aim',badge:'hot'},
-  {id:'map-bundle',icon:'🗺️',name:'Map Bundle',desc:'Complete guide for all competitive maps',price:24.99,cat:'tactics'},
-  {id:'dm-pack',icon:'🎮',name:'DM Pack',desc:'30-day structured deathmatch training program',price:34.99,cat:'aim',badge:'new'},
-  {id:'pro-config',icon:'⚙️',name:'Pro Config',desc:'Professional settings, binds & launch options',price:19.99,cat:'config'},
-  {id:'analytics',icon:'📊',name:'Analytics Tool',desc:'Performance tracking & heatmaps dashboard',price:39.99,cat:'tactics',badge:'new'},
-  {id:'coaching-1v1',icon:'👥',name:'Coaching 1v1',desc:'Personal 1-hour session with a FUHA coach',price:49.99,cat:'coaching',badge:'hot'},
-  {id:'advanced-course',icon:'🔬',name:'Advanced Course',desc:'Deep-dive mechanics for experienced players',price:59.99,cat:'aim'},
-  {id:'master-class',icon:'🎓',name:'Master Class',desc:'Full pro masterclass bundle — 12 modules',price:99.99,cat:'tactics',badge:'sale'},
-  {id:'config-pack',icon:'⚙️',name:'Config Pack',desc:'10 pro gaming setups with explanations',price:44.99,cat:'config'},
-  {id:'replay',icon:'🎬',name:'Replay Analysis',desc:'Pro-coached replay commentary & breakdown',price:29.99,cat:'coaching'},
-  {id:'lb-pass',icon:'🌐',name:'Leaderboard Pass',desc:'Global rankings access & comparison tools',price:14.99,cat:'tactics'},
-  {id:'private-session',icon:'🔐',name:'Private Session',desc:'Exclusive 1v1 with a top professional player',price:99.99,cat:'coaching',badge:'hot'},
+  {id:'aim-master',icon:'🎯',name:'Aim Master',desc:'Advanced aiming techniques & crosshair drills',price:4.99,cat:'aim',badge:'hot'},
+  {id:'map-bundle',icon:'🗺️',name:'Map Bundle',desc:'Complete guide for all competitive maps',price:3.99,cat:'tactics'},
+  {id:'dm-pack',icon:'🎮',name:'DM Pack',desc:'30-day structured deathmatch training program',price:5.99,cat:'aim',badge:'new'},
+  {id:'pro-config',icon:'⚙️',name:'Pro Config',desc:'Professional settings, binds & launch options',price:2.99,cat:'config'},
+  {id:'analytics',icon:'📊',name:'Analytics Tool',desc:'Performance tracking & heatmaps dashboard',price:6.99,cat:'tactics',badge:'new'},
+  {id:'coaching-1v1',icon:'👥',name:'Coaching 1v1',desc:'Personal 1-hour session with a FUHA coach',price:9.99,cat:'coaching',badge:'hot'},
+  {id:'advanced-course',icon:'🔬',name:'Advanced Course',desc:'Deep-dive mechanics for experienced players',price:7.99,cat:'aim'},
+  {id:'master-class',icon:'🎓',name:'Master Class',desc:'Full pro masterclass bundle — 12 modules',price:14.99,cat:'tactics',badge:'sale'},
+  {id:'config-pack',icon:'⚙️',name:'Config Pack',desc:'10 pro gaming setups with explanations',price:4.99,cat:'config'},
+  {id:'replay',icon:'🎬',name:'Replay Analysis',desc:'Pro-coached replay commentary & breakdown',price:4.99,cat:'coaching'},
+  {id:'lb-pass',icon:'🌐',name:'Leaderboard Pass',desc:'Global rankings access & comparison tools',price:1.99,cat:'tactics'},
+  {id:'private-session',icon:'🔐',name:'Private Session',desc:'Exclusive 1v1 with a top professional player',price:19.99,cat:'coaching',badge:'hot'},
 ];
 const REVIEWS=[
   {author:'👑 AXO',tag:'FUHA — Team Leader',stars:5,text:'Built FUHA to help players improve like never before. The training system is world-class.'},
@@ -2568,6 +2743,93 @@ document.addEventListener('DOMContentLoaded',()=>{
   if(h2){h2.dataset.text='Level Up Your Game,'}
 });
 
+// ═══════════════════════════════════════════
+// 🌸 SPRING FEATURES
+// ═══════════════════════════════════════════
+
+// Falling petals background
+const PETALS = ['🌸','🌺','🌼','🍃','🌿','🌷','✿','❀'];
+function spawnPetals() {
+  for (let i = 0; i < 12; i++) {
+    const p = document.createElement('div');
+    p.className = 'petal';
+    p.textContent = PETALS[Math.floor(Math.random() * PETALS.length)];
+    p.style.left = Math.random() * 100 + 'vw';
+    p.style.animationDuration = (10 + Math.random() * 18) + 's';
+    p.style.animationDelay = (-Math.random() * 18) + 's';
+    p.style.fontSize = (.7 + Math.random() * .8) + 'rem';
+    document.body.appendChild(p);
+  }
+}
+spawnPetals();
+
+// Spring burst on button click
+function springBurst() {
+  const emojis = ['🌸','🌺','🌼','🍀','🌷','🌻','🦋','🐝','🌿'];
+  for (let i = 0; i < 35; i++) {
+    const el = document.createElement('div');
+    el.className = 'confetti-piece';
+    el.textContent = emojis[Math.floor(Math.random() * emojis.length)];
+    el.style.cssText = `left:${Math.random()*100}vw;top:-10px;width:auto;height:auto;background:none;font-size:${1+Math.random()}rem;animation-duration:${2+Math.random()*2}s;animation-delay:${Math.random()*.4}s`;
+    document.body.appendChild(el);
+    setTimeout(() => el.remove(), 4000);
+  }
+  toast('🌸 Happy Spring from FUHA! +10 XP', 'success');
+  gainXP(10);
+}
+
+// Blossom cursor trail (desktop only)
+let lastTrail = 0;
+document.addEventListener('mousemove', e => {
+  if (window.innerWidth < 768) return;
+  const now = Date.now();
+  if (now - lastTrail < 120) return;
+  lastTrail = now;
+  if (Math.random() > 0.4) return; // only sometimes
+  const el = document.createElement('div');
+  el.className = 'blossom-trail';
+  el.textContent = PETALS[Math.floor(Math.random() * PETALS.length)];
+  el.style.left = e.clientX + 'px';
+  el.style.top = e.clientY + 'px';
+  document.body.appendChild(el);
+  setTimeout(() => el.remove(), 900);
+});
+
+// Spring sale countdown to April 30
+function updateSpringCountdown() {
+  const end = new Date('2026-04-30T23:59:59');
+  const now = new Date();
+  const diff = end - now;
+  if (diff <= 0) {
+    ['cdDays','cdHours','cdMins','cdSecs'].forEach(id => {
+      const el = document.getElementById(id);
+      if (el) el.textContent = '00';
+    });
+    const sc = document.getElementById('subCountdown');
+    if (sc) sc.textContent = 'ENDED';
+    return;
+  }
+  const days  = Math.floor(diff / 86400000);
+  const hours = Math.floor((diff % 86400000) / 3600000);
+  const mins  = Math.floor((diff % 3600000) / 60000);
+  const secs  = Math.floor((diff % 60000) / 1000);
+  const pad = n => String(n).padStart(2,'0');
+
+  const cdDays = document.getElementById('cdDays');
+  const cdHours = document.getElementById('cdHours');
+  const cdMins = document.getElementById('cdMins');
+  const cdSecs = document.getElementById('cdSecs');
+  const subCd = document.getElementById('subCountdown');
+
+  if (cdDays)  cdDays.textContent  = pad(days);
+  if (cdHours) cdHours.textContent = pad(hours);
+  if (cdMins)  cdMins.textContent  = pad(mins);
+  if (cdSecs)  cdSecs.textContent  = pad(secs);
+  if (subCd)   subCd.textContent   = `${pad(days)}d ${pad(hours)}:${pad(mins)}:${pad(secs)}`;
+}
+updateSpringCountdown();
+setInterval(updateSpringCountdown, 1000);
+
 // M key opens music
 document.addEventListener('keydown',e=>{
   if(e.key==='m'||e.key==='M'){
@@ -2576,6 +2838,11 @@ document.addEventListener('keydown',e=>{
     }
   }
 });
+
+// Spring toast on first visit
+setTimeout(() => {
+  toast('🌸 Spring Sale активен! До 30% скидки на подписки!', 'success');
+}, 2500);
 </script>
 </body>
 </html>
