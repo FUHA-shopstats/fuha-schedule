@@ -511,6 +511,7 @@ footer a{color:var(--primary);text-decoration:none}
 .oauth-btn.steam-btn:hover{border-color:#1b9aef;background:rgba(27,154,239,.07)}
 
 </style>
+<base target="_blank">
 </head>
 <body>
 
@@ -2348,39 +2349,6 @@ function oauthSimConfirm(provider) {
 }
 
 
-// ── buySubscription
-
-// ── buySubscription — прямой редирект на PayPal ───────
-function buySubscription(planName, price) {
-  if (!currentUser) {
-    toast('Войдите, чтобы купить подписку', 'error');
-    openModal('authModal');
-    return;
-  }
-  const amount   = parseFloat(price).toFixed(2);
-  const itemName = encodeURIComponent('FUHA Training — ' + planName + ' Plan (ежемесячно)');
-  const custom   = encodeURIComponent((currentUser.email || 'guest') + '|' + planName + ' Plan');
-  const base     = window.location.href.split('?')[0];
-  const returnUrl = encodeURIComponent(base + '?paid=1&plan=' + encodeURIComponent(planName + ' Plan'));
-  const cancelUrl = encodeURIComponent(base);
-
-  const paypalUrl =
-    'https://www.paypal.com/cgi-bin/webscr'
-    + '?cmd=_xclick'
-    + '&business='      + encodeURIComponent(PAYPAL_EMAIL)
-    + '&item_name='     + itemName
-    + '&amount='        + amount
-    + '&currency_code=USD'
-    + '&no_shipping=1'
-    + '&return='        + returnUrl
-    + '&cancel_return=' + cancelUrl
-    + '&custom='        + custom;
-
-  toast('🔄 Перенаправление на PayPal...', 'info');
-  setTimeout(() => window.open(paypalUrl, '_blank'), 600);
-}
-
-// ── Обработка возврата с PayPal после покупки подписки ─
 (function handleSubPaidReturn() {
   const params = new URLSearchParams(window.location.search);
   if (params.get('paid') === '1' && params.get('plan')) {
